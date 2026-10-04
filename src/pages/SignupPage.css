@@ -1,0 +1,17 @@
+.signup-form {
+  --field-gap: 12px;
+}
+
+.signup-form__existing {
+  margin-top: 20px;
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.signup-form__existing a {
+  color: var(--brand);
+}
+
+.signup-form__existing a:hover {
+  text-decoration: underline;
+}
