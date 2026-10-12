@@ -17,6 +17,35 @@ const socialLinks = [
   { label: 'YouTube', href: 'https://youtube.com', Icon: YouTubeIcon },
 ]
 
+const footerHrefs: Record<string, string> = {
+  'About Us': '/about-us',
+  Blog: '/blog',
+  'In the News': '/news',
+  'Substitution Policy': '/substitution-policy',
+  'Delivery Fee and Taxes': '/delivery-fees',
+  'Contact Us': '/contact-us',
+  Careers: '/careers',
+  'Become a BloomNation Florist': '/florist',
+  'How BloomNation Reviews Work': '/reviews',
+  'Florist Login': '/florist/login',
+  'Floral Jobs': '/floral-jobs',
+  'Help Center': '/help',
+  'Just Because': '/occasions?occasion=Just%20Because',
+  Anniversary: '/occasions?occasion=Anniversary',
+  Birthday: '/occasions?occasion=Birthday',
+  Congratulations: '/occasions?occasion=Congratulations',
+  'New Baby': '/occasions?occasion=New%20Baby',
+  "Valentine's Day": '/occasions?occasion=Valentine%27s%20Day',
+  "Mother's Day": '/occasions?occasion=Mother%27s%20Day',
+  'Same-Day Delivery': '/same-day',
+  'Next-Day Delivery': '/next-day',
+  'Shop by City': '/city',
+  'Send Me Flowers': '/send-me-flowers',
+  'Event Pages': '/events',
+  Florists: '/florists',
+  'Best Florists Near Me': '/florists/near-me',
+}
+
 const columns = [
   {
     title: 'Company',
@@ -59,7 +88,7 @@ export function Footer() {
             <ul>
               {column.links.map((link) => (
                 <li key={link}>
-                  <Link to="/">{link}</Link>
+                  <Link to={footerHrefs[link] ?? '/'}>{link}</Link>
                 </li>
               ))}
             </ul>

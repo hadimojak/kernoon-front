@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 1.4fr repeat(4, 1fr);
   gap: 40px;
-  max-width: 1180px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 56px 24px 40px;
 }
@@ -61,7 +61,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px 24px;
-  max-width: 1180px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 18px 24px 28px;
   font-size: 13.5px;

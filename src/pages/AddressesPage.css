@@ -1,0 +1,85 @@
+.addresses-panel {
+  min-width: 0;
+}
+
+.addresses-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.addresses-panel__header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.addresses-add-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--brand);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.addresses-add-link:hover {
+  color: var(--brand-strong);
+}
+
+.addresses-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 32px 44px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  text-align: center;
+}
+
+.addresses-empty h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.addresses-empty__art {
+  margin: 22px 0 18px;
+}
+
+.addresses-empty p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.addresses-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  margin-top: 22px;
+  padding: 12px 22px;
+  border-radius: 3px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.addresses-add-button:hover {
+  background: var(--brand-strong);
+}
+
+@media (max-width: 720px) {
+  .addresses-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .addresses-empty {
+    padding: 36px 18px 32px;
+  }
+}
