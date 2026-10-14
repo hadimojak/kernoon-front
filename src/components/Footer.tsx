@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { useI18n } from '../i18n/LanguageProvider'
+import type { MessageKey } from '../i18n/translations'
 import { FacebookIcon } from './icons/FacebookIcon'
 import { InstagramIcon } from './icons/InstagramIcon'
 import { LinkedInIcon } from './icons/LinkedInIcon'
@@ -17,55 +19,53 @@ const socialLinks = [
   { label: 'YouTube', href: 'https://youtube.com', Icon: YouTubeIcon },
 ]
 
-const footerHrefs: Record<string, string> = {
-  'About Us': '/about-us',
-  Blog: '/blog',
-  'In the News': '/news',
-  'Substitution Policy': '/substitution-policy',
-  'Delivery Fee and Taxes': '/delivery-fees',
-  'Contact Us': '/contact-us',
-  Careers: '/careers',
-  'Become a BloomNation Florist': '/florist',
-  'How BloomNation Reviews Work': '/reviews',
-  'Florist Login': '/florist/login',
-  'Floral Jobs': '/floral-jobs',
-  'Help Center': '/help',
-  'Just Because': '/occasions?occasion=Just%20Because',
-  Anniversary: '/occasions?occasion=Anniversary',
-  Birthday: '/occasions?occasion=Birthday',
-  Congratulations: '/occasions?occasion=Congratulations',
-  'New Baby': '/occasions?occasion=New%20Baby',
-  "Valentine's Day": '/occasions?occasion=Valentine%27s%20Day',
-  "Mother's Day": '/occasions?occasion=Mother%27s%20Day',
-  'Same-Day Delivery': '/same-day',
-  'Next-Day Delivery': '/next-day',
-  'Shop by City': '/city',
-  'Send Me Flowers': '/send-me-flowers',
-  'Event Pages': '/events',
-  Florists: '/florists',
-  'Best Florists Near Me': '/florists/near-me',
-}
-
-const columns = [
+const columns: { title: MessageKey; links: { key: MessageKey; to: string }[] }[] = [
   {
-    title: 'Company',
-    links: ['About Us', 'Blog', 'In the News', 'Substitution Policy', 'Delivery Fee and Taxes', 'Contact Us', 'Careers'],
+    title: 'footer.company',
+    links: [
+      { key: 'footer.about', to: '/about-us' },
+      { key: 'footer.blog', to: '/blog' },
+      { key: 'footer.news', to: '/news' },
+      { key: 'footer.shipping', to: '/delivery-fees' },
+      { key: 'footer.contact', to: '/contact-us' },
+      { key: 'footer.careers', to: '/careers' },
+    ],
   },
   {
-    title: 'Shop by Occasion',
-    links: ['Just Because', 'Anniversary', 'Birthday', 'Congratulations', 'New Baby', "Valentine's Day", "Mother's Day"],
+    title: 'footer.shop',
+    links: [
+      { key: 'nav.newborn', to: '/newborn' },
+      { key: 'nav.toddler', to: '/toddler' },
+      { key: 'nav.kids', to: '/kids' },
+      { key: 'nav.sleepwear', to: '/sleepwear' },
+      { key: 'nav.outerwear', to: '/outerwear' },
+      { key: 'nav.sizes', to: '/sizes' },
+    ],
   },
   {
-    title: 'Local Delivery',
-    links: ['Same-Day Delivery', 'Next-Day Delivery', 'Shop by City', 'Send Me Flowers', 'Event Pages', 'Florists', 'Best Florists Near Me'],
+    title: 'footer.help',
+    links: [
+      { key: 'footer.sizeGuide', to: '/sizes' },
+      { key: 'footer.shipping', to: '/delivery-fees' },
+      { key: 'footer.helpCenter', to: '/help' },
+      { key: 'footer.reviews', to: '/reviews' },
+      { key: 'footer.contact', to: '/contact-us' },
+    ],
   },
   {
-    title: 'For Florists',
-    links: ['Become a BloomNation Florist', 'How BloomNation Reviews Work', 'Florist Login', 'Floral Jobs', 'Help Center'],
+    title: 'footer.account',
+    links: [
+      { key: 'header.login', to: '/login' },
+      { key: 'header.orders', to: '/orders' },
+      { key: 'header.sell', to: '/florist' },
+      { key: 'header.sellerLogin', to: '/florist/login' },
+    ],
   },
 ]
 
 export function Footer() {
+  const { t } = useI18n()
+
   return (
     <footer className="footer">
       <div className="footer__inner">
@@ -83,12 +83,12 @@ export function Footer() {
         </div>
 
         {columns.map((column) => (
-          <nav className="footer__column" key={column.title} aria-label={column.title}>
-            <h2 className="footer__heading">{column.title}</h2>
+          <nav className="footer__column" key={column.title} aria-label={t(column.title)}>
+            <h2 className="footer__heading">{t(column.title)}</h2>
             <ul>
               {column.links.map((link) => (
-                <li key={link}>
-                  <Link to={footerHrefs[link] ?? '/'}>{link}</Link>
+                <li key={link.key + link.to}>
+                  <Link to={link.to}>{t(link.key)}</Link>
                 </li>
               ))}
             </ul>
@@ -99,19 +99,17 @@ export function Footer() {
       <div className="footer__legal">
         <ul className="footer__legal-links">
           <li>
-            <Link to="/terms">Terms of Service</Link>
+            <Link to="/terms">{t('footer.terms')}</Link>
           </li>
           <li>
-            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/privacy">{t('footer.privacy')}</Link>
           </li>
           <li>
-            <Link to="/cookies">Cookie Settings</Link>
+            <Link to="/cookies">{t('footer.cookies')}</Link>
           </li>
         </ul>
-        <p className="footer__copyright">&copy; 2026 BloomNation Inc. All rights reserved.</p>
-        <p className="footer__sister">
-          Looking for flower delivery in the UK? Visit our sister brand Floom.
-        </p>
+        <p className="footer__copyright">{t('footer.copyright')}</p>
+        <p className="footer__sister">{t('footer.note')}</p>
       </div>
     </footer>
   )

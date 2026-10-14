@@ -1,28 +1,31 @@
 import { useEffect } from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
+import { useI18n } from '../i18n/LanguageProvider'
 import '../styles/pages/ContactUsPage.css'
 
-const contactRows = [
-  { label: 'Phone', value: '(210) 405-5050', href: 'tel:2104055050' },
-  { label: 'Email', value: 'support@bloomnation.com', href: 'mailto:support@bloomnation.com' },
-  {
-    label: 'Address',
-    value: (
-      <>
-        1316 3rd St., Suite 301
-        <br />
-        Santa Monica, CA 90401
-      </>
-    ),
-  },
-  { label: 'Hours', value: '9AM - 9PM EST' },
-]
-
 export default function ContactUsPage() {
+  const { t } = useI18n()
+
   useEffect(() => {
-    document.title = 'Contact Us | BloomNation'
-  }, [])
+    document.title = t('contact.title')
+  }, [t])
+
+  const contactRows = [
+    { label: t('contact.phone'), value: '(210) 405-5050', href: 'tel:2104055050' },
+    { label: t('contact.email'), value: 'support@kernoon.com', href: 'mailto:support@kernoon.com' },
+    {
+      label: t('contact.address'),
+      value: (
+        <>
+          1316 3rd St., Suite 301
+          <br />
+          Santa Monica, CA 90401
+        </>
+      ),
+    },
+    { label: t('contact.hours'), value: t('contact.hoursValue') },
+  ]
 
   return (
     <div className="contact-page">
@@ -36,20 +39,14 @@ export default function ContactUsPage() {
               alt=""
             />
             <div className="contact-hero__copy">
-              <h1 id="customer-service-title">Customer Service</h1>
-              <p>
-                Our philosophy begins and ends with a marketplace that provides the best possible
-                customer service. By taking out the middleman, we have also taken out the bureaucracy.
-                All florists in the marketplace must abide by the Florist&apos;s Rules of Conduct. For
-                any questions, comments, or concerns about your order, we advise you to contact the
-                local florist you have placed your order with.
-              </p>
+              <h1 id="customer-service-title">{t('contact.heroTitle')}</h1>
+              <p>{t('contact.heroBody')}</p>
             </div>
           </div>
         </section>
 
         <section className="contact-details" aria-labelledby="contact-us-title">
-          <h2 id="contact-us-title">Contact Us</h2>
+          <h2 id="contact-us-title">{t('contact.heading')}</h2>
           <dl className="contact-details__list">
             {contactRows.map((row) => (
               <div className="contact-details__row" key={row.label}>

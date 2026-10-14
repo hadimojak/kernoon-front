@@ -34,12 +34,18 @@ export default function App() {
       <Route path="/about" element={<AboutUsPage />} />
       <Route path="/florist" element={<BecomeFloristPage />} />
       <Route path="/florist/login" element={<FloristLoginPage />} />
-      <Route path="/flowers" element={<ShopMenuPage kind="flowers" />} />
-      <Route path="/same-day" element={<ShopMenuPage kind="same-day" />} />
-      <Route path="/next-day" element={<ShopMenuPage kind="next-day" />} />
-      <Route path="/occasions" element={<ShopMenuPage kind="occasions" />} />
-      <Route path="/sympathy" element={<ShopMenuPage kind="sympathy" />} />
-      <Route path="/city" element={<ShopMenuPage kind="city" />} />
+      <Route path="/newborn" element={<ShopMenuPage kind="newborn" />} />
+      <Route path="/toddler" element={<ShopMenuPage kind="toddler" />} />
+      <Route path="/kids" element={<ShopMenuPage kind="kids" />} />
+      <Route path="/sleepwear" element={<ShopMenuPage kind="sleepwear" />} />
+      <Route path="/outerwear" element={<ShopMenuPage kind="outerwear" />} />
+      <Route path="/sizes" element={<ShopMenuPage kind="sizes" />} />
+      <Route path="/flowers" element={<ShopMenuPage kind="newborn" />} />
+      <Route path="/same-day" element={<ShopMenuPage kind="toddler" />} />
+      <Route path="/next-day" element={<ShopMenuPage kind="kids" />} />
+      <Route path="/occasions" element={<ShopMenuPage kind="sleepwear" />} />
+      <Route path="/sympathy" element={<ShopMenuPage kind="outerwear" />} />
+      <Route path="/city" element={<ShopMenuPage kind="sizes" />} />
       <Route path="/blog" element={<ContentPage />} />
       <Route path="/news" element={<ContentPage />} />
       <Route path="/substitution-policy" element={<ContentPage />} />

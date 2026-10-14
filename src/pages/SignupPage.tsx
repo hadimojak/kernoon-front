@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthLayout } from '../components/AuthLayout'
+import { useI18n } from '../i18n/LanguageProvider'
 import '../styles/pages/SignupPage.css'
 
 export default function SignupPage() {
+  const { t } = useI18n()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -15,11 +17,11 @@ export default function SignupPage() {
   }
 
   return (
-    <AuthLayout title="Create an Account">
+    <AuthLayout title={t('auth.create')}>
       <form className="auth-form signup-form" onSubmit={handleSubmit} noValidate>
         <div className="auth-field">
           <label className="sr-only" htmlFor="firstName">
-            First Name
+            {t('auth.first')}
           </label>
           <input
             className="auth-field__input"
@@ -27,7 +29,7 @@ export default function SignupPage() {
             name="firstName"
             type="text"
             autoComplete="given-name"
-            placeholder="First Name"
+            placeholder={t('auth.first')}
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
           />
@@ -35,7 +37,7 @@ export default function SignupPage() {
 
         <div className="auth-field">
           <label className="sr-only" htmlFor="lastName">
-            Last Name
+            {t('auth.last')}
           </label>
           <input
             className="auth-field__input"
@@ -43,7 +45,7 @@ export default function SignupPage() {
             name="lastName"
             type="text"
             autoComplete="family-name"
-            placeholder="Last Name"
+            placeholder={t('auth.last')}
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
           />
@@ -51,7 +53,7 @@ export default function SignupPage() {
 
         <div className="auth-field">
           <label className="sr-only" htmlFor="email">
-            Email Address
+            {t('auth.email')}
           </label>
           <input
             className="auth-field__input"
@@ -59,7 +61,7 @@ export default function SignupPage() {
             name="email"
             type="email"
             autoComplete="email"
-            placeholder="Email Address"
+            placeholder={t('auth.email')}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -67,7 +69,7 @@ export default function SignupPage() {
 
         <div className="auth-field">
           <label className="sr-only" htmlFor="password">
-            Password
+            {t('auth.password')}
           </label>
           <input
             className="auth-field__input"
@@ -75,7 +77,7 @@ export default function SignupPage() {
             name="password"
             type={showPassword ? 'text' : 'password'}
             autoComplete="new-password"
-            placeholder="Password"
+            placeholder={t('auth.password')}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
@@ -88,16 +90,15 @@ export default function SignupPage() {
             checked={showPassword}
             onChange={(event) => setShowPassword(event.target.checked)}
           />
-          <span>Show Password</span>
+          <span>{t('auth.showPassword')}</span>
         </label>
 
         <button className="auth-submit" type="submit">
-          Create an Account
+          {t('auth.create')}
         </button>
 
         <p className="signup-form__existing">
-          Already on BloomNation?{' '}
-          <Link to="/login">Login</Link>
+          {t('auth.already')} <Link to="/login">{t('auth.login')}</Link>
         </p>
       </form>
     </AuthLayout>

@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../components/AuthLayout'
+import { useI18n } from '../i18n/LanguageProvider'
 
 export default function LoginPage() {
+  const { t } = useI18n()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -14,11 +16,11 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthLayout title="Welcome Back" subtitle="Login to continue">
+    <AuthLayout title={t('auth.welcome')} subtitle={t('auth.loginLead')}>
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
         <div className="auth-field">
           <label className="auth-field__label" htmlFor="email">
-            Email
+            {t('auth.email')}
           </label>
           <input
             className="auth-field__input"
@@ -26,7 +28,7 @@ export default function LoginPage() {
             name="email"
             type="email"
             autoComplete="email"
-            placeholder="Email"
+            placeholder={t('auth.email')}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -34,7 +36,7 @@ export default function LoginPage() {
 
         <div className="auth-field">
           <label className="auth-field__label" htmlFor="password">
-            Password
+            {t('auth.password')}
           </label>
           <input
             className="auth-field__input"
@@ -42,7 +44,7 @@ export default function LoginPage() {
             name="password"
             type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
-            placeholder="Password"
+            placeholder={t('auth.password')}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
@@ -55,16 +57,16 @@ export default function LoginPage() {
             checked={showPassword}
             onChange={(event) => setShowPassword(event.target.checked)}
           />
-          <span>Show Password</span>
+          <span>{t('auth.showPassword')}</span>
         </label>
 
         <button className="auth-submit" type="submit">
-          Login
+          {t('auth.login')}
         </button>
 
         <div className="auth-links">
-          <Link to="/forgot-password">Forgot your password?</Link>
-          <Link to="/signup">Sign up for an account</Link>
+          <Link to="/forgot-password">{t('auth.forgot')}</Link>
+          <Link to="/signup">{t('auth.signupLink')}</Link>
         </div>
       </form>
     </AuthLayout>

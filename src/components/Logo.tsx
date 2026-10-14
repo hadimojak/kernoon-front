@@ -1,15 +1,17 @@
-import { BrandMark } from './icons/BrandMark'
-import { Wordmark } from './icons/Wordmark'
+import { useI18n } from '../i18n/LanguageProvider'
 
 type LogoProps = {
   className?: string
 }
 
 export function Logo({ className }: LogoProps) {
+  const { t } = useI18n()
+
   return (
-    <span className={['logo', className].filter(Boolean).join(' ')}>
-      <BrandMark className="logo__mark" size={26} />
-      <Wordmark className="logo__word" size={132} />
-    </span>
+    <img
+      className={['logo', className].filter(Boolean).join(' ')}
+      src="/kernoon-logo.svg"
+      alt={t('brand.name')}
+    />
   )
 }

@@ -3,7 +3,21 @@ import { Link, useLocation } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { StoreIcon } from '../components/icons/StoreIcon'
+import { useI18n } from '../i18n/LanguageProvider'
+import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/ContentPage.css'
+
+const contentKeys: Record<string, { title: MessageKey; lead: MessageKey }> = {
+  '/blog': { title: 'content.blog.title', lead: 'content.blog.lead' },
+  '/news': { title: 'content.news.title', lead: 'content.news.lead' },
+  '/substitution-policy': { title: 'content.shipping.title', lead: 'content.shipping.lead' },
+  '/delivery-fees': { title: 'content.shipping.title', lead: 'content.shipping.lead' },
+  '/careers': { title: 'content.careers.title', lead: 'content.careers.lead' },
+  '/help': { title: 'content.help.title', lead: 'content.help.lead' },
+  '/terms': { title: 'content.terms.title', lead: 'content.terms.lead' },
+  '/privacy': { title: 'content.privacy.title', lead: 'content.privacy.lead' },
+  '/cookies': { title: 'content.cookies.title', lead: 'content.cookies.lead' },
+}
 
 const COOKIE_KEY = 'bloomnation-cookie-prefs'
 
@@ -189,7 +203,16 @@ function readPrefs(): CookiePrefs {
 
 export default function ContentPage() {
   const { pathname } = useLocation()
-  const page = pages[pathname] ?? { title: 'BloomNation', lead: '' }
+  return <ContentScreen key={pathname} />
+}
+
+function ContentScreen() {
+  const { pathname } = useLocation()
+  const { t } = useI18n()
+  const page = pages[pathname] ?? { title: 'Kernoon', lead: '' }
+  const localized = contentKeys[pathname]
+  const title = localized ? t(localized.title) : t('content.generic.title')
+  const lead = localized ? t(localized.lead) : page.lead || t('content.generic.lead')
   const [openPost, setOpenPost] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [city, setCity] = useState<string | null>(null)
@@ -202,23 +225,12 @@ export default function ContentPage() {
   const [senderCity, setSenderCity] = useState('')
   const [occasion, setOccasion] = useState('Birthday')
   const [sent, setSent] = useState(false)
-  const [prefs, setPrefs] = useState<CookiePrefs>(defaultPrefs)
+  const [prefs, setPrefs] = useState<CookiePrefs>(readPrefs)
   const [prefsSaved, setPrefsSaved] = useState(false)
 
   useEffect(() => {
-    document.title = `${page.title} | BloomNation`
-  }, [page.title])
-
-  useEffect(() => {
-    setOpenPost(null)
-    setOpenFaq(0)
-    setCity(null)
-    setRole(null)
-    setApplied(null)
-    setSent(false)
-    setPrefsSaved(false)
-    setPrefs(readPrefs())
-  }, [pathname])
+    document.title = `${title} | ${t('brand.name')}`
+  }, [title, t])
 
   function submitApplication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -245,8 +257,8 @@ export default function ContentPage() {
       <Header />
       <main>
         <header className="info-page__intro">
-          <h1>{page.title}</h1>
-          <p>{page.lead}</p>
+          <h1>{title}</h1>
+          <p>{lead}</p>
         </header>
 
         {pathname === '/blog' ? (

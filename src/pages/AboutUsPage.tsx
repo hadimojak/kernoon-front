@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useI18n } from '../i18n/LanguageProvider'
 import { Link } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
@@ -7,29 +8,31 @@ import '../styles/pages/AboutUsPage.css'
 
 const features = [
   {
-    image: '/about/feature-1.jpg',
-    alt: 'Hands arranging a mixed bouquet in a peach vase',
-    title: 'Hand-Delivered Freshness',
-    body: 'Unlike mass-produced arrangements, our flowers are delivered fresh, never boxed.',
+    image: '/clothes/onesie.svg',
+    alt: '',
+    titleKey: 'nav.newborn' as const,
+    bodyKey: 'shop.newborn.lead' as const,
   },
   {
-    image: '/about/feature-2.jpg',
-    alt: 'Florist arranging pink and yellow blooms',
-    title: 'Support Local Florists',
-    body: 'Every bouquet is crafted by a local floral expert, ensuring quality and creativity.',
+    image: '/clothes/tee.svg',
+    alt: '',
+    titleKey: 'nav.toddler' as const,
+    bodyKey: 'shop.toddler.lead' as const,
   },
   {
-    image: '/about/feature-3.jpg',
-    alt: 'Colorful custom bouquet of sunflowers, roses, and dahlias',
-    title: 'Unique & Custom Designs',
-    body: 'Discover one-of-a-kind floral creations tailored to your special occasions.',
+    image: '/clothes/hoodie.svg',
+    alt: '',
+    titleKey: 'nav.kids' as const,
+    bodyKey: 'shop.kids.lead' as const,
   },
 ]
 
 export default function AboutUsPage() {
+  const { t } = useI18n()
+
   useEffect(() => {
-    document.title = 'About Us | BloomNation'
-  }, [])
+    document.title = t('about.title')
+  }, [t])
 
   return (
     <div className="about-page">
@@ -39,20 +42,13 @@ export default function AboutUsPage() {
         <section className="about-hero" aria-labelledby="about-welcome">
           <div className="about-hero__copy">
             <h1 id="about-welcome">
-              Hi, Welcome to
+              {t('about.hello')}
               <span className="about-hero__brand">
-                BloomNation
+                {t('brand.name')}
                 <BrandMark size={28} aria-hidden="true" />
               </span>
             </h1>
-            <p>
-              Founded in August of 2011, BloomNation is a trusted community marketplace for people
-              to list, discover, and send unique bouquets handcrafted by local florists across the
-              country. Whether you&apos;re looking for the traditional dozen roses or a one-of-a-kind
-              design, BloomNation lets you discover and send the perfect gift. With our epic
-              customer service and growing community of florists, BloomNation is the easiest and
-              most reliable way for ordering flowers online.
-            </p>
+            <p>{t('about.body')}</p>
           </div>
           <img
             className="about-hero__photo"
@@ -62,27 +58,24 @@ export default function AboutUsPage() {
         </section>
 
         <section className="about-why" aria-labelledby="why-choose">
-          <h2 id="why-choose">Why Choose Us?</h2>
-          <p>
-            With BloomNation, you&apos;re not just sending flowers—you&apos;re supporting small
-            businesses and celebrating artistry with every arrangement.
-          </p>
+          <h2 id="why-choose">{t('about.why')}</h2>
+          <p>{t('about.whyBody')}</p>
           <p className="about-why__credit">
             Images from Seed Floral (West Hollywood, CA) &amp; Brooklyn Blooms (Brooklyn, NY)
           </p>
 
           <ul className="about-features">
             {features.map((feature) => (
-              <li key={feature.title}>
+              <li key={feature.titleKey}>
                 <img src={feature.image} alt={feature.alt} />
-                <h3>{feature.title}</h3>
-                <p>{feature.body}</p>
+                <h3>{t(feature.titleKey)}</h3>
+                <p>{t(feature.bodyKey)}</p>
               </li>
             ))}
           </ul>
 
           <Link className="about-shop" to="/home">
-            Shop BloomNation
+            {t('about.shop')}
           </Link>
         </section>
 

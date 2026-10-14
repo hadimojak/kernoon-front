@@ -13,7 +13,8 @@
 }
 
 .footer .footer__logo {
-  color: #fff;
+  height: 72px;
+  max-width: 180px;
 }
 
 .footer__social {

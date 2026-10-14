@@ -53,7 +53,7 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   text-align: center;
-  color: #2a2a32;
+  color: #fff;
 }
 
 .contact-details__list {
@@ -73,13 +73,13 @@
 
 .contact-details__row dt {
   font-weight: 700;
-  color: #2a2a32;
+  color: #fff;
   text-align: right;
 }
 
 .contact-details__row dd {
   margin: 0;
-  color: #3f3f48;
+  color: #f2f2f4;
   line-height: 1.45;
 }
 

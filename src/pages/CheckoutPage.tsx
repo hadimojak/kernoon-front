@@ -2,12 +2,15 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
+import { useI18n } from '../i18n/LanguageProvider'
 import '../styles/pages/CheckoutPage.css'
 
 export default function CheckoutPage() {
+  const { t } = useI18n()
+
   useEffect(() => {
-    document.title = 'Cart | BloomNation'
-  }, [])
+    document.title = t('cart.title')
+  }, [t])
 
   return (
     <div className="checkout-page">
@@ -22,10 +25,10 @@ export default function CheckoutPage() {
             width={120}
             height={103}
           />
-          <h1 id="checkout-empty-title">Your cart is empty</h1>
+          <h1 id="checkout-empty-title">{t('cart.empty')}</h1>
           <hr className="checkout-empty__rule" />
           <Link className="checkout-empty__cta" to="/home">
-            Continue Shopping
+            {t('cart.continue')}
           </Link>
         </section>
       </main>
