@@ -4,7 +4,7 @@ import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { HelpIcon } from '../components/icons/HelpIcon'
 import { VisibilityIcon } from '../components/icons/VisibilityIcon'
-import './ProfilePage.css'
+import '../styles/pages/ProfilePage.css'
 
 const genderOptions = [
   { value: '', label: 'Select' },

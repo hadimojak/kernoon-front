@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthLayout } from '../components/AuthLayout'
-import './SignupPage.css'
+import '../styles/pages/SignupPage.css'
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState('')

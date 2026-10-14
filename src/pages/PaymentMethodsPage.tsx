@@ -4,8 +4,8 @@ import { AccountSidebar } from '../components/AccountSidebar'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { AddCircleIcon } from '../components/icons/AddCircleIcon'
-import '../pages/ProfilePage.css'
-import './PaymentMethodsPage.css'
+import '../styles/pages/ProfilePage.css'
+import '../styles/pages/PaymentMethodsPage.css'
 
 export default function PaymentMethodsPage() {
   useEffect(() => {

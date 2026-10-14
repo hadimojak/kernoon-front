@@ -6,7 +6,7 @@ import { PinterestIcon } from './icons/PinterestIcon'
 import { XIcon } from './icons/XIcon'
 import { YouTubeIcon } from './icons/YouTubeIcon'
 import { Logo } from './Logo'
-import './Footer.css'
+import '../styles/components/Footer.css'
 
 const socialLinks = [
   { label: 'Instagram', href: 'https://instagram.com', Icon: InstagramIcon },

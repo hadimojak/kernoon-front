@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { CaretIcon } from './icons/CaretIcon'
 import { CartIcon } from './icons/CartIcon'
 import { Logo } from './Logo'
-import './Header.css'
+import '../styles/components/Header.css'
 
 const guestUtilityLinks = [
   { label: 'Become a BloomNation Florist', to: '/florist' },

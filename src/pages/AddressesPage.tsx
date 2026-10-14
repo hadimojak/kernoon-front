@@ -5,8 +5,8 @@ import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { AddIcon } from '../components/icons/AddIcon'
 import { EmptyAddressesIcon } from '../components/icons/EmptyAddressesIcon'
-import '../pages/ProfilePage.css'
-import './AddressesPage.css'
+import '../styles/pages/ProfilePage.css'
+import '../styles/pages/AddressesPage.css'
 
 export default function AddressesPage() {
   useEffect(() => {

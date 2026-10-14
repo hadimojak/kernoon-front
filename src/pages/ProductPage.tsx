@@ -10,7 +10,7 @@ import { SparklesIcon } from '../components/icons/SparklesIcon'
 import { StarIcon } from '../components/icons/StarIcon'
 import { TombstoneIcon } from '../components/icons/TombstoneIcon'
 import { TruckIcon } from '../components/icons/TruckIcon'
-import './ProductPage.css'
+import '../styles/pages/ProductPage.css'
 
 const galleryImages = [
   { src: '/product/main.jpg', alt: 'Pink Combo floral arrangement in a white vase' },

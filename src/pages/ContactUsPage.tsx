@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import './ContactUsPage.css'
+import '../styles/pages/ContactUsPage.css'
 
 const contactRows = [
   { label: 'Phone', value: '(210) 405-5050', href: 'tel:2104055050' },

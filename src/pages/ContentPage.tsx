@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { StoreIcon } from '../components/icons/StoreIcon'
-import './ContentPage.css'
+import '../styles/pages/ContentPage.css'
 
 const COOKIE_KEY = 'bloomnation-cookie-prefs'
 

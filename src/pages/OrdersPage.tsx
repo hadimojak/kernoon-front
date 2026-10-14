@@ -5,8 +5,8 @@ import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { EmptyBouquetIcon } from '../components/icons/EmptyBouquetIcon'
 import { PinIcon } from '../components/icons/PinIcon'
-import '../pages/ProfilePage.css'
-import './OrdersPage.css'
+import '../styles/pages/ProfilePage.css'
+import '../styles/pages/OrdersPage.css'
 
 export default function OrdersPage() {
   const navigate = useNavigate()

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import './CheckoutPage.css'
+import '../styles/pages/CheckoutPage.css'
 
 export default function CheckoutPage() {
   useEffect(() => {

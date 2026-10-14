@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Footer } from './Footer'
 import { Header } from './Header'
-import './AuthLayout.css'
+import '../styles/components/AuthLayout.css'
 
 type AuthLayoutProps = {
   title: string

@@ -12,7 +12,7 @@ import { StarIcon } from '../components/icons/StarIcon'
 import { StoreIcon } from '../components/icons/StoreIcon'
 import { XIcon } from '../components/icons/XIcon'
 import { YouTubeIcon } from '../components/icons/YouTubeIcon'
-import './HomePage.css'
+import '../styles/pages/HomePage.css'
 
 const products = [
   { name: 'Peaceful in white', price: '$79.95', image: '/home/product-1.jpg' },

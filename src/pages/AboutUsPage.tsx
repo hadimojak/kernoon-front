@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { BrandMark } from '../components/icons/BrandMark'
-import './AboutUsPage.css'
+import '../styles/pages/AboutUsPage.css'
 
 const features = [
   {

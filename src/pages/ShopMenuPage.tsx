@@ -3,8 +3,8 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { StoreIcon } from '../components/icons/StoreIcon'
-import './HomePage.css'
-import './ShopMenuPage.css'
+import '../styles/pages/HomePage.css'
+import '../styles/pages/ShopMenuPage.css'
 
 const products = [
   { name: 'Peaceful in white', price: '$79.95', image: '/home/product-1.jpg' },
