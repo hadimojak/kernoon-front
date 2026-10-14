@@ -106,7 +106,8 @@
   align-items: center;
 }
 
-.profile-field span {
+.profile-field span,
+.profile-field > label {
   color: var(--text);
   font-size: 0.95rem;
 }

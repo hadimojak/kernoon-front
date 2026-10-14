@@ -14,9 +14,12 @@ export function VisibilityIcon({ size = 18, ...props }: IconProps) {
       {...props}
     >
       <path
-        d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"
-        fill="currentColor"
+        d="M2.2 12S6 6.5 12 6.5 21.8 12 21.8 12 18 17.5 12 17.5 2.2 12 2.2 12Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
       />
+      <circle cx="12" cy="12" r="2.5" fill="currentColor" />
     </svg>
   )
 }

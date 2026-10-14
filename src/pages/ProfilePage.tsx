@@ -2,8 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { AccountSidebar } from '../components/AccountSidebar'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
+import { PasswordInput } from '../components/PasswordInput'
 import { HelpIcon } from '../components/icons/HelpIcon'
-import { VisibilityIcon } from '../components/icons/VisibilityIcon'
 import '../styles/pages/ProfilePage.css'
 
 const genderOptions = [
@@ -22,8 +22,6 @@ export default function ProfilePage() {
   const [gender, setGender] = useState('')
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const [showCurrent, setShowCurrent] = useState(false)
-  const [showNew, setShowNew] = useState(false)
 
   useEffect(() => {
     document.title = 'My Account | BloomNation'
@@ -127,44 +125,24 @@ export default function ProfilePage() {
             <section className="profile-section" aria-labelledby="password-title">
               <h2 id="password-title">Password</h2>
               <form className="profile-card" onSubmit={handlePasswordSubmit}>
-                <div className="profile-password-row">
-                  <label className="profile-field profile-field--password">
-                    <span>Enter Current Password</span>
-                    <input
-                      type={showCurrent ? 'text' : 'password'}
-                      value={currentPassword}
-                      onChange={(event) => setCurrentPassword(event.target.value)}
-                      autoComplete="current-password"
-                    />
-                  </label>
-                  <button
-                    className="profile-show"
-                    type="button"
-                    onClick={() => setShowCurrent((value) => !value)}
-                  >
-                    <VisibilityIcon size={16} />
-                    <span>{showCurrent ? 'Hide Password' : 'Show Password'}</span>
-                  </button>
+                <div className="profile-field profile-field--password">
+                  <label htmlFor="current-password">Enter Current Password</label>
+                  <PasswordInput
+                    id="current-password"
+                    value={currentPassword}
+                    onChange={(event) => setCurrentPassword(event.target.value)}
+                    autoComplete="current-password"
+                  />
                 </div>
 
-                <div className="profile-password-row">
-                  <label className="profile-field profile-field--password">
-                    <span>Enter New Password</span>
-                    <input
-                      type={showNew ? 'text' : 'password'}
-                      value={newPassword}
-                      onChange={(event) => setNewPassword(event.target.value)}
-                      autoComplete="new-password"
-                    />
-                  </label>
-                  <button
-                    className="profile-show"
-                    type="button"
-                    onClick={() => setShowNew((value) => !value)}
-                  >
-                    <VisibilityIcon size={16} />
-                    <span>{showNew ? 'Hide Password' : 'Show Password'}</span>
-                  </button>
+                <div className="profile-field profile-field--password">
+                  <label htmlFor="new-password">Enter New Password</label>
+                  <PasswordInput
+                    id="new-password"
+                    value={newPassword}
+                    onChange={(event) => setNewPassword(event.target.value)}
+                    autoComplete="new-password"
+                  />
                 </div>
 
                 <div className="profile-requirements">

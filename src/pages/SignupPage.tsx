@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthLayout } from '../components/AuthLayout'
+import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
 import '../styles/pages/SignupPage.css'
 
@@ -10,7 +11,6 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -71,27 +71,16 @@ export default function SignupPage() {
           <label className="sr-only" htmlFor="password">
             {t('auth.password')}
           </label>
-          <input
+          <PasswordInput
             className="auth-field__input"
             id="password"
             name="password"
-            type={showPassword ? 'text' : 'password'}
             autoComplete="new-password"
             placeholder={t('auth.password')}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
-
-        <label className="auth-checkbox">
-          <input
-            className="auth-checkbox__input"
-            type="checkbox"
-            checked={showPassword}
-            onChange={(event) => setShowPassword(event.target.checked)}
-          />
-          <span>{t('auth.showPassword')}</span>
-        </label>
 
         <button className="auth-submit" type="submit">
           {t('auth.create')}

@@ -1,12 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthLayout } from '../components/AuthLayout'
+import { PasswordInput } from '../components/PasswordInput'
 
 export default function FloristLoginPage() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     document.title = 'Florist Login | BloomNation'
@@ -41,11 +41,10 @@ export default function FloristLoginPage() {
           <label className="auth-field__label" htmlFor="florist-password">
             Password
           </label>
-          <input
+          <PasswordInput
             className="auth-field__input"
             id="florist-password"
             name="password"
-            type={showPassword ? 'text' : 'password'}
             autoComplete="current-password"
             placeholder="Password"
             value={password}
@@ -53,16 +52,6 @@ export default function FloristLoginPage() {
             required
           />
         </div>
-
-        <label className="auth-checkbox">
-          <input
-            className="auth-checkbox__input"
-            type="checkbox"
-            checked={showPassword}
-            onChange={(event) => setShowPassword(event.target.checked)}
-          />
-          <span>Show Password</span>
-        </label>
 
         <button className="auth-submit" type="submit">
           Login
