@@ -1,4 +1,4 @@
-import { useI18n } from '../i18n/LanguageProvider'
+import { useI18n } from '../i18n/useI18n'
 
 type LogoProps = {
   className?: string

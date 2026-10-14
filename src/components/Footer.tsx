@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useI18n } from '../i18n/LanguageProvider'
+import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { FacebookIcon } from './icons/FacebookIcon'
 import { InstagramIcon } from './icons/InstagramIcon'

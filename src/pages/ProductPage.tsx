@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { catalog, formatMoney } from '../data/catalog'
-import { useI18n } from '../i18n/LanguageProvider'
+import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'

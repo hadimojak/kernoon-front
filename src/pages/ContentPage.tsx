@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { StoreIcon } from '../components/icons/StoreIcon'
-import { useI18n } from '../i18n/LanguageProvider'
+import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/ContentPage.css'
 

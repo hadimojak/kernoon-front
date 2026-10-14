@@ -13,7 +13,7 @@ import { StoreIcon } from '../components/icons/StoreIcon'
 import { XIcon } from '../components/icons/XIcon'
 import { YouTubeIcon } from '../components/icons/YouTubeIcon'
 import { catalog, formatMoney } from '../data/catalog'
-import { useI18n } from '../i18n/LanguageProvider'
+import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/HomePage.css'
 

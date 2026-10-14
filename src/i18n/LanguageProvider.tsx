@@ -1,17 +1,8 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { en, fa, type MessageKey } from './translations'
-
-export type Lang = 'en' | 'fa'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { en, fa } from './translations'
+import { LanguageContext, type Lang } from './useI18n'
 
 const STORAGE_KEY = 'kernoon-lang'
-
-type LanguageContextValue = {
-  lang: Lang
-  toggle: () => void
-  t: (key: MessageKey, vars?: Record<string, string>) => string
-}
-
-const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 function readLang(): Lang {
   try {
@@ -30,16 +21,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, lang)
   }, [lang])
 
-  const value = useMemo<LanguageContextValue>(() => {
+  const value = useMemo(() => {
     const dictionary = lang === 'fa' ? fa : en
     return {
       lang,
       toggle: () => setLang((current) => (current === 'en' ? 'fa' : 'en')),
-      t: (key, vars) => {
+      t: (key: keyof typeof en, vars?: Record<string, string>) => {
         let text: string = dictionary[key]
         if (vars) {
-          for (const [name, value] of Object.entries(vars)) {
-            text = text.replace(`{${name}}`, value)
+          for (const [name, replacement] of Object.entries(vars)) {
+            text = text.replace(`{${name}}`, replacement)
           }
         }
         return text
@@ -48,10 +39,4 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [lang])
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
-}
-
-export function useI18n() {
-  const value = useContext(LanguageContext)
-  if (!value) throw new Error('useI18n must be used within LanguageProvider')
-  return value
 }

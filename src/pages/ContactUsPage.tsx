@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import { useI18n } from '../i18n/LanguageProvider'
+import { useI18n } from '../i18n/useI18n'
 import '../styles/pages/ContactUsPage.css'
 
 export default function ContactUsPage() {
