@@ -57,8 +57,8 @@ const columns: { title: MessageKey; links: { key: MessageKey; to: string }[] }[]
     links: [
       { key: 'header.login', to: '/login' },
       { key: 'header.orders', to: '/orders' },
-      { key: 'header.sell', to: '/florist' },
-      { key: 'header.sellerLogin', to: '/florist/login' },
+      { key: 'header.sell', to: '/sell' },
+      { key: 'header.sellerLogin', to: '/sell/login' },
     ],
   },
 ]

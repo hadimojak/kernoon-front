@@ -2,7 +2,7 @@ import type React from 'react'
 
 type IconProps = React.SVGProps<SVGSVGElement> & { size?: number }
 
-/** Empty-state flower pair illustration from user_addresses_page design */
+/** Empty-state illustration for an address book with no addresses yet. */
 export function EmptyAddressesIcon({ size = 180, ...props }: IconProps) {
   return (
     <svg
@@ -25,7 +25,7 @@ export function EmptyAddressesIcon({ size = 180, ...props }: IconProps) {
       <ellipse cx="130" cy="110" rx="8" ry="3.5" fill="#b7c9a4" transform="rotate(40 130 110)" />
       <ellipse cx="126" cy="96" rx="7" ry="3" fill="#a8bc94" transform="rotate(25 126 96)" />
       <ellipse cx="112" cy="102" rx="6.5" ry="3" fill="#b7c9a4" transform="rotate(-30 112 102)" />
-      {/* flowers */}
+      {/* clothes */}
       <g stroke="#5c5c66" strokeWidth="1.1">
         <circle cx="78" cy="78" r="22" fill="#f3cfc4" />
         <path

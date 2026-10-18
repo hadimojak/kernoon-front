@@ -2,8 +2,8 @@ import type React from 'react'
 
 type IconProps = React.SVGProps<SVGSVGElement> & { size?: number }
 
-/** Empty-state bouquet illustration from orders_page design */
-export function EmptyBouquetIcon({ size = 200, ...props }: IconProps) {
+/** Empty-state illustration for orders with no clothes yet. */
+export function EmptyOrdersIcon({ size = 200, ...props }: IconProps) {
   return (
     <svg
       width={size}
@@ -31,7 +31,7 @@ export function EmptyBouquetIcon({ size = 200, ...props }: IconProps) {
       <ellipse cx="118" cy="74" rx="6" ry="3" fill="#a8bc94" transform="rotate(25 118 74)" />
       <ellipse cx="95" cy="68" rx="5.5" ry="2.8" fill="#b7c9a4" transform="rotate(-55 95 68)" />
       <ellipse cx="108" cy="66" rx="5.5" ry="2.8" fill="#b7c9a4" transform="rotate(50 108 66)" />
-      {/* flowers */}
+      {/* clothes */}
       <g stroke="#5c5c66" strokeWidth="1.1">
         <circle cx="82" cy="78" r="16" fill="#f3cfc4" />
         <path d="M74 72c4 2 8 2 12 0M72 80c5 1 10 1 15 0M76 88c4-1 8-2 12-1" fill="none" />

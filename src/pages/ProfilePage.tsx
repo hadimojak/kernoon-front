@@ -105,7 +105,7 @@ export default function ProfilePage() {
                   </div>
 
                   <aside className="profile-member">
-                    <img src="/profile/floral.png" alt="" />
+                    <img src="/profile/member.png" alt="" />
                     <p>
                       BloomNation member since
                       <br />

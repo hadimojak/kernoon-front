@@ -12,7 +12,7 @@
   padding: 40px 24px;
   background-color: #efe7d8;
   background-image:
-    url('/bloom-banner.jpg'),
+    url('/clothes/hero.svg'),
     radial-gradient(circle at 30% 35%, #f7d3e4 0%, transparent 55%),
     radial-gradient(circle at 70% 60%, #d9c7a8 0%, transparent 55%),
     linear-gradient(120deg, #e9c9d8 0%, #cdd9c0 45%, #dcc9a8 100%);

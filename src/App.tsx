@@ -1,11 +1,11 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import AboutUsPage from './pages/AboutUsPage'
 import AddressesPage from './pages/AddressesPage'
-import BecomeFloristPage from './pages/BecomeFloristPage'
+import SellPage from './pages/SellPage'
 import CheckoutPage from './pages/CheckoutPage'
 import ContentPage from './pages/ContentPage'
 import ContactUsPage from './pages/ContactUsPage'
-import FloristLoginPage from './pages/FloristLoginPage'
+import SellerLoginPage from './pages/SellerLoginPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -32,31 +32,33 @@ export default function App() {
       <Route path="/contact" element={<ContactUsPage />} />
       <Route path="/about-us" element={<AboutUsPage />} />
       <Route path="/about" element={<AboutUsPage />} />
-      <Route path="/florist" element={<BecomeFloristPage />} />
-      <Route path="/florist/login" element={<FloristLoginPage />} />
+      <Route path="/sell" element={<SellPage />} />
+      <Route path="/sell/login" element={<SellerLoginPage />} />
       <Route path="/newborn" element={<ShopMenuPage kind="newborn" />} />
       <Route path="/toddler" element={<ShopMenuPage kind="toddler" />} />
       <Route path="/kids" element={<ShopMenuPage kind="kids" />} />
       <Route path="/sleepwear" element={<ShopMenuPage kind="sleepwear" />} />
       <Route path="/outerwear" element={<ShopMenuPage kind="outerwear" />} />
       <Route path="/sizes" element={<ShopMenuPage kind="sizes" />} />
-      <Route path="/flowers" element={<ShopMenuPage kind="newborn" />} />
-      <Route path="/same-day" element={<ShopMenuPage kind="toddler" />} />
-      <Route path="/next-day" element={<ShopMenuPage kind="kids" />} />
-      <Route path="/occasions" element={<ShopMenuPage kind="sleepwear" />} />
-      <Route path="/sympathy" element={<ShopMenuPage kind="outerwear" />} />
-      <Route path="/city" element={<ShopMenuPage kind="sizes" />} />
+      <Route path="/flowers" element={<Navigate to="/newborn" replace />} />
+      <Route path="/same-day" element={<Navigate to="/toddler" replace />} />
+      <Route path="/next-day" element={<Navigate to="/kids" replace />} />
+      <Route path="/occasions" element={<Navigate to="/sleepwear" replace />} />
+      <Route path="/sympathy" element={<Navigate to="/outerwear" replace />} />
+      <Route path="/city" element={<Navigate to="/sizes" replace />} />
       <Route path="/blog" element={<ContentPage />} />
       <Route path="/news" element={<ContentPage />} />
       <Route path="/substitution-policy" element={<ContentPage />} />
       <Route path="/delivery-fees" element={<ContentPage />} />
       <Route path="/careers" element={<ContentPage />} />
-      <Route path="/send-me-flowers" element={<ContentPage />} />
+      <Route path="/clothes-for-me" element={<ContentPage />} />
+      <Route path="/send-me-flowers" element={<Navigate to="/clothes-for-me" replace />} />
       <Route path="/events" element={<ContentPage />} />
-      <Route path="/florists" element={<ContentPage />} />
-      <Route path="/florists/near-me" element={<ContentPage />} />
+      <Route path="/shops" element={<ContentPage />} />
+      <Route path="/shops/near-me" element={<ContentPage />} />
       <Route path="/reviews" element={<ContentPage />} />
-      <Route path="/floral-jobs" element={<ContentPage />} />
+      <Route path="/clothes-jobs" element={<ContentPage />} />
+      <Route path="/floral-jobs" element={<Navigate to="/clothes-jobs" replace />} />
       <Route path="/help" element={<ContentPage />} />
       <Route path="/terms" element={<ContentPage />} />
       <Route path="/privacy" element={<ContentPage />} />

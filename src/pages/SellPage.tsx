@@ -2,24 +2,18 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import '../styles/pages/BecomeFloristPage.css'
+import { useI18n } from '../i18n/useI18n'
+import type { MessageKey } from '../i18n/translations'
+import '../styles/pages/SellPage.css'
 
-const perks = [
-  {
-    title: 'Your own storefront',
-    body: 'List your shop, photos, and arrangements so local customers can find you.',
-  },
-  {
-    title: 'Orders from nearby customers',
-    body: 'Receive same-day and scheduled orders from people searching in your city.',
-  },
-  {
-    title: 'You keep the relationship',
-    body: 'Customers order from you directly. There is no wire-service middleman.',
-  },
+const perks: { title: MessageKey; body: MessageKey }[] = [
+  { title: 'seller.perk1.title', body: 'seller.perk1.body' },
+  { title: 'seller.perk2.title', body: 'seller.perk2.body' },
+  { title: 'seller.perk3.title', body: 'seller.perk3.body' },
 ]
 
-export default function BecomeFloristPage() {
+export default function SellPage() {
+  const { t } = useI18n()
   const [shop, setShop] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -28,8 +22,8 @@ export default function BecomeFloristPage() {
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
-    document.title = 'Become a BloomNation Florist | BloomNation'
-  }, [])
+    document.title = `${t('seller.title')} | ${t('brand.name')}`
+  }, [t])
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -37,45 +31,42 @@ export default function BecomeFloristPage() {
   }
 
   return (
-    <div className="florist-join">
+    <div className="seller-join">
       <Header />
 
       <main>
-        <section className="florist-join__hero" aria-labelledby="join-title">
-          <h1 id="join-title">Become a BloomNation Florist</h1>
-          <p>
-            Join the marketplace built for independent florists. Show your work, take local
-            orders, and keep the customer relationship.
-          </p>
-          <a className="florist-join__cta" href="#apply">
-            Apply to join
+        <section className="seller-join__hero" aria-labelledby="join-title">
+          <h1 id="join-title">{t('seller.title')}</h1>
+          <p>{t('seller.lead')}</p>
+          <a className="seller-join__cta" href="#apply">
+            {t('seller.apply')}
           </a>
-          <p className="florist-join__login">
-            Already a florist? <Link to="/florist/login">Florist Login</Link>
+          <p className="seller-join__login">
+            {t('seller.already')} <Link to="/sell/login">{t('seller.loginLink')}</Link>
           </p>
         </section>
 
-        <section className="florist-join__perks" aria-label="Why join">
+        <section className="seller-join__perks" aria-label="Why join">
           {perks.map((perk) => (
             <article key={perk.title}>
-              <h2>{perk.title}</h2>
-              <p>{perk.body}</p>
+              <h2>{t(perk.title)}</h2>
+              <p>{t(perk.body)}</p>
             </article>
           ))}
         </section>
 
-        <section className="florist-join__apply" id="apply" aria-labelledby="apply-title">
+        <section className="seller-join__apply" id="apply" aria-labelledby="apply-title">
           {submitted ? (
-            <div className="florist-join__thanks">
-              <h2 id="apply-title">Application received</h2>
+            <div className="seller-join__thanks">
+              <h2 id="apply-title">{t('seller.thanksTitle')}</h2>
               <p>
                 {`Thanks, ${name.split(' ')[0] || 'there'}. We'll review ${shop || 'your shop'} and email you at ${email}.`}
               </p>
-              <Link to="/florist/login">Go to Florist Login</Link>
+              <Link to="/sell/login">{t('seller.goLogin')}</Link>
             </div>
           ) : (
             <>
-              <h2 id="apply-title">Tell us about your shop</h2>
+              <h2 id="apply-title">{t('seller.formTitle')}</h2>
               <form onSubmit={handleSubmit} noValidate>
                 <label>
                   Shop name

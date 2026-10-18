@@ -8,14 +8,14 @@ import { Logo } from './Logo'
 import '../styles/components/Header.css'
 
 const guestUtilityLinks: { key: MessageKey; to: string }[] = [
-  { key: 'header.sell', to: '/florist' },
-  { key: 'header.sellerLogin', to: '/florist/login' },
+  { key: 'header.sell', to: '/sell' },
+  { key: 'header.sellerLogin', to: '/sell/login' },
   { key: 'header.login', to: '/login' },
 ]
 
 const loggedInUtilityLinks: { key: MessageKey; to: string }[] = [
-  { key: 'header.sell', to: '/florist' },
-  { key: 'header.sellerLogin', to: '/florist/login' },
+  { key: 'header.sell', to: '/sell' },
+  { key: 'header.sellerLogin', to: '/sell/login' },
 ]
 
 const navItems: { key: MessageKey; to: string }[] = [

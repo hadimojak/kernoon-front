@@ -3,7 +3,7 @@ import { AccountCircleIcon } from './icons/AccountCircleIcon'
 import { CalendarTodayIcon } from './icons/CalendarTodayIcon'
 import { ChevronRightIcon } from './icons/ChevronRightIcon'
 import { CreditCardIcon } from './icons/CreditCardIcon'
-import { GiftFlowerIcon } from './icons/GiftFlowerIcon'
+import { GiftIcon } from './icons/GiftIcon'
 import { HistoryIcon } from './icons/HistoryIcon'
 import { IdCardIcon } from './icons/IdCardIcon'
 
@@ -12,7 +12,7 @@ const navItems = [
   { label: 'Order History', to: '/orders', Icon: HistoryIcon },
   { label: 'Address Book', to: '/addresses', Icon: IdCardIcon },
   { label: 'Payment Methods', to: '/payment-methods', Icon: CreditCardIcon },
-  { label: 'Send Me Flowers', to: '/send-me-flowers', Icon: GiftFlowerIcon },
+  { label: 'Clothes for me', to: '/clothes-for-me', Icon: GiftIcon },
   { label: 'Event Pages', to: '/events', Icon: CalendarTodayIcon },
 ]
 

@@ -18,12 +18,6 @@ const kindByPath: Record<string, ShopKind> = {
   '/sleepwear': 'sleepwear',
   '/outerwear': 'outerwear',
   '/sizes': 'sizes',
-  '/flowers': 'newborn',
-  '/same-day': 'toddler',
-  '/next-day': 'kids',
-  '/occasions': 'sleepwear',
-  '/sympathy': 'outerwear',
-  '/city': 'sizes',
 }
 
 type ShopMenuPageProps = {
@@ -121,7 +115,7 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
                   <img src={product.image} alt="" />
                   <span className="home-products__name">{t(`product.${product.id}`)}</span>
                   <span className="home-products__price">{formatMoney(product, lang)}</span>
-                  <span className="home-products__florist">
+                  <span className="home-products__brand">
                     <StoreIcon />
                     {t('product.brand')}
                   </span>

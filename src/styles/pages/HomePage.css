@@ -222,7 +222,7 @@
 }
 
 .home-products,
-.home-occasions,
+.home-categories,
 .home-reviews,
 .home-follow {
   max-width: 1180px;
@@ -231,7 +231,7 @@
 }
 
 .home-products h2,
-.home-occasions h2,
+.home-categories h2,
 .home-reviews h2 {
   margin-bottom: 28px;
   font-size: 32px;
@@ -270,7 +270,7 @@
   font-weight: 700;
 }
 
-.home-products__florist {
+.home-products__brand {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -281,34 +281,34 @@
   font-size: 13px;
 }
 
-.home-products__florist svg {
+.home-products__brand svg {
   padding: 3px;
   border: 1px solid #d7d7dc;
   border-radius: 50%;
 }
 
-.home-occasions {
+.home-categories {
   max-width: 1080px;
 }
 
-.home-occasions ul {
+.home-categories ul {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
-.home-occasions a {
+.home-categories a {
   position: relative;
   display: block;
 }
 
-.home-occasions img {
+.home-categories img {
   width: 100%;
   aspect-ratio: 1 / 1.05;
   object-fit: cover;
 }
 
-.home-occasions span {
+.home-categories span {
   position: absolute;
   left: 50%;
   bottom: 18px;
@@ -327,7 +327,7 @@
   white-space: nowrap;
 }
 
-.home-occasions a:hover span {
+.home-categories a:hover span {
   background: #7c0c4d;
 }
 
@@ -504,7 +504,7 @@
 
   .home-products ul,
   .home-reviews ul,
-  .home-occasions ul,
+  .home-categories ul,
   .home-follow__posts {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -532,7 +532,7 @@
   .home-search__fields,
   .home-products ul,
   .home-reviews ul,
-  .home-occasions ul,
+  .home-categories ul,
   .home-follow__posts,
   .home-types {
     grid-template-columns: 1fr;
@@ -546,7 +546,7 @@
   .home-hero h1,
   .home-split h2,
   .home-products h2,
-  .home-occasions h2,
+  .home-categories h2,
   .home-reviews h2,
   .home-info h2 {
     font-size: 26px;

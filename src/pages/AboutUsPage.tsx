@@ -53,7 +53,7 @@ export default function AboutUsPage() {
           <img
             className="about-hero__photo"
             src="/about/hero.jpg"
-            alt="Florist in a checkered shirt working at a sunlit bench"
+            alt="Person working at a sunlit bench"
           />
         </section>
 
@@ -93,18 +93,17 @@ export default function AboutUsPage() {
               from University of California, Berkeley, Farbod has always had a passion for
               understanding business models creating solutions for the greater good. Prior to
               BloomNation, Farbod was an analyst in Mergers &amp; Acquisitions and corporate
-              strategy. Farbod&apos;s favorite flower is the Casablanca Lily.
+              strategy.
             </p>
           </article>
 
           <article>
             <h3>Gregg Weisstein – Co-Founder, Chief Operating Officer</h3>
             <p>
-              With thousands of both florists and their products in the marketplace, Gregg is
+              With thousands of Kernoon Clothes pieces in the shop, Gregg is
               responsible for keeping BloomNation a well-oiled machine. A Business Economics and
               Accounting graduate from University of California, Santa Barbara, Gregg has consulted
               for market leaders and wholesalers for the majority of his professional career.
-              Gregg&apos;s favorite flowers are orchids.
             </p>
           </article>
 

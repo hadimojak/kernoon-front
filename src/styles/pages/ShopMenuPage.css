@@ -23,7 +23,7 @@
   line-height: 1.55;
 }
 
-.shop-page .home-occasions button {
+.shop-page .home-categories button {
   position: relative;
   display: block;
   width: 100%;
@@ -33,7 +33,7 @@
   text-align: left;
 }
 
-.shop-page .home-occasions button.is-selected span,
+.shop-page .home-categories button.is-selected span,
 .shop-cities button.is-selected {
   background: var(--brand-dark);
 }

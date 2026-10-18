@@ -31,31 +31,31 @@ const posts = [
     id: 'seasonal',
     title: 'What to send when the season changes',
     date: 'March 12, 2026',
-    excerpt: 'Local florists design with what is fresh that week, not a catalog frozen in January.',
-    body: 'A bouquet in March should not look like a bouquet in August. Tulips, ranunculus, and branches give way to garden roses, dahlias, and local greenery. When you order on BloomNation, the shop near the recipient chooses stems that are actually in season, so the arrangement lasts longer and looks like it was made that morning.',
+    excerpt: 'Kernoon Clothes picks soft cotton and knits for the season, not a catalog frozen in January.',
+    body: 'A cotton set for warm months should not be the same as a knit layer for cold months. Kernoon Clothes swaps in lighter fabrics when the season changes, so the piece is comfortable the week it arrives.',
   },
   {
     id: 'note',
     title: 'How to write a card that sounds like you',
     date: 'February 2, 2026',
     excerpt: 'Short, specific, and a little imperfect beats a poem you found online.',
-    body: 'Name the moment. “Happy Tuesday, you handled that week” lands better than a generic congratulations line. Keep it to two or three sentences so it fits the card, and skip instructions for the florist in the message — those belong in the delivery notes at checkout.',
+    body: 'Name the moment. “Happy Tuesday, you handled that week” lands better than a generic congratulations line. Keep it to two or three sentences so it fits the note, and put size requests in the delivery notes at checkout.',
   },
   {
     id: 'same-day',
     title: 'Same-day delivery, without the wire service',
     date: 'January 18, 2026',
-    excerpt: 'The florist who designs the bouquet is the florist who delivers it.',
-    body: 'BloomNation sends the order to a shop in the recipient’s city. That shop designs the flowers and hands them off for delivery. You see their photos, reviews, and hours before you pay, and the arrangement is not rebuilt from a stock photo by a shop you never chose.',
+    excerpt: 'Kernoon Clothes packs the piece you chose and sends it to you.',
+    body: 'Kernoon Clothes packs the size you picked and ships it to the address you enter. You see the photos and reviews before you pay.',
   },
 ]
 
 const newsItems = [
   {
     source: 'Los Angeles Times',
-    title: 'Local florists take back the order',
+    title: 'Kernoon Clothes takes the order direct',
     date: 'November 4, 2025',
-    summary: 'A look at how neighborhood shops use BloomNation to sell directly to customers in their delivery area.',
+    summary: 'A look at how Kernoon Clothes sells directly to parents in each city.',
   },
   {
     source: 'Modern Retail',
@@ -67,7 +67,7 @@ const newsItems = [
     source: 'Business of Home',
     title: 'BloomNation and the Promenade Group',
     date: 'May 7, 2025',
-    summary: 'The founding team on building a marketplace that keeps the customer relationship with the florist.',
+    summary: 'The founding team on building Kernoon Clothes and keeping the customer relationship with the shop.',
   },
 ]
 
@@ -77,8 +77,8 @@ const companyJobs = [
   { id: 'design', title: 'Brand Designer', place: 'Santa Monica, CA' },
 ]
 
-const floralJobs = [
-  { id: 'designer', title: 'Lead Floral Designer', place: 'Los Angeles, CA' },
+const clothingJobs = [
+  { id: 'designer', title: 'Kernoon Clothes designer', place: 'Los Angeles, CA' },
   { id: 'driver', title: 'Delivery Driver', place: 'Austin, TX' },
   { id: 'manager', title: 'Shop Manager', place: 'Brooklyn, NY' },
 ]
@@ -86,15 +86,15 @@ const floralJobs = [
 const faqs = [
   {
     q: 'Who designs my order?',
-    a: 'A local florist on BloomNation designs and delivers it. You choose the shop from their photos and reviews before you check out.',
+    a: 'Kernoon Clothes cuts and ships the piece. You choose the size and style from the photos before you check out.',
   },
   {
     q: 'Can I get same-day delivery?',
     a: 'Yes, in most cities, when you order by the afternoon. The product page and checkout show the delivery windows that shop can still make.',
   },
   {
-    q: 'What if a flower is out of season?',
-    a: 'The florist substitutes a stem of similar color, size, and value and keeps the style of the photo. Read the substitution policy for the full promise.',
+    q: 'What if a size is sold out?',
+    a: 'Kernoon Clothes sends the same style in the nearest size and fabric. Read the shipping and returns page for the full promise.',
   },
   {
     q: 'How do I change an order?',
@@ -102,38 +102,37 @@ const faqs = [
   },
 ]
 
-const florists = [
-  { name: 'Absolutely Flowers', city: 'Los Angeles, CA', rating: '4.9' },
-  { name: 'H&A Floral Design', city: 'Los Angeles, CA', rating: '4.8' },
-  { name: 'Seed Floral', city: 'Santa Monica, CA', rating: '4.9' },
-  { name: 'Brooklyn Blooms', city: 'Brooklyn, NY', rating: '4.7' },
-  { name: 'Petal & Stem', city: 'Austin, TX', rating: '4.8' },
-  { name: 'Harbor & Bloom', city: 'Seattle, WA', rating: '4.6' },
+const shops = [
+  { name: 'Kernoon Clothes', city: 'Los Angeles, CA', rating: '4.9' },
+  { name: 'Kernoon Clothes', city: 'Santa Monica, CA', rating: '4.8' },
+  { name: 'Kernoon Clothes', city: 'Brooklyn, NY', rating: '4.7' },
+  { name: 'Kernoon Clothes', city: 'Austin, TX', rating: '4.8' },
+  { name: 'Kernoon Clothes', city: 'Seattle, WA', rating: '4.6' },
 ]
 
-const cities = [...new Set(florists.map((shop) => shop.city))]
+const cities = [...new Set(shops.map((shop) => shop.city))]
 
 const events = [
-  { label: "Valentine's Day", to: "/occasions?occasion=Valentine's%20Day" },
-  { label: "Mother's Day", to: "/occasions?occasion=Mother's%20Day" },
-  { label: 'Birthday', to: '/occasions?occasion=Birthday' },
-  { label: 'Anniversary', to: '/occasions?occasion=Anniversary' },
-  { label: 'Sympathy', to: '/sympathy' },
-  { label: 'Just Because', to: '/occasions?occasion=Just%20Because' },
+  { label: "Valentine's Day", to: '/sleepwear' },
+  { label: "Mother's Day", to: '/sleepwear' },
+  { label: 'Birthday', to: '/kids' },
+  { label: 'Anniversary', to: '/kids' },
+  { label: 'Sympathy', to: '/outerwear' },
+  { label: 'Just Because', to: '/toddler' },
 ]
 
 const pages: Record<string, { title: string; lead: string }> = {
   '/blog': {
     title: 'Blog',
-    lead: 'Notes on flowers, local shops, and sending something that feels considered.',
+    lead: 'Notes on sizes, fabrics, and Kernoon Clothes.',
   },
   '/news': {
     title: 'In the News',
-    lead: 'Recent stories about BloomNation and the florists on the marketplace.',
+    lead: 'Recent stories about Kernoon Clothes.',
   },
   '/substitution-policy': {
     title: 'Substitution Policy',
-    lead: 'Photos show the style. The florist builds that style with the best stems available that day.',
+    lead: 'Photos show the style. Kernoon Clothes sews that style in the size on the label.',
   },
   '/delivery-fees': {
     title: 'Delivery Fee and Taxes',
@@ -143,37 +142,37 @@ const pages: Record<string, { title: string; lead: string }> = {
     title: 'Careers',
     lead: 'BloomNation is part of the Promenade Group. These roles sit with the marketplace team.',
   },
-  '/send-me-flowers': {
-    title: 'Send Me Flowers',
-    lead: 'Tell us where you are and the occasion. We will point you to florists who deliver there.',
+  '/clothes-for-me': {
+    title: 'Clothes for me',
+    lead: 'Tell us your city and the age. Kernoon Clothes will show pieces we can ship there.',
   },
   '/events': {
     title: 'Event Pages',
-    lead: 'Shop arrangements gathered for the days people send flowers most.',
+    lead: 'Kernoon Clothes gathered for birthdays, new babies, and everyday gifting.',
   },
-  '/florists': {
-    title: 'Florists',
-    lead: 'Independent shops designing and delivering in their own cities.',
+  '/shops': {
+    title: 'Kernoon Clothes',
+    lead: 'Kernoon Clothes shops shipping from their own cities.',
   },
-  '/florists/near-me': {
-    title: 'Best Florists Near Me',
-    lead: 'Pick a city to see shops that deliver there.',
+  '/shops/near-me': {
+    title: 'Kernoon Clothes near me',
+    lead: 'Pick a city to see a Kernoon Clothes shop that ships there.',
   },
   '/reviews': {
     title: 'How BloomNation Reviews Work',
     lead: 'Reviews come from customers who received an order from that shop.',
   },
-  '/floral-jobs': {
-    title: 'Floral Jobs',
-    lead: 'Open roles at shops that sell on BloomNation.',
+  '/clothes-jobs': {
+    title: 'Kernoon Clothes jobs',
+    lead: 'Open roles at shops that sell Kernoon Clothes.',
   },
   '/help': {
     title: 'Help Center',
-    lead: 'Answers for ordering, delivery, and your florist account.',
+    lead: 'Answers for ordering, shipping, and your Kernoon Clothes account.',
   },
   '/terms': {
     title: 'Terms of Service',
-    lead: 'The rules for using BloomNation to browse, order, and sell floral arrangements.',
+    lead: 'The rules for using Kernoon Clothes to browse, order, and sell.',
   },
   '/privacy': {
     title: 'Privacy Policy',
@@ -211,7 +210,7 @@ function ContentScreen() {
   const { t } = useI18n()
   const page = pages[pathname] ?? { title: 'Kernoon', lead: '' }
   const localized = contentKeys[pathname]
-  const title = localized ? t(localized.title) : t('content.generic.title')
+  const title = localized ? t(localized.title) : page.title || t('content.generic.title')
   const lead = localized ? t(localized.lead) : page.lead || t('content.generic.lead')
   const [openPost, setOpenPost] = useState<string | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
@@ -249,8 +248,8 @@ function ContentScreen() {
     setPrefsSaved(true)
   }
 
-  const visibleFlorists = city ? florists.filter((shop) => shop.city === city) : florists
-  const jobs = pathname === '/floral-jobs' ? floralJobs : companyJobs
+  const visibleShops = city ? shops.filter((shop) => shop.city === city) : shops
+  const jobs = pathname === '/clothes-jobs' ? clothingJobs : companyJobs
 
   return (
     <div className="info-page">
@@ -294,15 +293,15 @@ function ContentScreen() {
           <section className="info-prose">
             <h2>What stays the same</h2>
             <p>
-              The florist keeps the colors, size, and overall feeling of the arrangement you chose. A premium design stays a premium design.
+              Kernoon Clothes keeps the color, size, and feel of the piece you chose.
             </p>
             <h2>What can change</h2>
             <p>
-              Weather, season, and the wholesale market can take a specific bloom out of reach. The shop replaces it with a flower of similar value and character. A one-of-a-kind vase in a photo may be a container of the same shape and color.
+              A color can sell out. Kernoon Clothes sends the same style in the closest color and the size on the label.
             </p>
-            <h2>If you need a specific stem</h2>
+            <h2>If you need a specific size</h2>
             <p>
-              Write it in the florist instructions at checkout, or call the shop before you order. If they cannot confirm it, they will tell you before the arrangement is made.
+              Write it in the order notes at checkout, or call Kernoon Clothes before you order. If that size or color is gone, we will tell you before the piece is packed.
             </p>
           </section>
         ) : null}
@@ -335,11 +334,11 @@ function ContentScreen() {
             <p>
               The exact fee appears at checkout once you enter a delivery address. Same-day requests can add a rush fee when the shop is close to its cutoff.
             </p>
-            <p>Sales tax is calculated from the delivery address and shown before you pay. There is no separate service charge on top of the arrangement, delivery, and tax.</p>
+            <p>Sales tax is calculated from the delivery address and shown before you pay. There is no separate service charge on top of the clothes, shipping, and tax.</p>
           </section>
         ) : null}
 
-        {pathname === '/careers' || pathname === '/floral-jobs' ? (
+        {pathname === '/careers' || pathname === '/clothes-jobs' ? (
           <section className="info-jobs" aria-label="Open roles">
             <ul>
               {jobs.map((job) => (
@@ -382,11 +381,11 @@ function ContentScreen() {
           </section>
         ) : null}
 
-        {pathname === '/send-me-flowers' ? (
+        {pathname === '/clothes-for-me' ? (
           <section className="info-prose">
             {sent ? (
               <p className="info-notice" role="status">
-                {`Thanks, ${sender}. We will email ${senderEmail} with florists who deliver ${occasion.toLowerCase()} flowers in ${senderCity}.`}
+                {`Thanks, ${sender}. Kernoon Clothes will email ${senderEmail} about ${occasion.toLowerCase()} clothes we can ship to ${senderCity}.`}
               </p>
             ) : (
               <form className="info-form" onSubmit={submitSend}>
@@ -434,9 +433,9 @@ function ContentScreen() {
           </section>
         ) : null}
 
-        {pathname === '/florists' || pathname === '/florists/near-me' ? (
-          <section className="info-shops" aria-label="Florists">
-            {pathname === '/florists/near-me' ? (
+        {pathname === '/shops' || pathname === '/shops/near-me' ? (
+          <section className="info-shops" aria-label="Kernoon Clothes">
+            {pathname === '/shops/near-me' ? (
               <ul className="info-cities">
                 {cities.map((name) => (
                   <li key={name}>
@@ -448,8 +447,8 @@ function ContentScreen() {
               </ul>
             ) : null}
             <ul>
-              {visibleFlorists.map((shop) => (
-                <li key={shop.name}>
+              {visibleShops.map((shop) => (
+                <li key={shop.city}>
                   <Link to="/product">
                     <StoreIcon />
                     <span>
@@ -462,14 +461,14 @@ function ContentScreen() {
                 </li>
               ))}
             </ul>
-            {visibleFlorists.length === 0 ? <p>No florists match that city yet.</p> : null}
+            {visibleShops.length === 0 ? <p>No Kernoon Clothes shop matches that city yet.</p> : null}
           </section>
         ) : null}
 
         {pathname === '/reviews' ? (
           <section className="info-prose">
             <h2>Who can review</h2>
-            <p>Only a customer with a completed delivery from that florist can leave a review. The review is tied to the order, not to a public star widget.</p>
+            <p>Only a customer with a completed Kernoon Clothes order can leave a review. The review is tied to the order, not to a public star widget.</p>
             <h2>What you see</h2>
             <p>The shop’s average, the number of reviews, and the written notes appear on the product page. A shop cannot edit the text. They can reply once.</p>
             <h2>What we remove</h2>
@@ -502,10 +501,10 @@ function ContentScreen() {
           <section className="info-prose">
             <h2>Orders</h2>
             <p>
-              When you place an order, you are buying from the florist you selected. BloomNation collects payment and passes the order to that shop. Delivery timing shown at checkout is the shop’s commitment.
+              When you place an order, you are buying Kernoon Clothes. We collect payment and pass the order to the shop. Shipping time shown at checkout is the shop’s commitment.
             </p>
             <h2>Accounts</h2>
-            <p>You are responsible for the email and password on your account. Florist accounts are for the shop owner or someone they authorize.</p>
+            <p>You are responsible for the email and password on your account. Kernoon Clothes seller accounts are for the shop owner or someone they authorize.</p>
             <h2>Acceptable use</h2>
             <p>Do not use the site to scrape listings, place fraudulent orders, or post content you do not have the right to share.</p>
           </section>
@@ -516,9 +515,9 @@ function ContentScreen() {
             <h2>Information you give us</h2>
             <p>Name, email, phone, delivery addresses, and payment details are used to complete orders, run your account, and reply when you contact support.</p>
             <h2>Information we collect automatically</h2>
-            <p>Pages you visit, the shop you viewed, and cookie preferences help us keep the site working and, if you allow it, understand which arrangements people browse.</p>
+            <p>Pages you visit, the shop you viewed, and cookie preferences help us keep the site working and, if you allow it, understand which clothes people browse.</p>
             <h2>Who we share it with</h2>
-            <p>The florist fulfilling your order receives the recipient name, address, card message, and delivery notes. Payment details are handled by our payment processor. We do not sell personal information.</p>
+            <p>The Kernoon Clothes shop fulfilling your order receives the recipient name, address, and delivery notes. Payment details are handled by our payment processor. We do not sell personal information.</p>
           </section>
         ) : null}
 

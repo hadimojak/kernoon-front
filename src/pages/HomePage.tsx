@@ -182,8 +182,8 @@ export default function HomePage({ loggedIn = false }: HomePageProps) {
           </section>
         </div>
 
-        <section className="home-products" aria-labelledby="shop-flowers-title">
-          <h2 id="shop-flowers-title">{t('home.productsTitle')}</h2>
+        <section className="home-products" aria-labelledby="shop-clothes-title">
+          <h2 id="shop-clothes-title">{t('home.productsTitle')}</h2>
           <ul>
             {catalog.map((product) => (
               <li key={product.id}>
@@ -191,7 +191,7 @@ export default function HomePage({ loggedIn = false }: HomePageProps) {
                   <img src={product.image} alt="" />
                   <span className="home-products__name">{t(`product.${product.id}`)}</span>
                   <span className="home-products__price">{formatMoney(product, lang)}</span>
-                  <span className="home-products__florist">
+                  <span className="home-products__brand">
                     <StoreIcon />
                     {t('product.brand')}
                   </span>
@@ -201,8 +201,8 @@ export default function HomePage({ loggedIn = false }: HomePageProps) {
           </ul>
         </section>
 
-        <section className="home-occasions" aria-labelledby="occasions-title">
-          <h2 id="occasions-title">{t('home.categoriesTitle')}</h2>
+        <section className="home-categories" aria-labelledby="categories-title">
+          <h2 id="categories-title">{t('home.categoriesTitle')}</h2>
           <ul>
             {categories.map((category) => (
               <li key={category.key}>

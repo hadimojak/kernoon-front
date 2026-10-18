@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { AccountSidebar } from '../components/AccountSidebar'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import { EmptyBouquetIcon } from '../components/icons/EmptyBouquetIcon'
+import { EmptyOrdersIcon } from '../components/icons/EmptyOrdersIcon'
 import { PinIcon } from '../components/icons/PinIcon'
 import '../styles/pages/ProfilePage.css'
 import '../styles/pages/OrdersPage.css'
@@ -32,7 +32,7 @@ export default function OrdersPage() {
           <section className="orders-panel" aria-labelledby="current-orders-title">
             <h2 id="current-orders-title">Current Orders</h2>
             <div className="orders-empty">
-              <EmptyBouquetIcon size={200} className="orders-empty__art" />
+              <EmptyOrdersIcon size={200} className="orders-empty__art" />
               <h3>You have no current orders</h3>
               <p className="orders-empty__lead">Your in-progress orders will appear here.</p>
               <p className="orders-empty__hint">

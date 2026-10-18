@@ -15,14 +15,14 @@ const tiers = [
     id: 'standard',
     price: '$165.00',
     name: 'Standard',
-    description: 'Your bouquet will be delivered approximately as pictured.',
+    description: 'Ships in this size.',
     popular: false,
   },
   {
     id: 'deluxe',
     price: '$185.00',
     name: 'Deluxe',
-    description: 'Additional flowers will be added to enhance the bouquet.',
+    description: 'The size most parents choose.',
     popular: true,
   },
   {
@@ -30,12 +30,12 @@ const tiers = [
     price: '$205.00',
     name: 'Premium',
     description:
-      'We will add more blooms and select the highest quality flowers we offer in this style.',
+      'A larger cut of the same Kernoon Clothes piece.',
     popular: false,
   },
 ] as const
 
-type AccordionKey = 'description' | 'florist' | 'related' | 'reviews' | 'substitution'
+type AccordionKey = 'description' | 'care' | 'related' | 'reviews' | 'substitution'
 
 export default function ProductPage() {
   const { t, lang } = useI18n()
@@ -45,7 +45,7 @@ export default function ProductPage() {
   const [tier, setTier] = useState<(typeof tiers)[number]['id']>('deluxe')
   const [open, setOpen] = useState<Record<AccordionKey, boolean>>({
     description: true,
-    florist: true,
+    care: true,
     related: true,
     reviews: true,
     substitution: true,
@@ -106,7 +106,7 @@ export default function ProductPage() {
             <div className="product-buybox">
               <h1>{t(`product.${product.id}`)}</h1>
 
-              <div className="product-tiers" role="radiogroup" aria-label="Arrangement size">
+              <div className="product-tiers" role="radiogroup" aria-label="Size">
                 {tiers.map((option) => (
                   <label
                     key={option.id}
@@ -175,13 +175,13 @@ export default function ProductPage() {
               <button
                 type="button"
                 className="product-accordion__header"
-                aria-expanded={open.florist}
-                onClick={() => toggle('florist')}
+                aria-expanded={open.care}
+                onClick={() => toggle('care')}
               >
                 <span>{t('product.care')}</span>
-                <span aria-hidden="true">{open.florist ? '−' : '+'}</span>
+                <span aria-hidden="true">{open.care ? '−' : '+'}</span>
               </button>
-              {open.florist ? (
+              {open.care ? (
                 <div className="product-accordion__body">
                   <p>{t('product.descriptionBody')}</p>
                 </div>

@@ -3,7 +3,7 @@ import type React from 'react'
 type IconProps = React.SVGProps<SVGSVGElement> & { size?: number }
 
 /** featured_seasonal_and_gifts style icon */
-export function GiftFlowerIcon({ size = 22, ...props }: IconProps) {
+export function GiftIcon({ size = 22, ...props }: IconProps) {
   return (
     <svg
       width={size}
