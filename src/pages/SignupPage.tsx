@@ -11,6 +11,7 @@ export default function SignupPage() {
   const navigate = useNavigate()
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [username, setUsername] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,6 +26,7 @@ export default function SignupPage() {
       const session = await signup({
         firstName,
         lastName,
+        username,
         phone,
         password,
         ...(email.trim() ? { email: email.trim() } : {}),
@@ -71,6 +73,23 @@ export default function SignupPage() {
             placeholder={t('auth.last')}
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
+            required
+          />
+        </div>
+
+        <div className="auth-field">
+          <label className="sr-only" htmlFor="username">
+            {t('auth.username')}
+          </label>
+          <input
+            className="auth-field__input"
+            id="username"
+            name="username"
+            type="text"
+            autoComplete="username"
+            placeholder={t('auth.username')}
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
             required
           />
         </div>

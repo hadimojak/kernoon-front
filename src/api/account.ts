@@ -3,6 +3,7 @@ const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
 export type SignupInput = {
   firstName: string
   lastName: string
+  username: string
   phone: string
   email?: string
   password: string
@@ -17,6 +18,7 @@ type SessionResponse = {
     id: string
     firstName: string
     lastName: string
+    username: string
     email: string
     phone: string
     role: AccountRole
@@ -43,8 +45,8 @@ export function loginWithEmail(email: string, code: string) {
   return request<SessionResponse>('/auth/email/login', { email, code })
 }
 
-export function loginWithPassword(email: string, password: string) {
-  return request<SessionResponse>('/auth/login', { email, password })
+export function loginWithPassword(username: string, password: string) {
+  return request<SessionResponse>('/auth/login', { username, password })
 }
 
 export function loginAsSeller(email: string, password: string) {

@@ -25,7 +25,7 @@ export default function LoginPage() {
   const [method, setMethod] = useState<LoginMethod>('phone')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-  const [passwordEmail, setPasswordEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [code, setCode] = useState('')
   const [codeSent, setCodeSent] = useState(false)
@@ -45,7 +45,7 @@ export default function LoginPage() {
     setPending(true)
     try {
       if (method === 'password') {
-        const session = await loginWithPassword(passwordEmail, password)
+        const session = await loginWithPassword(username, password)
         localStorage.setItem('kernoon-session', JSON.stringify(session))
         navigate('/home')
         return
@@ -131,18 +131,18 @@ export default function LoginPage() {
         {method === 'password' ? (
           <>
             <div className="auth-field">
-              <label className="auth-field__label" htmlFor="password-email">
-                {t('auth.email')}
+              <label className="auth-field__label" htmlFor="username">
+                {t('auth.username')}
               </label>
               <input
                 className="auth-field__input"
-                id="password-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder={t('auth.email')}
-                value={passwordEmail}
-                onChange={(event) => setPasswordEmail(event.target.value)}
+                id="username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                placeholder={t('auth.username')}
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
                 required
               />
             </div>
