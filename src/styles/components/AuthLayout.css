@@ -183,8 +183,10 @@
 
 @media (max-width: 600px) {
   .auth-hero {
-    height: 520px;
-    padding: 32px 16px;
+    height: auto;
+    min-height: 100dvh;
+    align-items: flex-start;
+    padding: 20px 14px 28px;
   }
 
   .auth-card {

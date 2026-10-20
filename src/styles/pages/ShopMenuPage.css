@@ -102,6 +102,10 @@
 }
 
 @media (max-width: 640px) {
+  .shop-page__intro {
+    padding: 28px 16px 4px;
+  }
+
   .shop-cities__search {
     flex-direction: column;
   }

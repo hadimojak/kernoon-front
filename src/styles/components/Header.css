@@ -159,15 +159,50 @@
 
 @media (max-width: 900px) {
   .header__bar {
-    flex-direction: column;
-    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .logo {
+    height: 44px;
+    max-width: 118px;
+  }
+
+  .header__utility {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .header__utility-list {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 10px;
+    overflow-x: auto;
+    font-size: 12.5px;
+  }
+
+  .header__utility-list > li + li {
+    padding-inline-start: 10px;
+  }
+
+  .header__utility-list a,
+  .header__lang,
+  .header__account-button {
+    white-space: nowrap;
   }
 
   .header__nav-list {
+    flex-wrap: nowrap;
     justify-content: flex-start;
+    gap: 18px;
+    overflow-x: auto;
+    padding: 8px 16px;
+  }
+
+  .header__nav-link {
+    flex: none;
+    min-height: 40px;
+    white-space: nowrap;
   }
 }

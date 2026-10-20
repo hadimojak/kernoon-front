@@ -127,15 +127,15 @@ export default function SellerPanelPage() {
               <tbody>
                 {products.map((product, index) => (
                   <tr key={`${product.name ?? product.id}-${index}`}>
-                    <td>
+                    <td data-label={t('panel.product')}>
                       <span className="seller-panel__product">
                         <img src={product.image} alt="" />
                         {product.name ?? t(`product.${product.id}`)}
                       </span>
                     </td>
-                    <td>{formatMoney(product, lang)}</td>
-                    <td>{t(`nav.${product.category}` as MessageKey)}</td>
-                    <td>{t('panel.inStock')}</td>
+                    <td data-label={t('panel.price')}>{formatMoney(product, lang)}</td>
+                    <td data-label={t('panel.category')}>{t(`nav.${product.category}` as MessageKey)}</td>
+                    <td data-label={t('panel.status')}>{t('panel.inStock')}</td>
                   </tr>
                 ))}
               </tbody>

@@ -78,9 +78,7 @@ export function Header({ userName, onLogout }: HeaderProps) {
                 <NavLink
                   to={link.to}
                   end
-                  className={({ isActive }) =>
-                    isActive && (link.to === '/login' || link.to === '/sell/login') ? 'is-current' : undefined
-                  }
+                  className={({ isActive }) => (isActive ? 'is-current' : undefined)}
                 >
                   {t(link.key)}
                 </NavLink>

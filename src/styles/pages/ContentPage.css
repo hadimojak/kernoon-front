@@ -165,8 +165,13 @@
   font-weight: 600;
 }
 
+.info-prose {
+  overflow-x: auto;
+}
+
 .info-prose table {
   width: 100%;
+  min-width: 280px;
   border-collapse: collapse;
   margin: 8px 0 20px;
 }
@@ -264,6 +269,17 @@
 }
 
 @media (max-width: 640px) {
+  .info-page__intro,
+  .info-list,
+  .info-prose,
+  .info-jobs,
+  .info-links,
+  .info-shops,
+  .info-faq {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .info-links ul {
     grid-template-columns: 1fr;
   }

@@ -165,10 +165,129 @@
 @media (max-width: 900px) {
   .seller-panel {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    min-height: 100dvh;
   }
 
-  .seller-panel__stats,
+  .seller-panel__nav {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'brand shop'
+      'menu menu';
+    align-items: center;
+    align-content: start;
+    height: auto;
+    gap: 4px 12px;
+    padding: 8px 12px 0;
+  }
+
+  .seller-panel__brand {
+    grid-area: brand;
+    margin: 0;
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .seller-panel__nav nav {
+    grid-area: menu;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .seller-panel__nav button {
+    flex: none;
+    align-self: center;
+    border-inline-start: 0;
+    border-bottom: 3px solid transparent;
+    padding: 12px 14px;
+    white-space: nowrap;
+  }
+
+  .seller-panel__nav button.is-active,
+  .seller-panel__nav button:hover {
+    border-inline-start-color: transparent;
+    border-bottom-color: var(--brand);
+  }
+
+  .seller-panel__shop {
+    grid-area: shop;
+    margin-top: 0;
+    justify-self: end;
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .seller-panel__main {
+    padding: 16px 14px 32px;
+  }
+
+  .seller-panel__top h1 {
+    margin-bottom: 14px;
+    font-size: 22px;
+  }
+
+  .seller-panel__stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .seller-panel__stats strong {
+    font-size: 22px;
+  }
+
   .seller-panel__add {
     grid-template-columns: 1fr;
+  }
+
+  .seller-panel__add button {
+    width: 100%;
+  }
+
+  .seller-panel thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .seller-panel tr {
+    display: grid;
+    gap: 6px;
+    padding: 12px 0;
+  }
+
+  .seller-panel td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+    border: 0;
+  }
+
+  .seller-panel td::before {
+    content: attr(data-label);
+    color: #646970;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .seller-panel td:first-child {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .seller-panel td:first-child::before {
+    content: none;
   }
 }

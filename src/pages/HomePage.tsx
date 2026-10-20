@@ -47,11 +47,6 @@ const instagramPosts = [
   '/clothes/sleep.svg',
 ]
 
-const clothingTypes: MessageKey[][] = [
-  ['nav.newborn', 'nav.toddler', 'nav.kids', 'nav.sleepwear'],
-  ['nav.outerwear', 'nav.sizes', 'footer.shipping', 'footer.contact'],
-]
-
 function formatDeliveryDate(value: string) {
   const [year, month, day] = value.split('-').map(Number)
   if (!year || !month || !day) return ''
@@ -62,17 +57,6 @@ function formatDeliveryDate(value: string) {
 
 type HomePageProps = {
   loggedIn?: boolean
-}
-
-const typeLinks: Record<string, string> = {
-  'nav.newborn': '/newborn',
-  'nav.toddler': '/toddler',
-  'nav.kids': '/kids',
-  'nav.sleepwear': '/sleepwear',
-  'nav.outerwear': '/outerwear',
-  'nav.sizes': '/sizes',
-  'footer.shipping': '/delivery-fees',
-  'footer.contact': '/contact-us',
 }
 
 export default function HomePage({ loggedIn = false }: HomePageProps) {
@@ -268,24 +252,6 @@ export default function HomePage({ loggedIn = false }: HomePageProps) {
                   <h3>{t(`${key}.q`)}</h3>
                   <p>{t(`${key}.a`)}</p>
                 </article>
-              ))}
-            </div>
-
-            <h2 className="home-info__seo-title">{t('home.seoTitle')}</h2>
-            <div className="home-info__seo">
-              <p>{t('home.seo')}</p>
-            </div>
-
-            <h2>{t('home.typesTitle')}</h2>
-            <div className="home-types">
-              {clothingTypes.map((column) => (
-                <ul key={column[0]}>
-                  {column.map((label) => (
-                    <li key={label}>
-                      <Link to={typeLinks[label]}>{t(label)}</Link>
-                    </li>
-                  ))}
-                </ul>
               ))}
             </div>
           </div>
