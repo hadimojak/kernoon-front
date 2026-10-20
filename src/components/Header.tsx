@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { canOpenSellerPanel } from '../auth/session'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
@@ -75,7 +75,15 @@ export function Header({ userName, onLogout }: HeaderProps) {
           <ul className="header__utility-list">
             {utilityLinks.map((link) => (
               <li key={link.key}>
-                <Link to={link.to}>{t(link.key)}</Link>
+                <NavLink
+                  to={link.to}
+                  end
+                  className={({ isActive }) =>
+                    isActive && (link.to === '/login' || link.to === '/sell/login') ? 'is-current' : undefined
+                  }
+                >
+                  {t(link.key)}
+                </NavLink>
               </li>
             ))}
             {userName ? (

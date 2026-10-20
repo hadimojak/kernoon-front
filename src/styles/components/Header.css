@@ -69,6 +69,11 @@
   color: var(--brand);
 }
 
+.header__utility-list a.is-current {
+  color: var(--brand);
+  font-weight: 700;
+}
+
 .header__cart {
   color: var(--ink) !important;
   font-weight: 500;
