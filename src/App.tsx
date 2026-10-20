@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { canOpenSellerPanel } from './auth/session'
 import AboutUsPage from './pages/AboutUsPage'
 import AddressesPage from './pages/AddressesPage'
 import SellPage from './pages/SellPage'
@@ -16,6 +17,11 @@ import ProductPage from './pages/ProductPage'
 import ProfilePage from './pages/ProfilePage'
 import ShopMenuPage from './pages/ShopMenuPage'
 import SignupPage from './pages/SignupPage'
+
+function SellerPanelRoute() {
+  if (!canOpenSellerPanel()) return <Navigate to="/sell/login" replace />
+  return <SellerPanelPage />
+}
 
 export default function App() {
   return (
@@ -35,7 +41,7 @@ export default function App() {
       <Route path="/about" element={<AboutUsPage />} />
       <Route path="/sell" element={<SellPage />} />
       <Route path="/sell/login" element={<SellerLoginPage />} />
-      <Route path="/seller-panel" element={<SellerPanelPage />} />
+      <Route path="/seller-panel" element={<SellerPanelRoute />} />
       <Route path="/newborn" element={<ShopMenuPage kind="newborn" />} />
       <Route path="/toddler" element={<ShopMenuPage kind="toddler" />} />
       <Route path="/kids" element={<ShopMenuPage kind="kids" />} />

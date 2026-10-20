@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { canOpenSellerPanel } from '../auth/session'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { FacebookIcon } from './icons/FacebookIcon'
@@ -87,11 +88,13 @@ export function Footer() {
           <nav className="footer__column" key={column.title} aria-label={t(column.title)}>
             <h2 className="footer__heading">{t(column.title)}</h2>
             <ul>
-              {column.links.map((link) => (
-                <li key={link.key + link.to}>
-                  <Link to={link.to}>{t(link.key)}</Link>
-                </li>
-              ))}
+              {column.links
+                .filter((link) => link.key !== 'header.sellerPanel' || canOpenSellerPanel())
+                .map((link) => (
+                  <li key={link.key + link.to}>
+                    <Link to={link.to}>{t(link.key)}</Link>
+                  </li>
+                ))}
             </ul>
           </nav>
         ))}

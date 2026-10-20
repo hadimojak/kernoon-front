@@ -8,6 +8,8 @@ export type SignupInput = {
   password: string
 }
 
+export type AccountRole = 'customer' | 'seller' | 'masterSeller'
+
 type SessionResponse = {
   accessToken: string
   refreshToken: string
@@ -17,6 +19,7 @@ type SessionResponse = {
     lastName: string
     email: string
     phone: string
+    role: AccountRole
   }
 }
 
@@ -42,6 +45,10 @@ export function loginWithEmail(email: string, code: string) {
 
 export function loginWithPassword(username: string, password: string) {
   return request<SessionResponse>('/auth/login', { username, password })
+}
+
+export function loginAsSeller(email: string, password: string) {
+  return request<SessionResponse>('/auth/seller/login', { email, password })
 }
 
 async function request<T>(path: string, body: unknown) {

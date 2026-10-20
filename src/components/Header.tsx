@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { canOpenSellerPanel } from '../auth/session'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { CaretIcon } from './icons/CaretIcon'
@@ -38,7 +39,9 @@ export function Header({ userName, onLogout }: HeaderProps) {
   const { t, toggle } = useI18n()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLLIElement>(null)
-  const utilityLinks = userName ? loggedInUtilityLinks : guestUtilityLinks
+  const utilityLinks = (userName ? loggedInUtilityLinks : guestUtilityLinks).filter(
+    (link) => link.key !== 'header.sellerPanel' || canOpenSellerPanel(),
+  )
 
   useEffect(() => {
     if (!menuOpen) return
