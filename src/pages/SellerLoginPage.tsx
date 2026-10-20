@@ -50,7 +50,7 @@ export default function SellerLoginPage() {
             placeholder={t('auth.email')}
             name="email"
             type="email"
-            autoComplete="username"
+            autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required

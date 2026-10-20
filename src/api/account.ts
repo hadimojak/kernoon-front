@@ -43,8 +43,8 @@ export function loginWithEmail(email: string, code: string) {
   return request<SessionResponse>('/auth/email/login', { email, code })
 }
 
-export function loginWithPassword(username: string, password: string) {
-  return request<SessionResponse>('/auth/login', { username, password })
+export function loginWithPassword(email: string, password: string) {
+  return request<SessionResponse>('/auth/login', { email, password })
 }
 
 export function loginAsSeller(email: string, password: string) {

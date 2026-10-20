@@ -11,12 +11,12 @@ import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
 
-type LoginMethod = 'phone' | 'email' | 'username'
+type LoginMethod = 'phone' | 'email' | 'password'
 
 const methods: { id: LoginMethod; label: 'auth.methodPhone' | 'auth.methodEmail' | 'auth.methodUser' }[] = [
   { id: 'phone', label: 'auth.methodPhone' },
   { id: 'email', label: 'auth.methodEmail' },
-  { id: 'username', label: 'auth.methodUser' },
+  { id: 'password', label: 'auth.methodUser' },
 ]
 
 export default function LoginPage() {
@@ -25,7 +25,7 @@ export default function LoginPage() {
   const [method, setMethod] = useState<LoginMethod>('phone')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
+  const [passwordEmail, setPasswordEmail] = useState('')
   const [password, setPassword] = useState('')
   const [code, setCode] = useState('')
   const [codeSent, setCodeSent] = useState(false)
@@ -44,8 +44,8 @@ export default function LoginPage() {
     setError('')
     setPending(true)
     try {
-      if (method === 'username') {
-        const session = await loginWithPassword(username, password)
+      if (method === 'password') {
+        const session = await loginWithPassword(passwordEmail, password)
         localStorage.setItem('kernoon-session', JSON.stringify(session))
         navigate('/home')
         return
@@ -128,21 +128,21 @@ export default function LoginPage() {
           </div>
         ) : null}
 
-        {method === 'username' ? (
+        {method === 'password' ? (
           <>
             <div className="auth-field">
-              <label className="auth-field__label" htmlFor="username">
-                {t('auth.username')}
+              <label className="auth-field__label" htmlFor="password-email">
+                {t('auth.email')}
               </label>
               <input
                 className="auth-field__input"
-                id="username"
-                name="username"
-                type="text"
-                autoComplete="username"
-                placeholder={t('auth.username')}
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
+                id="password-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder={t('auth.email')}
+                value={passwordEmail}
+                onChange={(event) => setPasswordEmail(event.target.value)}
                 required
               />
             </div>
@@ -164,7 +164,7 @@ export default function LoginPage() {
           </>
         ) : null}
 
-        {method !== 'username' && codeSent ? (
+        {method !== 'password' && codeSent ? (
           <div className="auth-field">
             <label className="auth-field__label" htmlFor="code">
               {t('auth.code')}
@@ -195,7 +195,7 @@ export default function LoginPage() {
         ) : null}
 
         <button className="auth-submit" type="submit" disabled={pending}>
-          {method !== 'username' && !codeSent ? t('auth.sendCode') : t('auth.login')}
+          {method !== 'password' && !codeSent ? t('auth.sendCode') : t('auth.login')}
         </button>
 
         <div className="auth-links">
