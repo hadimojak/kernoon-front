@@ -1,16 +1,35 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { loginAsSeller } from '../api/account'
+import {
+  loginAsSeller,
+  loginSellerWithEmail,
+  loginSellerWithPhone,
+  requestSellerEmailCode,
+  requestSellerPhoneCode,
+} from '../api/account'
 import { canOpenSellerPanel } from '../auth/session'
 import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
 
+type LoginMethod = 'phone' | 'email' | 'password'
+
+const methods: { id: LoginMethod; label: 'auth.methodPhone' | 'auth.methodEmail' | 'auth.methodUser' }[] = [
+  { id: 'phone', label: 'auth.methodPhone' },
+  { id: 'email', label: 'auth.methodEmail' },
+  { id: 'password', label: 'auth.methodUser' },
+]
+
 export default function SellerLoginPage() {
   const { t } = useI18n()
   const navigate = useNavigate()
+  const [method, setMethod] = useState<LoginMethod>('phone')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [code, setCode] = useState('')
+  const [codeSent, setCodeSent] = useState(false)
   const [error, setError] = useState('')
   const [pending, setPending] = useState(false)
 
@@ -18,20 +37,42 @@ export default function SellerLoginPage() {
     document.title = `${t('seller.loginTitle')} | ${t('brand.name')}`
   }, [t])
 
+  function chooseMethod(next: LoginMethod) {
+    setMethod(next)
+    setCode('')
+    setCodeSent(false)
+    setError('')
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
     setPending(true)
     try {
-      const session = await loginAsSeller(email, password)
+      const session =
+        method === 'password'
+          ? await loginAsSeller(username, password)
+          : !codeSent
+            ? null
+            : method === 'phone'
+              ? await loginSellerWithPhone(phone, code)
+              : await loginSellerWithEmail(email, code)
+
+      if (!session) {
+        if (method === 'phone') await requestSellerPhoneCode(phone)
+        else await requestSellerEmailCode(email)
+        setCodeSent(true)
+        return
+      }
+
       if (!canOpenSellerPanel(session.user.role)) {
         setError(t('auth.loginError'))
         return
       }
       localStorage.setItem('kernoon-session', JSON.stringify(session))
       navigate('/seller-panel')
-    } catch {
-      setError(t('auth.loginError'))
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('auth.loginError'))
     } finally {
       setPending(false)
     }
@@ -39,39 +80,120 @@ export default function SellerLoginPage() {
 
   return (
     <AuthLayout title={t('seller.loginTitle')} subtitle={t('seller.loginLead')}>
-      <form className="auth-form" onSubmit={handleSubmit} noValidate>
-        <div className="auth-field">
-          <label className="auth-field__label" htmlFor="seller-email">
-            {t('auth.email')}
-          </label>
-          <input
-            className="auth-field__input"
-            id="seller-email"
-            placeholder={t('auth.email')}
-            name="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-methods" role="tablist" aria-label={t('auth.methods')}>
+          {methods.map((item) => (
+            <button
+              key={item.id}
+              className={item.id === method ? 'auth-methods__option is-selected' : 'auth-methods__option'}
+              type="button"
+              role="tab"
+              aria-selected={item.id === method}
+              onClick={() => chooseMethod(item.id)}
+            >
+              {t(item.label)}
+            </button>
+          ))}
         </div>
 
-        <div className="auth-field">
-          <label className="auth-field__label" htmlFor="seller-password">
-            {t('auth.password')}
-          </label>
-          <PasswordInput
-            className="auth-field__input"
-            id="seller-password"
-            placeholder={t('auth.password')}
-            name="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </div>
+        {method === 'phone' ? (
+          <div className="auth-field">
+            <label className="auth-field__label" htmlFor="seller-phone">
+              {t('auth.phone')}
+            </label>
+            <input
+              className="auth-field__input"
+              id="seller-phone"
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder={t('auth.phone')}
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+              required
+            />
+          </div>
+        ) : null}
+
+        {method === 'email' ? (
+          <div className="auth-field">
+            <label className="auth-field__label" htmlFor="seller-email">
+              {t('auth.email')}
+            </label>
+            <input
+              className="auth-field__input"
+              id="seller-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder={t('auth.email')}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
+        ) : null}
+
+        {method === 'password' ? (
+          <>
+            <div className="auth-field">
+              <label className="auth-field__label" htmlFor="seller-username">
+                {t('auth.username')}
+              </label>
+              <input
+                className="auth-field__input"
+                id="seller-username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                placeholder={t('auth.username')}
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                required
+              />
+            </div>
+            <div className="auth-field">
+              <label className="auth-field__label" htmlFor="seller-password">
+                {t('auth.password')}
+              </label>
+              <PasswordInput
+                className="auth-field__input"
+                id="seller-password"
+                name="password"
+                autoComplete="current-password"
+                placeholder={t('auth.password')}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
+          </>
+        ) : null}
+
+        {method !== 'password' && codeSent ? (
+          <div className="auth-field">
+            <label className="auth-field__label" htmlFor="seller-code">
+              {t('auth.code')}
+            </label>
+            <input
+              className="auth-field__input"
+              id="seller-code"
+              name="code"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={6}
+              pattern="[0-9]{6}"
+              placeholder={t('auth.code')}
+              value={code}
+              onChange={(event) => setCode(event.target.value.replace(/\D/g, '').slice(0, 6))}
+              required
+            />
+            <p className="auth-form__note">
+              {method === 'phone' ? t('auth.codeSentPhone') : t('auth.codeSentEmail')}
+            </p>
+          </div>
+        ) : null}
 
         {error ? (
           <p className="auth-form__error" role="alert">
@@ -80,7 +202,7 @@ export default function SellerLoginPage() {
         ) : null}
 
         <button className="auth-submit" type="submit" disabled={pending}>
-          {t('auth.login')}
+          {method !== 'password' && !codeSent ? t('auth.sendCode') : t('auth.login')}
         </button>
 
         <div className="auth-links">

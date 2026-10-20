@@ -49,8 +49,24 @@ export function loginWithPassword(username: string, password: string) {
   return request<SessionResponse>('/auth/login', { username, password })
 }
 
-export function loginAsSeller(email: string, password: string) {
-  return request<SessionResponse>('/auth/seller/login', { email, password })
+export function requestSellerPhoneCode(phone: string) {
+  return request<{ sent: boolean }>('/auth/seller/phone/code', { phone })
+}
+
+export function loginSellerWithPhone(phone: string, code: string) {
+  return request<SessionResponse>('/auth/seller/phone/login', { phone, code })
+}
+
+export function requestSellerEmailCode(email: string) {
+  return request<{ sent: boolean }>('/auth/seller/email/code', { email })
+}
+
+export function loginSellerWithEmail(email: string, code: string) {
+  return request<SessionResponse>('/auth/seller/email/login', { email, code })
+}
+
+export function loginAsSeller(username: string, password: string) {
+  return request<SessionResponse>('/auth/seller/login', { username, password })
 }
 
 async function request<T>(path: string, body: unknown) {
