@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
+const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1'
 
 export type SignupInput = {
   firstName: string

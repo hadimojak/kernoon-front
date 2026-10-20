@@ -394,7 +394,7 @@ export const fa: Record<MessageKey, string> = {
   'auth.methods': 'روش ورود',
   'auth.methodPhone': 'شماره موبایل',
   'auth.methodEmail': 'ایمیل',
-  'auth.methodUser': 'نام کاربری و رمز',
+  'auth.methodUser': 'نام کاربری و پسورد',
   'auth.phone': 'شماره موبایل',
   'auth.username': 'نام کاربری',
   'auth.showPassword': 'نمایش رمز',
