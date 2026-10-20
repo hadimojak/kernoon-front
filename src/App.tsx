@@ -6,6 +6,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import ContentPage from './pages/ContentPage'
 import ContactUsPage from './pages/ContactUsPage'
 import SellerLoginPage from './pages/SellerLoginPage'
+import SellerPanelPage from './pages/SellerPanelPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
@@ -34,6 +35,7 @@ export default function App() {
       <Route path="/about" element={<AboutUsPage />} />
       <Route path="/sell" element={<SellPage />} />
       <Route path="/sell/login" element={<SellerLoginPage />} />
+      <Route path="/seller-panel" element={<SellerPanelPage />} />
       <Route path="/newborn" element={<ShopMenuPage kind="newborn" />} />
       <Route path="/toddler" element={<ShopMenuPage kind="toddler" />} />
       <Route path="/kids" element={<ShopMenuPage kind="kids" />} />

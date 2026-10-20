@@ -16,7 +16,7 @@ export default function SellerLoginPage() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    navigate('/home')
+    navigate('/seller-panel')
   }
 
   return (
