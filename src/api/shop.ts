@@ -1,42 +1,11 @@
 import { apiRequest } from './client'
 
-export type CatalogProduct = {
-  id: string
-  name: string
-  nameFa: string
-  usd: number
-  toman: number
-  image: string
-  category: string
-  sizes: string[]
-  stock: number
-  description: string
-}
-
 export type ShopOrder = {
   id: string
   status: string
   totalToman: number
   createdAt: string
   items: { name: string; quantity: number; lineToman: number }[]
-}
-
-export function listProducts(category?: string, size?: string) {
-  const query = new URLSearchParams()
-  if (category) query.set('category', category)
-  if (size) query.set('size', size)
-  const suffix = query.toString() ? `?${query}` : ''
-  return apiRequest<CatalogProduct[]>(`/products${suffix}`, {
-    method: 'GET',
-    auth: false,
-  })
-}
-
-export function getProduct(id: string) {
-  return apiRequest<CatalogProduct>(`/products/${id}`, {
-    method: 'GET',
-    auth: false,
-  })
 }
 
 export function listOrders() {
@@ -163,6 +132,10 @@ export type Cart = {
 
 export function getCart() {
   return apiRequest<Cart>('/cart', { method: 'GET' })
+}
+
+export function mergeGuestCart() {
+  return apiRequest<Cart>('/cart/merge', { method: 'POST' })
 }
 
 export function addCartItem(body: {

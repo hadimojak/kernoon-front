@@ -1,4 +1,5 @@
 import { apiRequest, persistSession, type SessionResponse } from './client'
+import { mergeGuestCart } from './shop'
 
 export type SignupInput = {
   firstName: string
@@ -18,7 +19,13 @@ async function authRequest(path: string, body: unknown) {
     body,
     auth: false,
   })
-  return persistSession(session)
+  const stored = persistSession(session)
+  try {
+    await mergeGuestCart()
+  } catch {
+    /* guest cart may be empty or cart service briefly unavailable */
+  }
+  return stored
 }
 
 export async function signup(input: SignupInput) {
@@ -75,8 +82,4 @@ export function loginSellerWithEmail(email: string, code: string) {
 
 export function loginAsSeller(username: string, password: string) {
   return authRequest('/auth/seller/login', { username, password })
-}
-
-export function refreshSession(refreshToken: string) {
-  return authRequest('/auth/refresh', { refreshToken })
 }

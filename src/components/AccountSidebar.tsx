@@ -2,10 +2,8 @@ import { NavLink } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { AccountCircleIcon } from './icons/AccountCircleIcon'
-import { CalendarTodayIcon } from './icons/CalendarTodayIcon'
 import { ChevronRightIcon } from './icons/ChevronRightIcon'
 import { CreditCardIcon } from './icons/CreditCardIcon'
-import { GiftIcon } from './icons/GiftIcon'
 import { HistoryIcon } from './icons/HistoryIcon'
 import { IdCardIcon } from './icons/IdCardIcon'
 
@@ -19,8 +17,6 @@ const navItems: {
   { label: 'account.orders', to: '/orders', Icon: HistoryIcon },
   { label: 'account.addresses', to: '/addresses', Icon: IdCardIcon },
   { label: 'account.payments', to: '/payment-methods', Icon: CreditCardIcon },
-  { label: 'account.clothesForMe', to: '/clothes-for-me', Icon: GiftIcon },
-  { label: 'account.events', to: '/events', Icon: CalendarTodayIcon },
 ]
 
 export function AccountSidebar() {

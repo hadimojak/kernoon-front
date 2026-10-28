@@ -46,12 +46,6 @@ export function addPanelProduct(body: {
   return apiRequest<PanelProduct>('/panel/products', { body })
 }
 
-export function removePanelProduct(id: string) {
-  return apiRequest<{ deleted: boolean }>(`/panel/products/${id}`, {
-    method: 'DELETE',
-  })
-}
-
 export function panelCustomers() {
   return apiRequest<PanelCustomer[]>('/panel/customers', { method: 'GET' })
 }
