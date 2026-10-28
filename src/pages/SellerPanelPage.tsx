@@ -13,19 +13,32 @@ import {
   type PanelProduct,
   type SizeGuideRow,
 } from '../api/panel'
+import {
+  getTicket,
+  getTicketWidgetSettings,
+  listTickets,
+  sendTicketMessage,
+  setTicketWidget,
+  updateTicketStatus,
+  type Ticket,
+  type TicketDetail,
+} from '../api/tickets'
 import { clothingColorIds } from '../data/catalog'
 import { mergeSizeGuide } from '../data/sizeGuide'
+import { useTicketsSocket } from '../hooks/useTicketsSocket'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
+import { readSessionUser } from '../auth/session'
 import '../styles/pages/SellerPanelPage.css'
 
-type Section = 'dashboard' | 'products' | 'orders' | 'customers'
+type Section = 'dashboard' | 'products' | 'orders' | 'customers' | 'tickets'
 
 const menu: { id: Section; label: MessageKey }[] = [
   { id: 'dashboard', label: 'panel.dashboard' },
   { id: 'products', label: 'panel.products' },
   { id: 'orders', label: 'panel.orders' },
   { id: 'customers', label: 'panel.customers' },
+  { id: 'tickets', label: 'panel.tickets' },
 ]
 
 const categories = ['newborn', 'toddler', 'kids', 'sleepwear', 'outerwear'] as const
@@ -60,6 +73,12 @@ export default function SellerPanelPage() {
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
   const [pending, setPending] = useState(false)
+  const [tickets, setTickets] = useState<Ticket[]>([])
+  const [activeTicket, setActiveTicket] = useState<TicketDetail | null>(null)
+  const [ticketReply, setTicketReply] = useState('')
+  const [widgetEnabled, setWidgetEnabled] = useState(false)
+  const sellerUser = readSessionUser()
+  const { socket, ready } = useTicketsSocket(section === 'tickets')
 
   useEffect(() => {
     document.title = `${t('panel.title')} | ${t('brand.name')}`
@@ -84,6 +103,70 @@ export default function SellerPanelPage() {
       alive = false
     }
   }, [t])
+
+  useEffect(() => {
+    if (section !== 'tickets') return
+    let alive = true
+    Promise.all([listTickets(), getTicketWidgetSettings()])
+      .then(([rows, widget]) => {
+        if (!alive) return
+        setTickets(rows)
+        setWidgetEnabled(widget.enabled)
+      })
+      .catch((caught) => {
+        if (alive) {
+          setError(caught instanceof Error ? caught.message : t('account.loadError'))
+        }
+      })
+    return () => {
+      alive = false
+    }
+  }, [section, t])
+
+  useEffect(() => {
+    const sock = socket.current
+    if (!sock || !ready || section !== 'tickets') return
+
+    function onCreated(payload: { ticket: Ticket }) {
+      setTickets((current) => {
+        if (current.some((row) => row.id === payload.ticket.id)) return current
+        return [payload.ticket, ...current]
+      })
+    }
+
+    function onUpdated(ticket: Ticket) {
+      setTickets((current) =>
+        current.map((row) => (row.id === ticket.id ? ticket : row)),
+      )
+    }
+
+    function onMessage(payload: { ticket: Ticket; message: TicketDetail['messages'][number] }) {
+      onUpdated(payload.ticket)
+      setActiveTicket((current) => {
+        if (!current || current.id !== payload.ticket.id) return current
+        if (current.messages.some((row) => row.id === payload.message.id)) return current
+        return {
+          ...payload.ticket,
+          messages: [...current.messages, payload.message],
+        }
+      })
+    }
+
+    function onWidget(payload: { enabled: boolean }) {
+      setWidgetEnabled(payload.enabled)
+    }
+
+    sock.on('ticket:created', onCreated)
+    sock.on('ticket:updated', onUpdated)
+    sock.on('message:new', onMessage)
+    sock.on('widget:updated', onWidget)
+    return () => {
+      sock.off('ticket:created', onCreated)
+      sock.off('ticket:updated', onUpdated)
+      sock.off('message:new', onMessage)
+      sock.off('widget:updated', onWidget)
+    }
+  }, [socket, ready, section])
 
   function openCreate() {
     setEditingId(null)
@@ -275,6 +358,74 @@ export default function SellerPanelPage() {
         setEditingId(null)
       }
       setNotice(t('panel.deleted'))
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('account.saveError'))
+    }
+  }
+
+  async function toggleWidget() {
+    setPending(true)
+    setError('')
+    try {
+      const next = await setTicketWidget(!widgetEnabled)
+      setWidgetEnabled(next.enabled)
+      setNotice(next.enabled ? t('panel.widgetOn') : t('panel.widgetOff'))
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('account.saveError'))
+    } finally {
+      setPending(false)
+    }
+  }
+
+  async function openTicket(id: string) {
+    setError('')
+    try {
+      const detail = await getTicket(id)
+      setActiveTicket(detail)
+      setTicketReply('')
+      socket.current?.emit('ticket:join', { ticketId: id })
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('account.loadError'))
+    }
+  }
+
+  async function replyToTicket(event: FormEvent) {
+    event.preventDefault()
+    if (!activeTicket || !ticketReply.trim()) return
+    setPending(true)
+    setError('')
+    try {
+      const result = await sendTicketMessage(
+        activeTicket.id,
+        ticketReply.trim(),
+        sellerUser?.firstName || sellerUser?.username || undefined,
+      )
+      setActiveTicket({
+        ...result.ticket,
+        messages: [...activeTicket.messages, result.message],
+      })
+      setTickets((current) =>
+        current.map((row) => (row.id === result.ticket.id ? result.ticket : row)),
+      )
+      setTicketReply('')
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('account.saveError'))
+    } finally {
+      setPending(false)
+    }
+  }
+
+  async function setTicketClosed(closed: boolean) {
+    if (!activeTicket) return
+    try {
+      const updated = await updateTicketStatus(
+        activeTicket.id,
+        closed ? 'closed' : 'open',
+      )
+      setActiveTicket({ ...activeTicket, ...updated })
+      setTickets((current) =>
+        current.map((row) => (row.id === updated.id ? updated : row)),
+      )
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('account.saveError'))
     }
@@ -646,6 +797,127 @@ export default function SellerPanelPage() {
                 ))}
               </ul>
             )}
+          </section>
+        ) : null}
+
+        {section === 'tickets' ? (
+          <section className="seller-panel__tickets">
+            <div className="seller-panel__card seller-panel__widget-card">
+              <div>
+                <h2>{t('panel.widget')}</h2>
+                <p>{t('panel.widgetHint')}</p>
+                <p className="seller-panel__notice">
+                  {widgetEnabled ? t('panel.widgetOn') : t('panel.widgetOff')}
+                </p>
+              </div>
+              <button
+                className="seller-panel__primary"
+                type="button"
+                disabled={pending}
+                onClick={() => void toggleWidget()}
+              >
+                {widgetEnabled ? t('panel.widgetOff') : t('panel.widgetOn')}
+              </button>
+            </div>
+
+            <div className="seller-panel__ticket-grid">
+              <div className="seller-panel__card">
+                <h2>{t('panel.tickets')}</h2>
+                {tickets.length === 0 ? (
+                  <p>{t('panel.emptyTickets')}</p>
+                ) : (
+                  <ul className="seller-panel__ticket-list">
+                    {tickets.map((ticket) => (
+                      <li key={ticket.id}>
+                        <button
+                          type="button"
+                          className={
+                            activeTicket?.id === ticket.id ? 'is-active' : undefined
+                          }
+                          onClick={() => void openTicket(ticket.id)}
+                        >
+                          <strong>{ticket.subject}</strong>
+                          <span>
+                            {ticket.kind === 'product'
+                              ? ticket.productName || t('panel.ticketProduct')
+                              : t('panel.ticketGeneral')}
+                          </span>
+                          <em>{ticket.status}</em>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="seller-panel__card">
+                {!activeTicket ? (
+                  <p>{t('panel.selectTicket')}</p>
+                ) : (
+                  <div className="seller-panel__ticket-thread">
+                    <header>
+                      <div>
+                        <h2>{activeTicket.subject}</h2>
+                        <p>
+                          {activeTicket.customerName || activeTicket.customerId}
+                          {activeTicket.productName
+                            ? ` · ${activeTicket.productName}`
+                            : ''}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          void setTicketClosed(activeTicket.status !== 'closed')
+                        }
+                      >
+                        {activeTicket.status === 'closed'
+                          ? t('panel.ticketOpen')
+                          : t('panel.ticketClose')}
+                      </button>
+                    </header>
+                    <ul>
+                      {activeTicket.messages.map((message) => (
+                        <li
+                          key={message.id}
+                          className={
+                            message.senderRole === 'customer' ? 'is-customer' : 'is-seller'
+                          }
+                        >
+                          <strong>
+                            {message.senderName || message.senderRole}
+                          </strong>
+                          <p>{message.body}</p>
+                          <time>
+                            {new Date(message.createdAt).toLocaleString(
+                              lang === 'fa' ? 'fa-IR' : 'en-US',
+                            )}
+                          </time>
+                        </li>
+                      ))}
+                    </ul>
+                    {activeTicket.status !== 'closed' ? (
+                      <form onSubmit={replyToTicket}>
+                        <textarea
+                          value={ticketReply}
+                          onChange={(event) => setTicketReply(event.target.value)}
+                          rows={4}
+                          required
+                          placeholder={t('ticket.replyPlaceholder')}
+                        />
+                        <button
+                          className="seller-panel__primary"
+                          type="submit"
+                          disabled={pending}
+                        >
+                          {t('panel.ticketReply')}
+                        </button>
+                      </form>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+            </div>
           </section>
         ) : null}
       </main>

@@ -72,7 +72,7 @@ export function Header() {
   useEffect(() => {
     if (!menuOpen) return
 
-    function handlePointerDown(event: MouseEvent) {
+    function handlePointerDown(event: PointerEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false)
       }
@@ -82,10 +82,10 @@ export function Header() {
       if (event.key === 'Escape') setMenuOpen(false)
     }
 
-    document.addEventListener('mousedown', handlePointerDown)
+    document.addEventListener('pointerdown', handlePointerDown)
     document.addEventListener('keydown', handleEscape)
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
+      document.removeEventListener('pointerdown', handlePointerDown)
       document.removeEventListener('keydown', handleEscape)
     }
   }, [menuOpen])
@@ -106,7 +106,7 @@ export function Header() {
         </Link>
 
         <div className="header__utility">
-          <ul className="header__utility-list">
+          <ul className="header__utility-links">
             {utilityLinks.map((link) => (
               <li key={link.key}>
                 <NavLink
@@ -119,6 +119,9 @@ export function Header() {
                 </NavLink>
               </li>
             ))}
+          </ul>
+
+          <ul className="header__utility-actions">
             {userName ? (
               <li className="header__account" ref={menuRef}>
                 <button
@@ -128,7 +131,10 @@ export function Header() {
                   aria-haspopup="menu"
                   onClick={() => setMenuOpen((open) => !open)}
                 >
-                  <span>{t('header.hi', { name: userName })}</span>
+                  <span className="header__account-label">
+                    {t('header.hi', { name: userName })}
+                  </span>
+                  <span className="header__account-label-short">{t('header.account')}</span>
                   <CaretIcon className="header__caret" size={9} />
                 </button>
                 {menuOpen ? (
@@ -169,7 +175,12 @@ export function Header() {
               </li>
             ) : null}
             <li>
-              <button className="header__lang" type="button" onClick={toggle} aria-label={t('lang.label')}>
+              <button
+                className="header__lang"
+                type="button"
+                onClick={toggle}
+                aria-label={t('lang.label')}
+              >
                 {t('lang.switch')}
               </button>
             </li>

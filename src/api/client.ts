@@ -97,12 +97,16 @@ export async function apiRequest<T>(
   return data as T
 }
 
-async function accessToken() {
+export async function getAccessToken() {
   const session = readSession() as StoredSession | null
   if (!session?.accessToken) return null
   const expiresAt = session.accessExpiresAt ?? 0
   if (expiresAt > Date.now() + 60_000) return session.accessToken
   return refreshAccessToken()
+}
+
+async function accessToken() {
+  return getAccessToken()
 }
 
 async function refreshAccessToken() {
