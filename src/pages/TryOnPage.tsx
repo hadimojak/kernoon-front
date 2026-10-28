@@ -13,9 +13,13 @@ import {
   makeTryOnId,
   normalizeColors,
   readTryOnCart,
+  readTryOnOffsets,
   slotForCategory,
   tryOnSamples,
+  tryOnSlots,
   writeTryOnCart,
+  writeTryOnOffsets,
+  type SlotOffset,
   type TryOnItem,
   type TryOnSlot,
 } from '../data/tryOnCart'
@@ -23,14 +27,28 @@ import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/TryOnPage.css'
 
-const slots: TryOnSlot[] = ['body', 'top', 'bottom', 'outer']
+const slots = tryOnSlots
 
 const slotLabel: Record<TryOnSlot, MessageKey> = {
   body: 'tryOn.slot.body',
   top: 'tryOn.slot.top',
   bottom: 'tryOn.slot.bottom',
   outer: 'tryOn.slot.outer',
+  gloves: 'tryOn.slot.gloves',
+  socks: 'tryOn.slot.socks',
 }
+
+type RackFilter = 'all' | TryOnSlot
+
+const rackFilters: RackFilter[] = [
+  'all',
+  'body',
+  'top',
+  'bottom',
+  'outer',
+  'gloves',
+  'socks',
+]
 
 type RackItem = {
   productId: string
@@ -64,8 +82,12 @@ function fillFor(color: ClothingColorId) {
 export default function TryOnPage() {
   const { t, lang } = useI18n()
   const [rack, setRack] = useState<RackItem[]>([])
+  const [rackFilter, setRackFilter] = useState<RackFilter>('all')
   const [cart, setCart] = useState<TryOnItem[]>(() => readTryOnCart())
   const [worn, setWorn] = useState<Partial<Record<TryOnSlot, string>>>({})
+  const [offsets, setOffsets] = useState<Partial<Record<TryOnSlot, SlotOffset>>>(
+    () => readTryOnOffsets(),
+  )
   const [dragId, setDragId] = useState<string | null>(null)
   const [dropSlot, setDropSlot] = useState<TryOnSlot | null>(null)
 
@@ -97,6 +119,15 @@ export default function TryOnPage() {
   useEffect(() => {
     writeTryOnCart(cart)
   }, [cart])
+
+  useEffect(() => {
+    writeTryOnOffsets(offsets)
+  }, [offsets])
+
+  const filteredRack = useMemo(
+    () => (rackFilter === 'all' ? rack : rack.filter((item) => item.slot === rackFilter)),
+    [rack, rackFilter],
+  )
 
   const wornItems = useMemo(() => {
     const map: Partial<Record<TryOnSlot, TryOnItem>> = {}
@@ -142,10 +173,22 @@ export default function TryOnPage() {
       }
       return next
     })
+    setOffsets((current) => {
+      const next = { ...current }
+      for (const slot of slots) {
+        if (worn[slot] === id) delete next[slot]
+      }
+      return next
+    })
   }
 
   function wearItem(item: TryOnItem, slot: TryOnSlot = item.slot) {
     setWorn((current) => ({ ...current, [slot]: item.id }))
+    setOffsets((current) => {
+      const next = { ...current }
+      delete next[slot]
+      return next
+    })
   }
 
   function clearSlot(slot: TryOnSlot) {
@@ -154,6 +197,15 @@ export default function TryOnPage() {
       delete next[slot]
       return next
     })
+    setOffsets((current) => {
+      const next = { ...current }
+      delete next[slot]
+      return next
+    })
+  }
+
+  function setSlotOffset(slot: TryOnSlot, next: SlotOffset) {
+    setOffsets((current) => ({ ...current, [slot]: next }))
   }
 
   function setItemColor(id: string, color: ClothingColorId) {
@@ -196,40 +248,67 @@ export default function TryOnPage() {
               <h2 id="tryon-rack">{t('tryOn.rack')}</h2>
               <p>{t('tryOn.rackHint')}</p>
             </div>
-            <ul className="tryon__rack-list">
-              {rack.map((item, index) => (
-                <motion.li
-                  key={item.productId}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05, type: 'spring', stiffness: 260, damping: 22 }}
+            <div className="tryon__filters" role="tablist" aria-label={t('tryOn.sections')}>
+              {rackFilters.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  role="tab"
+                  aria-selected={rackFilter === filter}
+                  className={
+                    rackFilter === filter ? 'tryon__filter is-active' : 'tryon__filter'
+                  }
+                  onClick={() => setRackFilter(filter)}
                 >
-                  <article className="tryon__card">
-                    <img src={item.image} alt="" />
-                    <div>
-                      <h3>{labelOf(item)}</h3>
-                      <p>{t(slotLabel[item.slot])}</p>
-                      <div className="tryon__swatches" aria-hidden>
-                        {item.colors.map((color) => (
-                          <span
-                            key={color}
-                            className="tryon__swatch"
-                            style={{ background: fillFor(color) }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <motion.button
-                      type="button"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => addToTempCart(item)}
-                    >
-                      {t('tryOn.addTemp')}
-                    </motion.button>
-                  </article>
-                </motion.li>
+                  {filter === 'all'
+                    ? t('tryOn.filterAll')
+                    : t(slotLabel[filter])}
+                </button>
               ))}
+            </div>
+            <ul className="tryon__rack-list">
+              {filteredRack.length === 0 ? (
+                <li className="tryon__empty">{t('tryOn.sectionEmpty')}</li>
+              ) : (
+                filteredRack.map((item, index) => (
+                  <motion.li
+                    key={item.productId}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      delay: Math.min(index, 8) * 0.04,
+                      type: 'spring',
+                      stiffness: 260,
+                      damping: 22,
+                    }}
+                  >
+                    <article className="tryon__card">
+                      <img src={item.image} alt="" />
+                      <div>
+                        <h3>{labelOf(item)}</h3>
+                        <p>{t(slotLabel[item.slot])}</p>
+                        <div className="tryon__swatches" aria-hidden>
+                          {item.colors.map((color) => (
+                            <span
+                              key={color}
+                              className="tryon__swatch"
+                              style={{ background: fillFor(color) }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => addToTempCart(item)}
+                      >
+                        {t('tryOn.addTemp')}
+                      </motion.button>
+                    </article>
+                  </motion.li>
+                ))
+              )}
             </ul>
           </section>
 
@@ -237,6 +316,7 @@ export default function TryOnPage() {
             <div className="tryon__panel-head tryon__panel-head--center">
               <h2 id="tryon-stage">{t('tryOn.stage')}</h2>
               <p>{t('tryOn.stageHint')}</p>
+              <p className="tryon__reposition-hint">{t('tryOn.repositionHint')}</p>
             </div>
 
             <motion.div
@@ -247,11 +327,14 @@ export default function TryOnPage() {
             >
               <AnimatedBaby
                 worn={wornItems}
+                offsets={offsets}
                 dropSlot={dropSlot}
+                zonesActive={Boolean(dragId)}
                 onDragOverSlot={(slot) => setDropSlot(slot)}
                 onDragLeave={() => setDropSlot(null)}
                 onDropSlot={onDrop}
                 onClearSlot={clearSlot}
+                onOffsetChange={setSlotOffset}
                 t={t}
               />
             </motion.div>

@@ -1,17 +1,19 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import type { DragEvent } from 'react'
+import { AnimatePresence, motion, useMotionValue } from 'framer-motion'
+import { useEffect, type DragEvent, type ReactNode } from 'react'
 import { clothingColorHex, type ClothingColorId } from '../data/catalog'
-import type { TryOnItem, TryOnSlot } from '../data/tryOnCart'
+import type { SlotOffset, TryOnItem, TryOnSlot } from '../data/tryOnCart'
 import type { MessageKey } from '../i18n/translations'
 
-/** Visual drop order top→bottom on the figure (not paint order). */
-const zoneOrder: TryOnSlot[] = ['outer', 'top', 'body', 'bottom']
+/** Drop-target chips around the figure. */
+const zoneOrder: TryOnSlot[] = ['outer', 'top', 'body', 'bottom', 'gloves', 'socks']
 
 const slotLabel: Record<TryOnSlot, MessageKey> = {
   body: 'tryOn.slot.body',
   top: 'tryOn.slot.top',
   bottom: 'tryOn.slot.bottom',
   outer: 'tryOn.slot.outer',
+  gloves: 'tryOn.slot.gloves',
+  socks: 'tryOn.slot.socks',
 }
 
 function fillFor(color: ClothingColorId) {
@@ -47,23 +49,83 @@ const garmentVariants = {
   },
 }
 
+const DRAG_LIMIT = 56
+
+function DraggableGarment({
+  slot,
+  offset,
+  onOffsetChange,
+  repositionEnabled,
+  children,
+}: {
+  slot: TryOnSlot
+  offset: SlotOffset
+  onOffsetChange: (slot: TryOnSlot, next: SlotOffset) => void
+  repositionEnabled: boolean
+  children: ReactNode
+}) {
+  const x = useMotionValue(offset.x)
+  const y = useMotionValue(offset.y)
+
+  useEffect(() => {
+    x.set(offset.x)
+    y.set(offset.y)
+  }, [offset.x, offset.y, x, y])
+
+  return (
+    <motion.g
+      variants={garmentVariants}
+      initial="hidden"
+      animate="show"
+      exit="exit"
+      style={{ x, y, cursor: repositionEnabled ? 'grab' : 'default' }}
+      drag={repositionEnabled}
+      dragMomentum={false}
+      dragElastic={0.06}
+      dragConstraints={{
+        left: -DRAG_LIMIT,
+        right: DRAG_LIMIT,
+        top: -DRAG_LIMIT,
+        bottom: DRAG_LIMIT,
+      }}
+      whileDrag={{ cursor: 'grabbing', scale: 1.03 }}
+      onDragEnd={() => {
+        onOffsetChange(slot, {
+          x: Math.max(-DRAG_LIMIT, Math.min(DRAG_LIMIT, x.get())),
+          y: Math.max(-DRAG_LIMIT, Math.min(DRAG_LIMIT, y.get())),
+        })
+      }}
+      filter="url(#tryon-cloth)"
+    >
+      {children}
+    </motion.g>
+  )
+}
+
 type AnimatedBabyProps = {
   worn: Partial<Record<TryOnSlot, TryOnItem>>
+  offsets: Partial<Record<TryOnSlot, SlotOffset>>
   dropSlot: TryOnSlot | null
+  /** When true, drop zones capture pointer (cart drag). When false, garments can be moved. */
+  zonesActive: boolean
   onDragOverSlot: (slot: TryOnSlot) => void
   onDragLeave: () => void
   onDropSlot: (slot: TryOnSlot) => void
   onClearSlot: (slot: TryOnSlot) => void
+  onOffsetChange: (slot: TryOnSlot, next: SlotOffset) => void
   t: (key: MessageKey) => string
 }
 
 export function AnimatedBaby({
   worn,
+  offsets,
   dropSlot,
+  zonesActive,
   onDragOverSlot,
   onDragLeave,
   onDropSlot,
   onClearSlot,
+  onOffsetChange,
   t,
 }: AnimatedBabyProps) {
   function zoneProps(slot: TryOnSlot) {
@@ -72,11 +134,13 @@ export function AnimatedBaby({
         worn[slot] ? ' is-filled' : ''
       }`,
       onDragOver: (event: DragEvent) => {
+        if (!zonesActive) return
         event.preventDefault()
         onDragOverSlot(slot)
       },
       onDragLeave,
       onDrop: (event: DragEvent) => {
+        if (!zonesActive) return
         event.preventDefault()
         onDropSlot(slot)
       },
@@ -87,9 +151,16 @@ export function AnimatedBaby({
   const top = worn.top
   const bottom = worn.bottom
   const outer = worn.outer
+  const gloves = worn.gloves
+  const socks = worn.socks
   const hasTop = Boolean(top)
   const hasBottom = Boolean(bottom)
-  const hasOuter = Boolean(outer)
+  const hasAny = Boolean(body || top || bottom || outer || gloves || socks)
+  const repositionEnabled = !zonesActive
+
+  function offsetOf(slot: TryOnSlot): SlotOffset {
+    return offsets[slot] ?? { x: 0, y: 0 }
+  }
 
   return (
     <div className="tryon-baby" role="img" aria-label={t('tryOn.babyLabel')}>
@@ -127,7 +198,7 @@ export function AnimatedBaby({
               floodOpacity="0.16"
             />
           </filter>
-          <filter id="tryon-cloth" x="-10%" y="-10%" width="120%" height="120%">
+          <filter id="tryon-cloth" x="-15%" y="-15%" width="130%" height="130%">
             <feDropShadow
               dx="0"
               dy="3"
@@ -150,8 +221,6 @@ export function AnimatedBaby({
           { cx: 244, cy: 88, r: 2.4, delay: 0.5 },
           { cx: 40, cy: 200, r: 2, delay: 1 },
           { cx: 242, cy: 236, r: 3, delay: 1.4 },
-          { cx: 52, cy: 330, r: 2.2, delay: 0.3 },
-          { cx: 228, cy: 348, r: 2.6, delay: 0.9 },
         ].map((dot) => (
           <motion.circle
             key={`${dot.cx}-${dot.cy}`}
@@ -159,7 +228,7 @@ export function AnimatedBaby({
             cy={dot.cy}
             r={dot.r}
             fill="#d0178b"
-            animate={{ opacity: [0.12, 0.5, 0.12], y: [0, -12, 0] }}
+            animate={{ opacity: [0.12, 0.45, 0.12], y: [0, -10, 0] }}
             transition={{
               duration: 3.4,
               repeat: Infinity,
@@ -168,16 +237,6 @@ export function AnimatedBaby({
             }}
           />
         ))}
-
-        <motion.ellipse
-          cx="140"
-          cy="392"
-          rx="70"
-          ry="11"
-          fill="#d0178b"
-          animate={{ opacity: [0.07, 0.14, 0.07], rx: [64, 78, 64] }}
-          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
-        />
 
         <motion.g
           style={{ originX: '140px', originY: '300px' }}
@@ -191,45 +250,14 @@ export function AnimatedBaby({
           >
             <circle cx="140" cy="76" r="40" fill="url(#tryon-skin)" />
             <ellipse cx="140" cy="50" rx="38" ry="16" fill="#5a3d2b" opacity="0.9" />
-            <motion.ellipse
-              cx="125"
-              cy="78"
-              rx="3.8"
-              ry="3.8"
-              fill="#3a2a22"
-              animate={{ ry: [3.8, 3.8, 0.35, 3.8, 3.8] }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                times: [0, 0.74, 0.8, 0.86, 1],
-                ease: 'easeInOut',
-              }}
-            />
-            <motion.ellipse
-              cx="155"
-              cy="78"
-              rx="3.8"
-              ry="3.8"
-              fill="#3a2a22"
-              animate={{ ry: [3.8, 3.8, 0.35, 3.8, 3.8] }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                times: [0, 0.74, 0.8, 0.86, 1],
-                ease: 'easeInOut',
-                delay: 0.04,
-              }}
-            />
-            <motion.path
+            <ellipse cx="125" cy="78" rx="3.8" ry="3.8" fill="#3a2a22" />
+            <ellipse cx="155" cy="78" rx="3.8" ry="3.8" fill="#3a2a22" />
+            <path
               d="M129 94c5 5 17 5 22 0"
               stroke="#c47a6a"
               strokeWidth="2.4"
               fill="none"
               strokeLinecap="round"
-              animate={{
-                d: ['M129 94c5 5 17 5 22 0', 'M129 95c6 4 16 4 22 0', 'M129 94c5 5 17 5 22 0'],
-              }}
-              transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
             />
             <circle cx="114" cy="88" r="6" fill="#f0a090" opacity="0.42" />
             <circle cx="166" cy="88" r="6" fill="#f0a090" opacity="0.42" />
@@ -237,108 +265,81 @@ export function AnimatedBaby({
 
           <rect x="129" y="112" width="22" height="14" rx="6" fill="url(#tryon-skin)" />
 
-          <motion.path
+          <path
             d="M86 158c-14 26-18 66-12 92"
             stroke="url(#tryon-skin)"
             strokeWidth="20"
             strokeLinecap="round"
             fill="none"
-            style={{ originX: '92px', originY: '158px' }}
-            animate={{ rotate: [0, 5, 0, -3.5, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <motion.path
+          <path
             d="M194 158c14 26 18 66 12 92"
             stroke="url(#tryon-skin)"
             strokeWidth="20"
             strokeLinecap="round"
             fill="none"
-            style={{ originX: '188px', originY: '158px' }}
-            animate={{ rotate: [0, -5, 0, 3.5, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
           />
-
-          <motion.path
+          <path
             d="M120 278c-3 38-5 68-3 94"
             stroke="url(#tryon-skin)"
             strokeWidth="24"
             strokeLinecap="round"
             fill="none"
-            style={{ originX: '120px', originY: '278px' }}
-            animate={{ rotate: [0, -1.8, 0, 1.2, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           />
-          <motion.path
+          <path
             d="M160 278c3 38 5 68 3 94"
             stroke="url(#tryon-skin)"
             strokeWidth="24"
             strokeLinecap="round"
             fill="none"
-            style={{ originX: '160px', originY: '278px' }}
-            animate={{ rotate: [0, 1.8, 0, -1.2, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           />
 
-          <motion.path
+          <path
             d="M100 138c6-8 74-8 80 0l8 24v88c0 16-14 28-40 28h-16c-26 0-40-12-40-28v-88l8-24z"
             fill="url(#tryon-skin)"
-            animate={{ scaleY: [1, 1.02, 1], scaleX: [1, 1.008, 1] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ originX: '140px', originY: '210px' }}
           />
 
-          {/* Paint order: body → bottom → top → outer so layers nest cleanly */}
+          {/* Paint: body → bottom → top → outer → gloves → socks */}
           <AnimatePresence mode="sync">
             {body ? (
-              <motion.g
+              <DraggableGarment
                 key={`body-${body.id}`}
-                variants={garmentVariants}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                style={{ originX: '140px', originY: '200px' }}
-                filter="url(#tryon-cloth)"
-                clipPath={hasTop || hasBottom ? 'url(#tryon-body-clip)' : undefined}
+                slot="body"
+                offset={offsetOf('body')}
+                onOffsetChange={onOffsetChange}
+                repositionEnabled={repositionEnabled}
               >
-                {/* Full onesie when alone; short base layer when other pieces are on */}
-                {hasTop || hasBottom ? (
-                  <motion.path
-                    d="M104 142c6-8 66-8 72 0l6 14v78c0 10-10 18-22 18h-40c-12 0-22-8-22-18v-78l6-14z"
-                    animate={{ fill: fillFor(body.color) }}
-                    transition={{ duration: 0.3 }}
-                    stroke="#1f2230"
-                    strokeOpacity="0.1"
-                    strokeWidth="1.5"
-                  />
-                ) : (
-                  <motion.path
-                    d="M96 140c8-12 80-12 88 0l10 18 16 10c5 3 7 10 3 15l-10 14c-3 4-8 5-12 3l-5-3v118c0 12-10 20-20 20h-42c-10 0-20-8-20-20V197l-5 3c-4 2-9 1-12-3l-10-14c-4-5-2-12 3-15l16-10 10-18z"
-                    animate={{ fill: fillFor(body.color) }}
-                    transition={{ duration: 0.3 }}
-                    stroke="#1f2230"
-                    strokeOpacity="0.1"
-                    strokeWidth="1.5"
-                  />
-                )}
-                {!hasTop && !hasBottom ? (
-                  <>
-                    <circle cx="120" cy="205" r="3.2" fill="#1f2230" opacity="0.18" />
-                    <circle cx="120" cy="228" r="3.2" fill="#1f2230" opacity="0.18" />
-                    <circle cx="120" cy="251" r="3.2" fill="#1f2230" opacity="0.18" />
-                  </>
-                ) : null}
-              </motion.g>
+                <g clipPath={hasTop || hasBottom ? 'url(#tryon-body-clip)' : undefined}>
+                  {hasTop || hasBottom ? (
+                    <motion.path
+                      d="M104 142c6-8 66-8 72 0l6 14v78c0 10-10 18-22 18h-40c-12 0-22-8-22-18v-78l6-14z"
+                      animate={{ fill: fillFor(body.color) }}
+                      transition={{ duration: 0.3 }}
+                      stroke="#1f2230"
+                      strokeOpacity="0.1"
+                      strokeWidth="1.5"
+                    />
+                  ) : (
+                    <motion.path
+                      d="M96 140c8-12 80-12 88 0l10 18 16 10c5 3 7 10 3 15l-10 14c-3 4-8 5-12 3l-5-3v118c0 12-10 20-20 20h-42c-10 0-20-8-20-20V197l-5 3c-4 2-9 1-12-3l-10-14c-4-5-2-12 3-15l16-10 10-18z"
+                      animate={{ fill: fillFor(body.color) }}
+                      transition={{ duration: 0.3 }}
+                      stroke="#1f2230"
+                      strokeOpacity="0.1"
+                      strokeWidth="1.5"
+                    />
+                  )}
+                </g>
+              </DraggableGarment>
             ) : null}
 
             {bottom ? (
-              <motion.g
+              <DraggableGarment
                 key={`bottom-${bottom.id}`}
-                variants={garmentVariants}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                style={{ originX: '140px', originY: '310px' }}
-                filter="url(#tryon-cloth)"
+                slot="bottom"
+                offset={offsetOf('bottom')}
+                onOffsetChange={onOffsetChange}
+                repositionEnabled={repositionEnabled}
               >
                 <motion.path
                   d="M110 252h60c7 0 12 5 12 12v16c0 5-2 10-6 18l-8 66c-1.5 8-8 13-14 13h-5c-6 0-11-4-12.5-10l-6.5-40-6.5 40c-1.5 6-6.5 10-12.5 10h-5c-6 0-12.5-5-14-13l-8-66c-4-8-6-13-6-18v-16c0-7 5-12 12-12z"
@@ -348,25 +349,16 @@ export function AnimatedBaby({
                   strokeOpacity="0.12"
                   strokeWidth="1.5"
                 />
-                <path
-                  d="M140 252v48"
-                  stroke="#fff"
-                  strokeOpacity="0.25"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </motion.g>
+              </DraggableGarment>
             ) : null}
 
             {top ? (
-              <motion.g
+              <DraggableGarment
                 key={`top-${top.id}`}
-                variants={garmentVariants}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                style={{ originX: '140px', originY: '175px' }}
-                filter="url(#tryon-cloth)"
+                slot="top"
+                offset={offsetOf('top')}
+                onOffsetChange={onOffsetChange}
+                repositionEnabled={repositionEnabled}
               >
                 <motion.path
                   d="M102 144c7-10 69-10 76 0l7 14 14 8c5 3 6 9 3 14l-9 13c-2.5 4-8 5-11 2.5l-3-2v48c0 9-9 15-18 15h-32c-9 0-18-6-18-15v-48l-3 2c-3 2.5-8.5 1.5-11-2.5l-9-13c-3-5-2-11 3-14l14-8 7-14z"
@@ -376,27 +368,17 @@ export function AnimatedBaby({
                   strokeOpacity="0.12"
                   strokeWidth="1.5"
                 />
-                <path
-                  d="M140 148v72"
-                  stroke="#fff"
-                  strokeOpacity="0.22"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </motion.g>
+              </DraggableGarment>
             ) : null}
 
             {outer ? (
-              <motion.g
+              <DraggableGarment
                 key={`outer-${outer.id}`}
-                variants={garmentVariants}
-                initial="hidden"
-                animate="show"
-                exit="exit"
-                style={{ originX: '140px', originY: '185px' }}
-                filter="url(#tryon-cloth)"
+                slot="outer"
+                offset={offsetOf('outer')}
+                onOffsetChange={onOffsetChange}
+                repositionEnabled={repositionEnabled}
               >
-                {/* Open jacket: left panel */}
                 <motion.path
                   d="M96 146c8-14 28-18 40-18v168c-18 8-40 4-52-8v-92l-6 3c-4 2-9 1-11-3l-12-18c-3-5-2-11 3-14l18-10 20-16z"
                   animate={{ fill: fillFor(outer.color) }}
@@ -406,7 +388,6 @@ export function AnimatedBaby({
                   strokeWidth="1.5"
                   opacity={0.96}
                 />
-                {/* Open jacket: right panel */}
                 <motion.path
                   d="M144 128c12 0 32 4 40 18l20 16 18 10c5 3 6 9 3 14l-12 18c-2 4-7 5-11 3l-6-3v92c-12 12-34 16-52 8V128z"
                   animate={{ fill: fillFor(outer.color) }}
@@ -416,52 +397,82 @@ export function AnimatedBaby({
                   strokeWidth="1.5"
                   opacity={0.96}
                 />
+              </DraggableGarment>
+            ) : null}
+
+            {gloves ? (
+              <DraggableGarment
+                key={`gloves-${gloves.id}`}
+                slot="gloves"
+                offset={offsetOf('gloves')}
+                onOffsetChange={onOffsetChange}
+                repositionEnabled={repositionEnabled}
+              >
+                {/* Left + right mittens at hand ends */}
+                <motion.ellipse
+                  cx="68"
+                  cy="258"
+                  rx="16"
+                  ry="20"
+                  animate={{ fill: fillFor(gloves.color) }}
+                  transition={{ duration: 0.3 }}
+                  stroke="#1f2230"
+                  strokeOpacity="0.12"
+                  strokeWidth="1.5"
+                />
+                <motion.ellipse
+                  cx="212"
+                  cy="258"
+                  rx="16"
+                  ry="20"
+                  animate={{ fill: fillFor(gloves.color) }}
+                  transition={{ duration: 0.3 }}
+                  stroke="#1f2230"
+                  strokeOpacity="0.12"
+                  strokeWidth="1.5"
+                />
+                <ellipse cx="62" cy="248" rx="5" ry="7" fill={fillFor(gloves.color)} opacity="0.9" />
+                <ellipse cx="218" cy="248" rx="5" ry="7" fill={fillFor(gloves.color)} opacity="0.9" />
+              </DraggableGarment>
+            ) : null}
+
+            {socks ? (
+              <DraggableGarment
+                key={`socks-${socks.id}`}
+                slot="socks"
+                offset={offsetOf('socks')}
+                onOffsetChange={onOffsetChange}
+                repositionEnabled={repositionEnabled}
+              >
+                <motion.path
+                  d="M108 360c-2 8-1 18 4 24 4 5 12 8 20 6 6-1 10-6 11-12l2-18h-18c-8 0-15 4-19 12z"
+                  animate={{ fill: fillFor(socks.color) }}
+                  transition={{ duration: 0.3 }}
+                  stroke="#1f2230"
+                  strokeOpacity="0.12"
+                  strokeWidth="1.4"
+                />
+                <motion.path
+                  d="M172 360c2 8 1 18-4 24-4 5-12 8-20 6-6-1-10-6-11-12l-2-18h18c8 0 15 4 19 12z"
+                  animate={{ fill: fillFor(socks.color) }}
+                  transition={{ duration: 0.3 }}
+                  stroke="#1f2230"
+                  strokeOpacity="0.12"
+                  strokeWidth="1.4"
+                />
                 <path
-                  d="M136 150v140M144 150v140"
+                  d="M112 368h18M168 368h18"
                   stroke="#fff"
-                  strokeOpacity="0.28"
-                  strokeWidth="2.5"
+                  strokeOpacity="0.35"
+                  strokeWidth="2"
                   strokeLinecap="round"
                 />
-              </motion.g>
-            ) : null}
-          </AnimatePresence>
-
-          {/* Soft sparkle when any garment is worn */}
-          <AnimatePresence>
-            {body || top || bottom || outer ? (
-              <motion.g
-                key="sparkle"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                {[
-                  { x: 68, y: 150 },
-                  { x: 208, y: 170 },
-                  { x: 74, y: 290 },
-                ].map((spark, index) => (
-                  <motion.circle
-                    key={`${spark.x}-${spark.y}`}
-                    cx={spark.x}
-                    cy={spark.y}
-                    r="2.5"
-                    fill="#fff"
-                    animate={{ opacity: [0, 0.9, 0], scale: [0.5, 1.4, 0.5] }}
-                    transition={{
-                      duration: 1.8,
-                      repeat: Infinity,
-                      delay: index * 0.45,
-                      ease: 'easeInOut',
-                    }}
-                  />
-                ))}
-              </motion.g>
+              </DraggableGarment>
             ) : null}
           </AnimatePresence>
         </motion.g>
 
-        {hasOuter || hasTop || hasBottom || body ? (
+        {hasAny ? (
           <motion.text
             x="140"
             y="28"
@@ -469,15 +480,15 @@ export function AnimatedBaby({
             fill="#d0178b"
             fontSize="11"
             fontWeight="700"
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 0.75, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.75 }}
           >
             ★
           </motion.text>
         ) : null}
       </motion.svg>
 
-      <div className="tryon-zones">
+      <div className={`tryon-zones${zonesActive ? ' is-active' : ''}`}>
         {zoneOrder.map((slot) => {
           const props = zoneProps(slot)
           return (
@@ -490,14 +501,18 @@ export function AnimatedBaby({
               animate={
                 dropSlot === slot
                   ? {
-                      scale: 1.02,
-                      backgroundColor: 'rgba(255,255,255,0.55)',
+                      scale: 1.04,
+                      backgroundColor: 'rgba(255,255,255,0.62)',
                       borderColor: 'rgba(208,23,139,0.55)',
                     }
                   : {
                       scale: 1,
-                      backgroundColor: 'rgba(255,255,255,0)',
-                      borderColor: 'rgba(208,23,139,0)',
+                      backgroundColor: worn[slot]
+                        ? 'rgba(255,255,255,0.2)'
+                        : 'rgba(255,255,255,0)',
+                      borderColor: worn[slot]
+                        ? 'rgba(208,23,139,0.2)'
+                        : 'rgba(208,23,139,0)',
                     }
               }
               transition={{ type: 'spring', stiffness: 420, damping: 26 }}

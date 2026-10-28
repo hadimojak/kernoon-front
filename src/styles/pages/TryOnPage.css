@@ -71,6 +71,39 @@
   text-align: center;
 }
 
+.tryon__reposition-hint {
+  margin-top: 8px !important;
+  color: var(--brand) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600;
+}
+
+.tryon__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.tryon__filter {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(208, 23, 139, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.tryon__filter.is-active,
+.tryon__filter:hover {
+  background: linear-gradient(135deg, #d0178b, #9d1468);
+  border-color: transparent;
+  color: #fff;
+}
+
 .tryon__rack,
 .tryon__temp {
   border: 1px solid rgba(208, 23, 139, 0.12);
@@ -268,50 +301,58 @@
 
 .tryon-zones {
   position: absolute;
-  /* Align with torso/legs — skip the head area */
-  inset: 26% 16% 10%;
+  left: 50%;
+  bottom: 2%;
+  transform: translateX(-50%);
+  width: min(100%, 300px);
   display: grid;
-  /* outer → top → body → bottom */
-  grid-template-rows: 0.85fr 0.95fr 0.85fr 1.15fr;
-  gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
   pointer-events: none;
   z-index: 2;
+  padding: 0 6px;
+}
+
+.tryon-zones.is-active {
+  pointer-events: auto;
 }
 
 .tryon-zone {
   pointer-events: auto;
-  border: 1.5px dashed transparent;
-  border-radius: 14px;
+  border: 1.5px dashed rgba(208, 23, 139, 0.22);
+  border-radius: 12px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  padding: 6px 8px;
-  color: transparent;
-  font-size: 0.7rem;
+  gap: 4px;
+  min-height: 34px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--brand-dark, #7c0c4d);
+  font-size: 0.68rem;
   font-weight: 700;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(80, 20, 60, 0.06);
   transition:
     border-color 0.18s ease,
     background 0.18s ease,
     color 0.18s ease;
 }
 
-.tryon-zone.is-target,
-.tryon-baby:hover .tryon-zone {
-  border-color: rgba(208, 23, 139, 0.32);
-  background: rgba(255, 255, 255, 0.34);
-  color: var(--brand-dark, #7c0c4d);
+.tryon-zones:not(.is-active) .tryon-zone {
+  opacity: 0.72;
 }
 
 .tryon-zone.is-target {
   border-style: solid;
+  border-color: rgba(208, 23, 139, 0.55);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 0 0 3px rgba(208, 23, 139, 0.12);
 }
 
 .tryon-zone.is-filled {
-  border-color: rgba(208, 23, 139, 0.18);
-  background: rgba(255, 255, 255, 0.16);
-  color: rgba(125, 12, 77, 0.72);
+  border-color: rgba(208, 23, 139, 0.35);
+  background: rgba(255, 247, 251, 0.95);
 }
 
 .tryon-zone__clear {

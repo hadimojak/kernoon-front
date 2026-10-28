@@ -1,7 +1,24 @@
 import type { ClothingColorId } from './catalog'
 import { clothingColorIds } from './catalog'
 
-export type TryOnSlot = 'body' | 'top' | 'bottom' | 'outer'
+export type TryOnSlot =
+  | 'body'
+  | 'top'
+  | 'bottom'
+  | 'outer'
+  | 'gloves'
+  | 'socks'
+
+export const tryOnSlots: TryOnSlot[] = [
+  'body',
+  'top',
+  'bottom',
+  'outer',
+  'gloves',
+  'socks',
+]
+
+export type SlotOffset = { x: number; y: number }
 
 export type TryOnItem = {
   id: string
@@ -16,15 +33,16 @@ export type TryOnItem = {
 }
 
 const STORAGE_KEY = 'kernoon-try-on-cart'
+const OFFSET_KEY = 'kernoon-try-on-offsets'
 
 export function slotForCategory(category: string, name = ''): TryOnSlot {
   const lower = `${category} ${name}`.toLowerCase()
+  if (/sock|جوراب/.test(lower)) return 'socks'
+  if (/glove|mitten|دستکش/.test(lower)) return 'gloves'
   if (category === 'outerwear' || /cardigan|hoodie|jacket|coat/.test(lower)) {
     return 'outer'
   }
-  if (
-    /jogger|pants|overall|trouser|bottom|شلوار|بیلر|جاگر/.test(lower)
-  ) {
+  if (/jogger|pants|overall|trouser|bottom|شلوار|بیلر|جاگر/.test(lower)) {
     return 'bottom'
   }
   if (
@@ -58,7 +76,8 @@ export function readTryOnCart(): TryOnItem[] {
         item &&
         typeof item.id === 'string' &&
         typeof item.productId === 'string' &&
-        typeof item.name === 'string',
+        typeof item.name === 'string' &&
+        tryOnSlots.includes(item.slot),
     )
   } catch {
     return []
@@ -68,6 +87,21 @@ export function readTryOnCart(): TryOnItem[] {
 export function writeTryOnCart(items: TryOnItem[]) {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   window.dispatchEvent(new Event('kernoon-try-on'))
+}
+
+export function readTryOnOffsets(): Partial<Record<TryOnSlot, SlotOffset>> {
+  try {
+    const raw = sessionStorage.getItem(OFFSET_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw) as Partial<Record<TryOnSlot, SlotOffset>>
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+export function writeTryOnOffsets(offsets: Partial<Record<TryOnSlot, SlotOffset>>) {
+  sessionStorage.setItem(OFFSET_KEY, JSON.stringify(offsets))
 }
 
 export function makeTryOnId() {
@@ -129,5 +163,23 @@ export const tryOnSamples: Omit<TryOnItem, 'id' | 'color'>[] = [
     category: 'kids',
     colors: ['gray', 'pink', 'green'],
     slot: 'outer',
+  },
+  {
+    productId: 'sample-gloves',
+    name: 'Soft baby mittens',
+    nameFa: 'دستکش نرم نوزاد',
+    image: '/clothes/onesie.svg',
+    category: 'newborn',
+    colors: ['pink', 'white', 'beige'],
+    slot: 'gloves',
+  },
+  {
+    productId: 'sample-socks',
+    name: 'Cotton ankle socks',
+    nameFa: 'جوراب نخی مچی',
+    image: '/clothes/tee.svg',
+    category: 'toddler',
+    colors: ['white', 'navy', 'yellow'],
+    slot: 'socks',
   },
 ]
