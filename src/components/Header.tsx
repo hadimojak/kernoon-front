@@ -22,6 +22,7 @@ const loggedInUtilityLinks: { key: MessageKey; to: string; state?: { from: strin
 ]
 
 const navItems: { key: MessageKey; to: string }[] = [
+  { key: 'nav.all', to: '/all' },
   { key: 'nav.newborn', to: '/newborn' },
   { key: 'nav.toddler', to: '/toddler' },
   { key: 'nav.kids', to: '/kids' },

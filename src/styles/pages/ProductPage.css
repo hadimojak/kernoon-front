@@ -403,6 +403,113 @@
   }
 }
 
+.product-size-guide-btn {
+  display: inline-flex;
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.product-size-guide-btn:hover {
+  color: var(--brand-strong);
+}
+
+.size-guide-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 20, 24, 0.45);
+}
+
+.size-guide-modal__panel {
+  width: min(640px, 100%);
+  max-height: min(88vh, 720px);
+  overflow: auto;
+  padding: 22px 22px 20px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+}
+
+.size-guide-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.size-guide-modal__header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.size-guide-modal__close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 4px;
+  background: #f3f3f3;
+  color: var(--ink);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.size-guide-modal__close:hover {
+  background: #e8e8e8;
+}
+
+.size-guide-modal__lead {
+  margin: 10px 0 16px;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.size-guide-modal__table-wrap {
+  overflow-x: auto;
+}
+
+.size-guide-modal__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.size-guide-modal__table th,
+.size-guide-modal__table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.size-guide-modal__table th {
+  background: #f7f7f7;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.size-guide-modal__foot {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
 @media (max-width: 640px) {
   .product-page__frame {
     padding: 14px 16px 36px;
@@ -415,5 +522,21 @@
 
   .product-support__copy {
     padding: 36px 22px;
+  }
+
+  .size-guide-modal {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .size-guide-modal__panel {
+    max-height: 90vh;
+    padding: 18px 14px 16px;
+  }
+
+  .size-guide-modal__table th,
+  .size-guide-modal__table td {
+    padding: 8px 8px;
+    font-size: 0.82rem;
   }
 }

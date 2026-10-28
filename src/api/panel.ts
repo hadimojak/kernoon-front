@@ -7,6 +7,14 @@ export type PanelDashboard = {
   revenueToman: number
 }
 
+export type SizeGuideRow = {
+  size: string
+  heightCm: string
+  chestCm: string
+  waistCm: string
+  note?: string
+}
+
 export type PanelProduct = {
   id: string
   name: string
@@ -15,6 +23,7 @@ export type PanelProduct = {
   toman: number
   category: string
   sizes: string[]
+  sizeGuide?: SizeGuideRow[]
   stock: number
   image: string
   images: string[]
@@ -38,6 +47,7 @@ export type SellerProductInput = {
   usd?: number
   category: string
   sizes: string[]
+  sizeGuide?: SizeGuideRow[]
   stock: number
   description: string
   image?: string

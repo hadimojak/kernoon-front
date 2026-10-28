@@ -1,5 +1,13 @@
 import { apiRequest } from './client'
 
+export type SizeGuideRow = {
+  size: string
+  heightCm: string
+  chestCm: string
+  waistCm: string
+  note?: string
+}
+
 export type ShopProduct = {
   id: string
   name: string
@@ -10,6 +18,7 @@ export type ShopProduct = {
   images?: string[]
   category: string
   sizes: string[]
+  sizeGuide?: SizeGuideRow[]
   stock: number
   description: string
   sellerId?: string

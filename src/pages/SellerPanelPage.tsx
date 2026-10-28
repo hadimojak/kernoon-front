@@ -11,7 +11,9 @@ import {
   type PanelCustomer,
   type PanelDashboard,
   type PanelProduct,
+  type SizeGuideRow,
 } from '../api/panel'
+import { mergeSizeGuide } from '../data/sizeGuide'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/SellerPanelPage.css'
@@ -36,6 +38,7 @@ const emptyForm = {
   stock: '10',
   category: 'kids' as (typeof categories)[number],
   sizes: ['2-3'] as string[],
+  sizeGuide: mergeSizeGuide(['2-3']) as SizeGuideRow[],
   images: [] as string[],
 }
 
@@ -97,6 +100,10 @@ export default function SellerPanelPage() {
         ? product.category
         : 'kids') as (typeof categories)[number],
       sizes: product.sizes?.length ? [...product.sizes] : ['2-3'],
+      sizeGuide: mergeSizeGuide(
+        product.sizes?.length ? product.sizes : ['2-3'],
+        product.sizeGuide,
+      ),
       images: product.images?.length
         ? [...product.images]
         : product.image
@@ -114,8 +121,26 @@ export default function SellerPanelPage() {
       const sizes = has
         ? current.sizes.filter((item) => item !== size)
         : [...current.sizes, size]
-      return { ...current, sizes: sizes.length ? sizes : current.sizes }
+      const nextSizes = sizes.length ? sizes : current.sizes
+      return {
+        ...current,
+        sizes: nextSizes,
+        sizeGuide: mergeSizeGuide(nextSizes, current.sizeGuide),
+      }
     })
+  }
+
+  function updateGuideField(
+    size: string,
+    field: 'heightCm' | 'chestCm' | 'waistCm' | 'note',
+    value: string,
+  ) {
+    setForm((current) => ({
+      ...current,
+      sizeGuide: current.sizeGuide.map((row) =>
+        row.size === size ? { ...row, [field]: value } : row,
+      ),
+    }))
   }
 
   async function onAlbumPick(event: ChangeEvent<HTMLInputElement>) {
@@ -177,6 +202,7 @@ export default function SellerPanelPage() {
       toman: Math.round(toman),
       category: form.category,
       sizes: form.sizes,
+      sizeGuide: mergeSizeGuide(form.sizes, form.sizeGuide),
       stock: Number.isFinite(stock) ? Math.max(0, Math.round(stock)) : 0,
       description: form.description.trim() || t('panel.defaultDescription'),
       image: form.images[0],
@@ -421,6 +447,58 @@ export default function SellerPanelPage() {
                           />
                           {t(`size.${size}` as MessageKey)}
                         </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="wp-box">
+                    <h2>{t('panel.sizeGuide')}</h2>
+                    <p className="wp-editor__hint">{t('panel.sizeGuideHint')}</p>
+                    <div className="wp-editor__guide">
+                      {form.sizeGuide.map((row) => (
+                        <fieldset key={row.size} className="wp-editor__guide-row">
+                          <legend>{t(`size.${row.size}` as MessageKey)}</legend>
+                          <label>
+                            {t('panel.guideHeight')}
+                            <input
+                              value={row.heightCm}
+                              onChange={(event) =>
+                                updateGuideField(row.size, 'heightCm', event.target.value)
+                              }
+                              placeholder="86–98"
+                            />
+                          </label>
+                          <label>
+                            {t('panel.guideChest')}
+                            <input
+                              value={row.chestCm}
+                              onChange={(event) =>
+                                updateGuideField(row.size, 'chestCm', event.target.value)
+                              }
+                              placeholder="51–54"
+                            />
+                          </label>
+                          <label>
+                            {t('panel.guideWaist')}
+                            <input
+                              value={row.waistCm}
+                              onChange={(event) =>
+                                updateGuideField(row.size, 'waistCm', event.target.value)
+                              }
+                              placeholder="50–53"
+                            />
+                          </label>
+                          <label className="wp-editor__guide-note">
+                            {t('panel.guideNote')}
+                            <input
+                              value={row.note ?? ''}
+                              onChange={(event) =>
+                                updateGuideField(row.size, 'note', event.target.value)
+                              }
+                              placeholder={t('panel.guideNotePlaceholder')}
+                            />
+                          </label>
+                        </fieldset>
                       ))}
                     </div>
                   </div>

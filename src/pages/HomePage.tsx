@@ -16,6 +16,7 @@ import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/HomePage.css'
 
 const categories: { key: MessageKey; image: string; to: string }[] = [
+  { key: 'nav.all', image: '/clothes/hero.svg', to: '/all' },
   { key: 'nav.newborn', image: '/clothes/onesie.svg', to: '/newborn' },
   { key: 'nav.toddler', image: '/clothes/tee.svg', to: '/toddler' },
   { key: 'nav.kids', image: '/clothes/hoodie.svg', to: '/kids' },

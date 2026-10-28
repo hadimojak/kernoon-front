@@ -10,9 +10,10 @@ import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/HomePage.css'
 import '../styles/pages/ShopMenuPage.css'
 
-type ShopKind = Category | 'sizes'
+type ShopKind = Category | 'sizes' | 'all'
 
 const kindByPath: Record<string, ShopKind> = {
+  '/all': 'all',
   '/newborn': 'newborn',
   '/toddler': 'toddler',
   '/kids': 'kids',
@@ -52,7 +53,8 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
 
   useEffect(() => {
     let alive = true
-    const category = resolvedKind === 'sizes' ? undefined : resolvedKind
+    const category =
+      resolvedKind === 'sizes' || resolvedKind === 'all' ? undefined : resolvedKind
     listProducts(category, size ?? undefined)
       .then((rows) => {
         if (alive) setProducts(rows)
@@ -62,6 +64,7 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
         setProducts(
           catalog
             .filter((product) => {
+              if (resolvedKind === 'all') return true
               if (resolvedKind === 'sizes') {
                 return size ? product.sizes.includes(size) : true
               }

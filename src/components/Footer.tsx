@@ -39,6 +39,7 @@ const columns: {
     title: 'footer.shop',
     split: true,
     links: [
+      { key: 'nav.all', to: '/all' },
       { key: 'nav.newborn', to: '/newborn' },
       { key: 'nav.toddler', to: '/toddler' },
       { key: 'nav.kids', to: '/kids' },

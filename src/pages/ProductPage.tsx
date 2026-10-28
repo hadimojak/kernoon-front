@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { addCartItem, getProduct, type ShopProduct } from '../api/shop'
 import { catalog, formatMoney } from '../data/catalog'
+import { mergeSizeGuide } from '../data/sizeGuide'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { Footer } from '../components/Footer'
@@ -54,6 +55,7 @@ export default function ProductPage() {
   const [tier, setTier] = useState<(typeof tiers)[number]['id']>('deluxe')
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+  const [guideOpen, setGuideOpen] = useState(false)
   const [open, setOpen] = useState<Record<AccordionKey, boolean>>({
     description: true,
     care: true,
@@ -61,6 +63,7 @@ export default function ProductPage() {
     reviews: true,
     substitution: true,
   })
+  const sizeGuide = mergeSizeGuide(product.sizes, product.sizeGuide)
 
   const album =
     product.images?.filter(Boolean).length
@@ -96,6 +99,20 @@ export default function ProductPage() {
   useEffect(() => {
     document.title = `${title} | ${t('brand.name')}`
   }, [t, title])
+
+  useEffect(() => {
+    if (!guideOpen) return
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setGuideOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = previous
+    }
+  }, [guideOpen])
 
   function toggle(key: AccordionKey) {
     setOpen((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -210,6 +227,14 @@ export default function ProductPage() {
                   </label>
                 ))}
               </div>
+
+              <button
+                className="product-size-guide-btn"
+                type="button"
+                onClick={() => setGuideOpen(true)}
+              >
+                {t('product.sizeGuide')}
+              </button>
 
               <p className="product-buybox__prompt">{t('product.how')}</p>
               <div className="product-delivery" role="status">
@@ -362,6 +387,61 @@ export default function ProductPage() {
       </main>
 
       <Footer />
+
+      {guideOpen ? (
+        <div
+          className="size-guide-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="size-guide-title"
+          onClick={() => setGuideOpen(false)}
+        >
+          <div
+            className="size-guide-modal__panel"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header className="size-guide-modal__header">
+              <h2 id="size-guide-title">{t('product.sizeGuideTitle')}</h2>
+              <button
+                className="size-guide-modal__close"
+                type="button"
+                onClick={() => setGuideOpen(false)}
+                aria-label={t('product.sizeGuideClose')}
+              >
+                ×
+              </button>
+            </header>
+            <p className="size-guide-modal__lead">
+              {t('product.sizeGuideLead', { name: title })}
+            </p>
+            <div className="size-guide-modal__table-wrap">
+              <table className="size-guide-modal__table">
+                <thead>
+                  <tr>
+                    <th>{t('product.guideSize')}</th>
+                    <th>{t('product.guideHeight')}</th>
+                    <th>{t('product.guideChest')}</th>
+                    <th>{t('product.guideWaist')}</th>
+                    <th>{t('product.guideNote')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sizeGuide.map((row) => (
+                    <tr key={row.size}>
+                      <td>{t(`size.${row.size}` as MessageKey)}</td>
+                      <td>{row.heightCm}</td>
+                      <td>{row.chestCm}</td>
+                      <td>{row.waistCm}</td>
+                      <td>{row.note || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="size-guide-modal__foot">{t('product.sizeGuideFoot')}</p>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

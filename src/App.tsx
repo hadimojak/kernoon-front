@@ -99,6 +99,7 @@ export default function App() {
       <Route path="/sell" element={<SellPage />} />
       <Route path="/sell/login" element={<SellerLoginPage />} />
       <Route path="/seller-panel" element={<SellerPanelRoute />} />
+      <Route path="/all" element={<ShopMenuPage kind="all" />} />
       <Route path="/newborn" element={<ShopMenuPage kind="newborn" />} />
       <Route path="/toddler" element={<ShopMenuPage kind="toddler" />} />
       <Route path="/kids" element={<ShopMenuPage kind="kids" />} />
