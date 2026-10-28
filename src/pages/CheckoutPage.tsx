@@ -4,14 +4,16 @@ import { isLoggedIn } from '../auth/session'
 import {
   checkoutOrder,
   getCart,
+  getProduct,
   listAddresses,
   listPaymentMethods,
   removeCartItem,
   type Address,
   type CartItem,
   type PaymentMethod,
+  type ShopProduct,
 } from '../api/shop'
-import { catalog, formatMoney } from '../data/catalog'
+import { formatMoney } from '../data/catalog'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { useI18n } from '../i18n/useI18n'
@@ -22,6 +24,7 @@ export default function CheckoutPage() {
   const { t, lang } = useI18n()
   const navigate = useNavigate()
   const [items, setItems] = useState<CartItem[]>([])
+  const [productsById, setProductsById] = useState<Record<string, ShopProduct>>({})
   const [addresses, setAddresses] = useState<Address[]>([])
   const [payments, setPayments] = useState<PaymentMethod[]>([])
   const [addressId, setAddressId] = useState('')
@@ -42,6 +45,22 @@ export default function CheckoutPage() {
         const cart = await getCart()
         if (!alive) return
         setItems(cart.items)
+        const ids = [...new Set(cart.items.map((item) => item.productId))]
+        const resolved = await Promise.all(
+          ids.map(async (id) => {
+            try {
+              return await getProduct(id)
+            } catch {
+              return null
+            }
+          }),
+        )
+        if (!alive) return
+        const map: Record<string, ShopProduct> = {}
+        for (const row of resolved) {
+          if (row) map[row.id] = row
+        }
+        setProductsById(map)
         if (signedIn) {
           const [addr, cards] = await Promise.all([listAddresses(), listPaymentMethods()])
           if (!alive) return
@@ -123,7 +142,7 @@ export default function CheckoutPage() {
             <h1 id="checkout-title">{t('cart.title')}</h1>
             <ul className="account-list">
               {items.map((item) => {
-                const product = catalog.find((row) => row.id === item.productId)
+                const product = productsById[item.productId]
                 return (
                   <li key={item.id} className="account-list__item">
                     <div>
@@ -135,7 +154,11 @@ export default function CheckoutPage() {
                           : item.productId}
                       </strong>
                       <p>
-                        {t(`size.${item.size}` as MessageKey)} · {item.tier} · ×{item.quantity}
+                        {t(`size.${item.size}` as MessageKey)}
+                        {item.color
+                          ? ` · ${t(`color.${item.color}` as MessageKey)}`
+                          : ''}
+                        {' · '}×{item.quantity}
                       </p>
                       {product ? <p>{formatMoney(product, lang)}</p> : null}
                     </div>

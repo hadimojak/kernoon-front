@@ -13,6 +13,7 @@ import {
   type PanelProduct,
   type SizeGuideRow,
 } from '../api/panel'
+import { clothingColorIds } from '../data/catalog'
 import { mergeSizeGuide } from '../data/sizeGuide'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
@@ -30,6 +31,8 @@ const menu: { id: Section; label: MessageKey }[] = [
 const categories = ['newborn', 'toddler', 'kids', 'sleepwear', 'outerwear'] as const
 const sizeOptions = ['0-3', '3-6', '6-12', '1-2', '2-3', '3-4'] as const
 
+const countryOptions = ['Iran', 'Turkey', 'China', 'Bangladesh', 'India', 'Other'] as const
+
 const emptyForm = {
   name: '',
   nameFa: '',
@@ -39,6 +42,8 @@ const emptyForm = {
   category: 'kids' as (typeof categories)[number],
   sizes: ['2-3'] as string[],
   sizeGuide: mergeSizeGuide(['2-3']) as SizeGuideRow[],
+  colors: ['white'] as string[],
+  countryOfOrigin: 'Iran',
   images: [] as string[],
 }
 
@@ -104,6 +109,8 @@ export default function SellerPanelPage() {
         product.sizes?.length ? product.sizes : ['2-3'],
         product.sizeGuide,
       ),
+      colors: product.colors?.length ? [...product.colors] : ['white'],
+      countryOfOrigin: product.countryOfOrigin || 'Iran',
       images: product.images?.length
         ? [...product.images]
         : product.image
@@ -127,6 +134,16 @@ export default function SellerPanelPage() {
         sizes: nextSizes,
         sizeGuide: mergeSizeGuide(nextSizes, current.sizeGuide),
       }
+    })
+  }
+
+  function toggleColor(color: string) {
+    setForm((current) => {
+      const has = current.colors.includes(color)
+      const colors = has
+        ? current.colors.filter((item) => item !== color)
+        : [...current.colors, color]
+      return { ...current, colors: colors.length ? colors : current.colors }
     })
   }
 
@@ -193,6 +210,14 @@ export default function SellerPanelPage() {
       setError(t('panel.sizesRequired'))
       return
     }
+    if (!form.colors.length) {
+      setError(t('panel.colorsRequired'))
+      return
+    }
+    if (!form.countryOfOrigin.trim()) {
+      setError(t('panel.countryRequired'))
+      return
+    }
     setPending(true)
     setError('')
     setNotice('')
@@ -203,6 +228,8 @@ export default function SellerPanelPage() {
       category: form.category,
       sizes: form.sizes,
       sizeGuide: mergeSizeGuide(form.sizes, form.sizeGuide),
+      colors: form.colors,
+      countryOfOrigin: form.countryOfOrigin.trim(),
       stock: Number.isFinite(stock) ? Math.max(0, Math.round(stock)) : 0,
       description: form.description.trim() || t('panel.defaultDescription'),
       image: form.images[0],
@@ -449,6 +476,41 @@ export default function SellerPanelPage() {
                         </label>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="wp-box">
+                    <h2>{t('panel.colors')}</h2>
+                    <div className="wp-editor__sizes">
+                      {clothingColorIds.map((color) => (
+                        <label key={color}>
+                          <input
+                            type="checkbox"
+                            checked={form.colors.includes(color)}
+                            onChange={() => toggleColor(color)}
+                          />
+                          {t(`color.${color}` as MessageKey)}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="wp-box">
+                    <h2>{t('panel.country')}</h2>
+                    <label className="wp-box__stock">
+                      {t('panel.country')}
+                      <select
+                        value={form.countryOfOrigin}
+                        onChange={(event) =>
+                          setForm({ ...form, countryOfOrigin: event.target.value })
+                        }
+                      >
+                        {countryOptions.map((country) => (
+                          <option key={country} value={country}>
+                            {t(`country.${country}` as MessageKey)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
                   </div>
 
                   <div className="wp-box">

@@ -4,7 +4,7 @@ import { listProducts, type ShopProduct } from '../api/shop'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { StoreIcon } from '../components/icons/StoreIcon'
-import { catalog, formatMoney, sizeIds, type Category, type SizeId } from '../data/catalog'
+import { formatMoney, sizeIds, type Category, type SizeId } from '../data/catalog'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/HomePage.css'
@@ -60,23 +60,7 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
         if (alive) setProducts(rows)
       })
       .catch(() => {
-        if (!alive) return
-        setProducts(
-          catalog
-            .filter((product) => {
-              if (resolvedKind === 'all') return true
-              if (resolvedKind === 'sizes') {
-                return size ? product.sizes.includes(size) : true
-              }
-              return product.category === resolvedKind
-            })
-            .map((product) => ({
-              ...product,
-              images: [product.image],
-              stock: 10,
-              description: '',
-            })),
-        )
+        if (alive) setProducts([])
       })
     return () => {
       alive = false

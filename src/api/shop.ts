@@ -19,6 +19,8 @@ export type ShopProduct = {
   category: string
   sizes: string[]
   sizeGuide?: SizeGuideRow[]
+  colors: string[]
+  countryOfOrigin: string
   stock: number
   description: string
   sellerId?: string
@@ -178,6 +180,7 @@ export type CartItem = {
   productId: string
   size: string
   tier: string
+  color?: string
   quantity: number
 }
 
@@ -197,6 +200,7 @@ export function addCartItem(body: {
   productId: string
   size: string
   tier: string
+  color?: string
   quantity: number
 }) {
   return apiRequest<Cart>('/cart/items', { body })

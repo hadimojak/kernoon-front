@@ -24,6 +24,8 @@ export type PanelProduct = {
   category: string
   sizes: string[]
   sizeGuide?: SizeGuideRow[]
+  colors: string[]
+  countryOfOrigin: string
   stock: number
   image: string
   images: string[]
@@ -48,6 +50,8 @@ export type SellerProductInput = {
   category: string
   sizes: string[]
   sizeGuide?: SizeGuideRow[]
+  colors: string[]
+  countryOfOrigin: string
   stock: number
   description: string
   image?: string

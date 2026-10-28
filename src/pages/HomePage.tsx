@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { listProducts, type ShopProduct } from '../api/shop'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { FacebookIcon } from '../components/icons/FacebookIcon'
@@ -10,7 +11,7 @@ import { StarIcon } from '../components/icons/StarIcon'
 import { StoreIcon } from '../components/icons/StoreIcon'
 import { XIcon } from '../components/icons/XIcon'
 import { YouTubeIcon } from '../components/icons/YouTubeIcon'
-import { catalog, formatMoney } from '../data/catalog'
+import { formatMoney } from '../data/catalog'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/HomePage.css'
@@ -48,10 +49,25 @@ const instagramPosts = [
 
 export default function HomePage() {
   const { t, lang } = useI18n()
+  const [products, setProducts] = useState<ShopProduct[]>([])
 
   useEffect(() => {
     document.title = t('home.title')
   }, [t])
+
+  useEffect(() => {
+    let alive = true
+    listProducts()
+      .then((rows) => {
+        if (alive) setProducts(rows)
+      })
+      .catch(() => {
+        if (alive) setProducts([])
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
 
   return (
     <div className="home">
@@ -121,7 +137,7 @@ export default function HomePage() {
         <section className="home-products" aria-labelledby="shop-clothes-title">
           <h2 id="shop-clothes-title">{t('home.productsTitle')}</h2>
           <ul>
-            {catalog.map((product) => (
+            {products.map((product) => (
               <li key={product.id}>
                 <Link to={`/product?item=${product.id}`}>
                   <img src={product.image} alt="" />
@@ -158,7 +174,10 @@ export default function HomePage() {
           <ul>
             {reviewKeys.map((key, index) => (
               <li key={key}>
-                <img src={catalog[index].image} alt="" />
+                <img
+                  src={products[index]?.image || '/clothes/onesie.svg'}
+                  alt=""
+                />
                 <blockquote>“{t(key)}”</blockquote>
                 <p className="home-reviews__name">{reviewNames[index]}</p>
                 <p className="home-reviews__buyer">{t('home.verified')}</p>
