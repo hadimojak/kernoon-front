@@ -124,7 +124,9 @@ export default function HomePage() {
               <li key={product.id}>
                 <Link to={`/product?item=${product.id}`}>
                   <img src={product.image} alt="" />
-                  <span className="home-products__name">{t(`product.${product.id}`)}</span>
+                  <span className="home-products__name">
+                    {lang === 'fa' ? product.nameFa : product.name}
+                  </span>
                   <span className="home-products__price">{formatMoney(product, lang)}</span>
                   <span className="home-products__brand">
                     <StoreIcon />

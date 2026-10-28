@@ -1,0 +1,93 @@
+.profile-photo-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.profile-photo-header h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.profile-photo-back {
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.profile-photo-back:hover {
+  color: var(--ink);
+}
+
+.profile-photo-card {
+  display: grid;
+  gap: 18px;
+  max-width: 420px;
+}
+
+.profile-photo-preview {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 4px;
+}
+
+.profile-photo-preview img {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #f7f7f7;
+}
+
+.profile-photo-hint {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.profile-photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.profile-button--secondary {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+.profile-button--secondary:hover {
+  background: #f5f5f5;
+}
+
+.profile-button--ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  min-width: 0;
+  box-shadow: none;
+}
+
+.profile-button--ghost:hover {
+  color: var(--ink);
+  background: transparent;
+}
+
+@media (max-width: 640px) {
+  .profile-photo-actions {
+    flex-direction: column;
+  }
+
+  .profile-photo-actions .profile-button {
+    width: 100%;
+  }
+}

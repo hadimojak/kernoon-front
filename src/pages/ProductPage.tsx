@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { addCartItem } from '../api/shop'
+import { addCartItem, getProduct, type ShopProduct } from '../api/shop'
 import { catalog, formatMoney } from '../data/catalog'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
@@ -42,7 +42,14 @@ export default function ProductPage() {
   const { t, lang } = useI18n()
   const navigate = useNavigate()
   const [params] = useSearchParams()
-  const product = catalog.find((item) => item.id === params.get('item')) ?? catalog[0]
+  const itemId = params.get('item') || catalog[0].id
+  const fallback = catalog.find((item) => item.id === itemId) ?? catalog[0]
+  const [product, setProduct] = useState<ShopProduct>({
+    ...fallback,
+    images: [fallback.image],
+    stock: 10,
+    description: '',
+  })
   const [activeImage, setActiveImage] = useState(0)
   const [tier, setTier] = useState<(typeof tiers)[number]['id']>('deluxe')
   const [pending, setPending] = useState(false)
@@ -55,9 +62,40 @@ export default function ProductPage() {
     substitution: true,
   })
 
+  const album =
+    product.images?.filter(Boolean).length
+      ? product.images.filter(Boolean)
+      : [product.image]
+  const titleKey = `product.${product.id}` as MessageKey
+  const title =
+    lang === 'fa' && product.nameFa
+      ? product.nameFa
+      : product.name && product.name !== product.id
+        ? product.name
+        : t(titleKey) === titleKey
+          ? product.name || product.id
+          : t(titleKey)
+
   useEffect(() => {
-    document.title = `${t(`product.${product.id}`)} | ${t('brand.name')}`
-  }, [t, product.id])
+    let alive = true
+    getProduct(itemId)
+      .then((row) => {
+        if (alive) {
+          setProduct(row)
+          setActiveImage(0)
+        }
+      })
+      .catch(() => {
+        /* keep local fallback */
+      })
+    return () => {
+      alive = false
+    }
+  }, [itemId])
+
+  useEffect(() => {
+    document.title = `${title} | ${t('brand.name')}`
+  }, [t, title])
 
   function toggle(key: AccordionKey) {
     setOpen((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -92,43 +130,38 @@ export default function ProductPage() {
           <nav className="product-breadcrumb" aria-label="Breadcrumb">
             <Link to="/home">{t('brand.home')}</Link>
             <span aria-hidden="true">›</span>
-            <Link to={`/${product.category}`}>{t(`nav.${product.category}`)}</Link>
+            <Link to={`/${product.category}`}>{t(`nav.${product.category}` as MessageKey)}</Link>
             <span aria-hidden="true">›</span>
-            <span>{t(`product.${product.id}`)}</span>
+            <span>{title}</span>
           </nav>
 
           <section className="product-hero">
             <div className="product-gallery">
               <figure className="product-gallery__main">
-                <img
-                  src={product.image}
-                  alt={t(`product.${product.id}`)}
-                />
+                <img src={album[activeImage] || product.image} alt={title} />
               </figure>
               <ul className="product-gallery__thumbs">
-                {[1, 2, 3].map((imageIndex) => {
-                  return (
-                    <li key={imageIndex}>
-                      <button
-                        type="button"
-                        className={
-                          activeImage === imageIndex
-                            ? 'product-gallery__thumb is-active'
-                            : 'product-gallery__thumb'
-                        }
-                        onClick={() => setActiveImage(imageIndex)}
-                        aria-label={`View image ${imageIndex}`}
-                      >
-                        <img src={product.image} alt="" />
-                      </button>
-                    </li>
-                  )
-                })}
+                {album.map((src, imageIndex) => (
+                  <li key={`${imageIndex}-${src.slice(0, 24)}`}>
+                    <button
+                      type="button"
+                      className={
+                        activeImage === imageIndex
+                          ? 'product-gallery__thumb is-active'
+                          : 'product-gallery__thumb'
+                      }
+                      onClick={() => setActiveImage(imageIndex)}
+                      aria-label={`View image ${imageIndex + 1}`}
+                    >
+                      <img src={src} alt="" />
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="product-buybox">
-              <h1>{t(`product.${product.id}`)}</h1>
+              <h1>{title}</h1>
 
               <div className="product-tiers" role="radiogroup" aria-label="Size">
                 {tiers.map((option) => (
@@ -153,7 +186,21 @@ export default function ProductPage() {
                       checked={tier === option.id}
                       onChange={() => setTier(option.id)}
                     />
-                    <span className="product-tier__price">{formatMoney(product, lang)}</span>
+                    <span className="product-tier__price">
+                      {lang === 'fa'
+                        ? `${product.toman.toLocaleString('fa-IR')} تومان`
+                        : formatMoney(
+                            {
+                              id: 'onesie',
+                              usd: product.usd,
+                              toman: product.toman,
+                              image: product.image,
+                              category: 'kids',
+                              sizes: product.sizes as never,
+                            },
+                            lang,
+                          )}
+                    </span>
                     <span className="product-tier__name">
                       {t(
                         `size.${product.sizes[tiers.findIndex((item) => item.id === option.id)] ?? product.sizes[0]}` as MessageKey,
@@ -196,7 +243,7 @@ export default function ProductPage() {
               </button>
               {open.description ? (
                 <div className="product-accordion__body">
-                  <p>{t('product.descriptionBody')}</p>
+                  <p>{product.description || t('product.descriptionBody')}</p>
                 </div>
               ) : null}
             </section>
@@ -240,7 +287,9 @@ export default function ProductPage() {
                             <span className="product-related__media">
                               <img src={item.image} alt="" />
                             </span>
-                            <span className="product-related__name">{t(`product.${item.id}`)}</span>
+                            <span className="product-related__name">
+                              {lang === 'fa' ? item.nameFa : item.name}
+                            </span>
                             <span className="product-related__price">{formatMoney(item, lang)}</span>
                           </Link>
                         </li>

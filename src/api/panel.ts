@@ -11,11 +11,16 @@ export type PanelProduct = {
   id: string
   name: string
   nameFa: string
+  usd: number
   toman: number
   category: string
   sizes: string[]
   stock: number
   image: string
+  images: string[]
+  description: string
+  sellerId?: string
+  masterSellerId?: string
 }
 
 export type PanelCustomer = {
@@ -26,6 +31,19 @@ export type PanelCustomer = {
   city: string
 }
 
+export type SellerProductInput = {
+  name: string
+  nameFa: string
+  toman: number
+  usd?: number
+  category: string
+  sizes: string[]
+  stock: number
+  description: string
+  image?: string
+  images?: string[]
+}
+
 export function panelDashboard() {
   return apiRequest<PanelDashboard>('/panel/dashboard', { method: 'GET' })
 }
@@ -34,16 +52,21 @@ export function panelProducts() {
   return apiRequest<PanelProduct[]>('/panel/products', { method: 'GET' })
 }
 
-export function addPanelProduct(body: {
-  name: string
-  nameFa: string
-  toman: number
-  category: string
-  sizes: string[]
-  stock: number
-  image?: string
-}) {
+export function addPanelProduct(body: SellerProductInput) {
   return apiRequest<PanelProduct>('/panel/products', { body })
+}
+
+export function updatePanelProduct(id: string, body: SellerProductInput) {
+  return apiRequest<PanelProduct>(`/panel/products/${id}`, {
+    method: 'PATCH',
+    body,
+  })
+}
+
+export function removePanelProduct(id: string) {
+  return apiRequest<{ deleted: boolean }>(`/panel/products/${id}`, {
+    method: 'DELETE',
+  })
 }
 
 export function panelCustomers() {

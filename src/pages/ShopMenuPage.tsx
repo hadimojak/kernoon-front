@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { listProducts, type ShopProduct } from '../api/shop'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { StoreIcon } from '../components/icons/StoreIcon'
@@ -24,6 +25,11 @@ type ShopMenuPageProps = {
   kind?: ShopKind
 }
 
+function moneyOf(product: ShopProduct, lang: 'en' | 'fa') {
+  if (lang === 'fa') return `${product.toman.toLocaleString('fa-IR')} تومان`
+  return `$${product.usd.toFixed(2)}`
+}
+
 export default function ShopMenuPage({ kind = 'newborn' }: ShopMenuPageProps) {
   const { pathname } = useLocation()
   return <ShopScreen key={pathname} kind={kind} />
@@ -35,6 +41,7 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
   const resolvedKind = kindByPath[pathname] ?? kind
   const [query, setQuery] = useState('')
   const [size, setSize] = useState<SizeId | null>(null)
+  const [products, setProducts] = useState<ShopProduct[]>([])
 
   const titleKey = `shop.${resolvedKind}.title` as MessageKey
   const leadKey = `shop.${resolvedKind}.lead` as MessageKey
@@ -43,14 +50,39 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
     document.title = `${t(titleKey)} | ${t('brand.name')}`
   }, [t, titleKey])
 
+  useEffect(() => {
+    let alive = true
+    const category = resolvedKind === 'sizes' ? undefined : resolvedKind
+    listProducts(category, size ?? undefined)
+      .then((rows) => {
+        if (alive) setProducts(rows)
+      })
+      .catch(() => {
+        if (!alive) return
+        setProducts(
+          catalog
+            .filter((product) => {
+              if (resolvedKind === 'sizes') {
+                return size ? product.sizes.includes(size) : true
+              }
+              return product.category === resolvedKind
+            })
+            .map((product) => ({
+              ...product,
+              images: [product.image],
+              stock: 10,
+              description: '',
+            })),
+        )
+      })
+    return () => {
+      alive = false
+    }
+  }, [resolvedKind, size])
+
   const matchingSizes = sizeIds.filter((id) =>
     t(`size.${id}`).toLowerCase().includes(query.trim().toLowerCase()),
   )
-
-  const visibleProducts = catalog.filter((product) => {
-    if (resolvedKind === 'sizes') return size ? product.sizes.includes(size) : true
-    return product.category === resolvedKind
-  })
 
   function selectSize(id: SizeId) {
     setSize(id)
@@ -62,6 +94,14 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
       sizeIds.find((id) => t(`size.${id}`).toLowerCase() === query.trim().toLowerCase()) ??
       matchingSizes[0]
     if (match) selectSize(match)
+  }
+
+  function productLabel(product: ShopProduct) {
+    if (lang === 'fa' && product.nameFa) return product.nameFa
+    if (product.name && product.name !== product.id) return product.name
+    const key = `product.${product.id}` as MessageKey
+    const translated = t(key)
+    return translated === key ? product.name || product.id : translated
   }
 
   return (
@@ -106,15 +146,17 @@ function ShopScreen({ kind = 'newborn' }: ShopMenuPageProps) {
 
         <section className="home-products" aria-labelledby="shop-results-title">
           <h2 id="shop-results-title">
-            {resolvedKind === 'sizes' && size ? t('shop.inSize', { size: t(`size.${size}`) }) : t('shop.results')}
+            {resolvedKind === 'sizes' && size
+              ? t('shop.inSize', { size: t(`size.${size}`) })
+              : t('shop.results')}
           </h2>
           <ul>
-            {visibleProducts.map((product) => (
+            {products.map((product) => (
               <li key={product.id}>
                 <Link to={`/product?item=${product.id}`}>
-                  <img src={product.image} alt="" />
-                  <span className="home-products__name">{t(`product.${product.id}`)}</span>
-                  <span className="home-products__price">{formatMoney(product, lang)}</span>
+                  <img src={product.image || product.images?.[0]} alt="" />
+                  <span className="home-products__name">{productLabel(product)}</span>
+                  <span className="home-products__price">{moneyOf(product, lang)}</span>
                   <span className="home-products__brand">
                     <StoreIcon />
                     {t('product.brand')}

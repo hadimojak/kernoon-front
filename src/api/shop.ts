@@ -1,5 +1,39 @@
 import { apiRequest } from './client'
 
+export type ShopProduct = {
+  id: string
+  name: string
+  nameFa: string
+  usd: number
+  toman: number
+  image: string
+  images?: string[]
+  category: string
+  sizes: string[]
+  stock: number
+  description: string
+  sellerId?: string
+  masterSellerId?: string
+}
+
+export function listProducts(category?: string, size?: string) {
+  const query = new URLSearchParams()
+  if (category) query.set('category', category)
+  if (size) query.set('size', size)
+  const suffix = query.toString() ? `?${query}` : ''
+  return apiRequest<ShopProduct[]>(`/products${suffix}`, {
+    method: 'GET',
+    auth: false,
+  })
+}
+
+export function getProduct(id: string) {
+  return apiRequest<ShopProduct>(`/products/${id}`, {
+    method: 'GET',
+    auth: false,
+  })
+}
+
 export type ShopOrder = {
   id: string
   status: string
@@ -82,6 +116,7 @@ export type Profile = {
   phone: string
   gender: string
   role: string
+  avatarUrl: string | null
   createdAt: string
 }
 
@@ -105,6 +140,17 @@ export function changePassword(currentPassword: string, newPassword: string) {
     method: 'PATCH',
     body: { currentPassword, newPassword },
   })
+}
+
+export function uploadProfileImage(imageBase64: string, mimeType: string) {
+  return apiRequest<Profile>('/profile/image', {
+    method: 'POST',
+    body: { imageBase64, mimeType },
+  })
+}
+
+export function removeProfileImage() {
+  return apiRequest<Profile>('/profile/image', { method: 'DELETE' })
 }
 
 export function applyAsSeller(body: {

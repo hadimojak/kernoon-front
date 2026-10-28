@@ -129,7 +129,9 @@ export default function CheckoutPage() {
                     <div>
                       <strong>
                         {product
-                          ? t(`product.${product.id}` as MessageKey)
+                          ? lang === 'fa'
+                            ? product.nameFa
+                            : product.name
                           : item.productId}
                       </strong>
                       <p>

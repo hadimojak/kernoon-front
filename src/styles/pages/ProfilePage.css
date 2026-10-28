@@ -158,9 +158,29 @@
   text-align: center;
 }
 
-.profile-member img {
+.profile-member__avatar {
   width: 140px;
   height: auto;
+}
+
+.profile-member__avatar.is-photo {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+
+.profile-member__photo-link {
+  color: var(--brand);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.profile-member__photo-link:hover {
+  color: var(--brand-strong);
+  text-decoration: underline;
 }
 
 .profile-member p {

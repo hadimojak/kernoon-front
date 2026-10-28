@@ -19,6 +19,7 @@ import PaymentFormPage from './pages/PaymentFormPage'
 import PaymentMethodsPage from './pages/PaymentMethodsPage'
 import ProductPage from './pages/ProductPage'
 import ProfilePage from './pages/ProfilePage'
+import ProfilePhotoPage from './pages/ProfilePhotoPage'
 import ShopMenuPage from './pages/ShopMenuPage'
 import SignupPage from './pages/SignupPage'
 
@@ -38,6 +39,14 @@ export default function App() {
         element={
           <RequireAccount>
             <ProfilePage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path="/profile/photo"
+        element={
+          <RequireAccount>
+            <ProfilePhotoPage />
           </RequireAccount>
         }
       />

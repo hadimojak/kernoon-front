@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { persistSession } from '../api/client'
 import {
   changePassword,
@@ -33,6 +34,8 @@ export default function ProfilePage() {
   const [phone, setPhone] = useState(sessionUser?.phone ?? '')
   const [gender, setGender] = useState('')
   const [memberSince, setMemberSince] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState('/profile/member.png')
+  const [hasAvatar, setHasAvatar] = useState(false)
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [profileNotice, setProfileNotice] = useState('')
@@ -57,6 +60,8 @@ export default function ProfilePage() {
         setEmail(profile.email)
         setPhone(profile.phone)
         setGender(profile.gender || '')
+        setAvatarUrl(profile.avatarUrl || '/profile/member.png')
+        setHasAvatar(Boolean(profile.avatarUrl))
         setMemberSince(
           new Date(profile.createdAt).toLocaleDateString(lang === 'fa' ? 'fa-IR' : 'en-US', {
             year: 'numeric',
@@ -202,7 +207,14 @@ export default function ProfilePage() {
                   </div>
 
                   <aside className="profile-member">
-                    <img src="/profile/member.png" alt="" />
+                    <img
+                      className={hasAvatar ? 'profile-member__avatar is-photo' : 'profile-member__avatar'}
+                      src={avatarUrl}
+                      alt=""
+                    />
+                    <Link className="profile-member__photo-link" to="/profile/photo">
+                      {hasAvatar ? t('account.photoChange') : t('account.photoAdd')}
+                    </Link>
                     <p>
                       {t('account.memberSince')}
                       <br />

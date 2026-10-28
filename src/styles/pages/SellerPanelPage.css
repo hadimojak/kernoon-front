@@ -54,10 +54,189 @@
   padding: 24px 28px 48px;
 }
 
-.seller-panel__top h1 {
+.seller-panel__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 20px;
+}
+
+.seller-panel__top h1 {
+  margin: 0;
   font-size: 28px;
   font-weight: 600;
+}
+
+.seller-panel__primary {
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 2px;
+  background: #2271b1;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seller-panel__primary:hover {
+  background: #135e96;
+}
+
+.seller-panel__ghost {
+  height: 36px;
+  margin-top: 8px;
+  padding: 0 12px;
+  border: 1px solid #c3c4c7;
+  border-radius: 2px;
+  background: #f6f7f7;
+  color: #2c3338;
+  cursor: pointer;
+}
+
+.wp-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.wp-editor__main,
+.wp-box {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.wp-editor__main label,
+.wp-box label,
+.wp-box__stock {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wp-editor__main input,
+.wp-editor__main textarea,
+.wp-box input,
+.wp-box select {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #8c8f94;
+  border-radius: 2px;
+  font: inherit;
+}
+
+.wp-editor__main textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.wp-box h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.wp-editor__side {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.wp-editor__album {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.wp-editor__album legend {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wp-editor__hint {
+  margin: 0 0 8px;
+  color: #646970;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.wp-editor__thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.wp-editor__thumbs figure {
+  margin: 0;
+  border: 1px solid #dcdcde;
+  background: #f6f7f7;
+}
+
+.wp-editor__thumbs img {
+  display: block;
+  width: 100%;
+  height: 96px;
+  object-fit: contain;
+}
+
+.wp-editor__thumbs button {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #dcdcde;
+  background: #fff;
+  color: #b32d2e;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.wp-editor__upload {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #c3c4c7;
+  background: #f6f7f7;
+  cursor: pointer;
+}
+
+.wp-editor__upload input {
+  display: none;
+}
+
+.wp-editor__sizes {
+  display: grid;
+  gap: 8px;
+}
+
+.wp-editor__sizes label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.seller-panel__row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.seller-panel__row-actions button {
+  border: 0;
+  background: transparent;
+  color: #2271b1;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .seller-panel__stats {
@@ -230,9 +409,17 @@
     padding: 16px 14px 32px;
   }
 
-  .seller-panel__top h1 {
+  .seller-panel__top {
+    flex-wrap: wrap;
     margin-bottom: 14px;
+  }
+
+  .seller-panel__top h1 {
     font-size: 22px;
+  }
+
+  .wp-editor {
+    grid-template-columns: 1fr;
   }
 
   .seller-panel__stats {
