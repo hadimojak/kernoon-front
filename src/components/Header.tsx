@@ -29,6 +29,7 @@ const navItems: { key: MessageKey; to: string }[] = [
   { key: 'nav.sleepwear', to: '/sleepwear' },
   { key: 'nav.outerwear', to: '/outerwear' },
   { key: 'nav.sizes', to: '/sizes' },
+  { key: 'nav.tryOn', to: '/try-on' },
 ]
 
 export function Header() {

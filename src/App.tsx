@@ -22,6 +22,7 @@ import ProfilePage from './pages/ProfilePage'
 import ProfilePhotoPage from './pages/ProfilePhotoPage'
 import ShopMenuPage from './pages/ShopMenuPage'
 import SignupPage from './pages/SignupPage'
+import TryOnPage from './pages/TryOnPage'
 
 function SellerPanelRoute() {
   if (!canOpenSellerPanel()) return <Navigate to="/sell/login" replace />
@@ -106,6 +107,7 @@ export default function App() {
       <Route path="/sleepwear" element={<ShopMenuPage kind="sleepwear" />} />
       <Route path="/outerwear" element={<ShopMenuPage kind="outerwear" />} />
       <Route path="/sizes" element={<ShopMenuPage kind="sizes" />} />
+      <Route path="/try-on" element={<TryOnPage />} />
       <Route path="/flowers" element={<Navigate to="/newborn" replace />} />
       <Route path="/same-day" element={<Navigate to="/toddler" replace />} />
       <Route path="/next-day" element={<Navigate to="/kids" replace />} />
