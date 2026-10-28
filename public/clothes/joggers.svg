@@ -1,4 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
-  <rect width="240" height="300" fill="#f4f7ff"/>
-  <path d="M78 80h84v36l22 130h-36l-14-110h-28l-14 110H56l22-130z" fill="#fff" stroke="#3d4c8a" stroke-width="4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300" fill="none">
+  <defs>
+    <linearGradient id="jog-bg" x1="0" y1="0" x2="240" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4F7FF"/>
+      <stop offset="1" stop-color="#DDE5FB"/>
+    </linearGradient>
+    <linearGradient id="jog-body" x1="55" y1="55" x2="185" y2="270" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#C9D5F4"/>
+    </linearGradient>
+    <filter id="jog-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#3D4C8A" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="240" height="300" fill="url(#jog-bg)"/>
+  <g filter="url(#jog-soft)">
+    <path d="M84 62h72c8 0 14 6 14 14v28l20 146c1 8-5 15-13 15h-28c-7 0-13-5-14-12l-11-88h-8l-11 88c-1 7-7 12-14 12H65c-8 0-14-7-13-15L72 104V76c0-8 6-14 12-14z" fill="url(#jog-body)" stroke="#3D4C8A" stroke-width="2.5"/>
+    <path d="M78 94h84" stroke="#3D4C8A" stroke-width="3" stroke-linecap="round"/>
+    <path d="M90 94c2-8 10-12 18-12M132 82c8 0 16 4 18 12" stroke="#6B7AB3" stroke-width="2" stroke-linecap="round"/>
+    <path d="M120 108v48" stroke="#8FA0D4" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <rect x="72" y="248" width="30" height="10" rx="5" fill="#3D4C8A" opacity="0.85"/>
+    <rect x="138" y="248" width="30" height="10" rx="5" fill="#3D4C8A" opacity="0.85"/>
+    <path d="M96 140h10M134 140h10" stroke="#6B7AB3" stroke-width="2" stroke-linecap="round"/>
+  </g>
 </svg>

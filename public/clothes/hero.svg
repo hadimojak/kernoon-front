@@ -1,7 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">
-  <rect width="640" height="420" fill="#fff4fb"/>
-  <path d="M150 90h150l30 50v210H120V140z" fill="#fff" stroke="#d0178b" stroke-width="6"/>
-  <circle cx="180" cy="210" r="7" fill="#d0178b"/>
-  <circle cx="180" cy="242" r="7" fill="#d0178b"/>
-  <path d="M360 110h170l36 58-28 18-16-32v190H368V154l-16 32-28-18z" fill="#fff" stroke="#00aaab" stroke-width="6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" fill="none">
+  <defs>
+    <linearGradient id="hero-bg" x1="0" y1="0" x2="640" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7FB"/>
+      <stop offset="1" stop-color="#EAF8F8"/>
+    </linearGradient>
+    <linearGradient id="hero-onesie" x1="110" y1="70" x2="300" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8DDEB"/>
+    </linearGradient>
+    <linearGradient id="hero-tee" x1="340" y1="90" x2="540" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#D9F2F2"/>
+    </linearGradient>
+    <filter id="hero-soft" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#D0178B" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="640" height="420" fill="url(#hero-bg)"/>
+  <circle cx="120" cy="90" r="36" fill="#FFE4F1" opacity="0.7"/>
+  <circle cx="540" cy="330" r="48" fill="#D7F2F2" opacity="0.7"/>
+  <g filter="url(#hero-soft)">
+    <path d="M168 78c12-20 78-20 90 0l14 24 38 24c8 5 11 16 7 24l-18 32c-4 7-13 9-20 6l-12-6v156c0 12-10 22-22 22h-56c-12 0-22-10-22-22V182l-12 6c-7 3-16 1-20-6l-18-32c-4-8-1-19 7-24l38-24 14-24z" fill="url(#hero-onesie)" stroke="#D0178B" stroke-width="3"/>
+    <path d="M186 78c10-12 52-12 62 0" stroke="#D0178B" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="186" cy="198" r="6" fill="#D0178B"/>
+    <circle cx="186" cy="228" r="6" fill="#D0178B"/>
+    <circle cx="186" cy="258" r="6" fill="#D0178B"/>
+    <path d="M170 160c24 10 104 10 128 0" stroke="#F3C5DE" stroke-width="4" stroke-linecap="round" opacity="0.75"/>
+  </g>
+  <g filter="url(#hero-soft)">
+    <path d="M392 98c14-22 64-22 78 0l12 20 46 28c9 6 12 18 7 28l-22 36c-4 8-14 10-22 6l-10-6v140c0 12-10 22-22 22h-64c-12 0-22-10-22-22V210l-10 6c-8 4-18 2-22-6l-22-36c-5-10-2-22 7-28l46-28 12-20z" fill="url(#hero-tee)" stroke="#00AAAB" stroke-width="3"/>
+    <path d="M412 100c10-10 36-10 46 0" stroke="#00AAAB" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M392 186h84M392 214h84M392 242h84" stroke="#00AAAB" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+    <path d="M378 168c26 8 100 8 126 0" stroke="#9ED9DA" stroke-width="4" stroke-linecap="round" opacity="0.75"/>
+  </g>
 </svg>

@@ -1,7 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
-  <rect width="240" height="300" fill="#fff4fb"/>
-  <path d="M78 70h84l18 28v150H60V98z" fill="#fff" stroke="#d0178b" stroke-width="4"/>
-  <circle cx="96" cy="150" r="5" fill="#d0178b"/>
-  <circle cx="96" cy="172" r="5" fill="#d0178b"/>
-  <circle cx="96" cy="194" r="5" fill="#d0178b"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300" fill="none">
+  <defs>
+    <linearGradient id="onesie-bg" x1="0" y1="0" x2="240" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7FB"/>
+      <stop offset="1" stop-color="#FCE8F4"/>
+    </linearGradient>
+    <linearGradient id="onesie-body" x1="60" y1="55" x2="180" y2="270" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F8DDEB"/>
+    </linearGradient>
+    <filter id="onesie-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#D0178B" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="240" height="300" fill="url(#onesie-bg)"/>
+  <g filter="url(#onesie-soft)">
+    <path d="M88 58c8-14 56-14 64 0l10 18 28 18c6 4 8 12 5 18l-14 24c-3 5-9 7-14 5l-8-4v118c0 10-8 18-18 18h-42c-10 0-18-8-18-18V137l-8 4c-5 2-11 0-14-5L47 112c-3-6-1-14 5-18l28-18 8-18z" fill="url(#onesie-body)" stroke="#D0178B" stroke-width="2.5"/>
+    <path d="M100 58c6-8 34-8 40 0" stroke="#D0178B" stroke-width="2" stroke-linecap="round"/>
+    <path d="M108 92h24" stroke="#E58ABB" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="100" cy="148" r="4.5" fill="#D0178B"/>
+    <circle cx="100" cy="170" r="4.5" fill="#D0178B"/>
+    <circle cx="100" cy="192" r="4.5" fill="#D0178B"/>
+    <circle cx="100" cy="214" r="4.5" fill="#D0178B"/>
+    <path d="M86 246c8 10 28 14 44 0" stroke="#E58ABB" stroke-width="2" stroke-linecap="round"/>
+    <path d="M72 118c18 8 78 8 96 0" stroke="#F3C5DE" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+  </g>
 </svg>

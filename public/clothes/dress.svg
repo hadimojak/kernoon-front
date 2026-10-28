@@ -1,4 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
-  <rect width="240" height="300" fill="#fff5f8"/>
-  <path d="M96 68h48l18 40 28 140H50l28-140z" fill="#fff" stroke="#d0178b" stroke-width="4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300" fill="none">
+  <defs>
+    <linearGradient id="dress-bg" x1="0" y1="0" x2="240" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF5F8"/>
+      <stop offset="1" stop-color="#F9D9E4"/>
+    </linearGradient>
+    <linearGradient id="dress-body" x1="55" y1="45" x2="185" y2="270" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F2B8CC"/>
+    </linearGradient>
+    <filter id="dress-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#D0178B" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="240" height="300" fill="url(#dress-bg)"/>
+  <g filter="url(#dress-soft)">
+    <path d="M104 52c5-8 27-8 32 0l6 12 8 8c18 4 34 18 42 42 8 24 14 58 18 102 1 10-7 18-17 18H47c-10 0-18-8-17-18 4-44 10-78 18-102 8-24 24-38 42-42l8-8 6-12z" fill="url(#dress-body)" stroke="#D0178B" stroke-width="2.5"/>
+    <path d="M112 52c4-4 12-4 16 0" stroke="#D0178B" stroke-width="2" stroke-linecap="round"/>
+    <path d="M100 84h40" stroke="#D0178B" stroke-width="2" stroke-linecap="round"/>
+    <path d="M88 120c10 6 54 6 64 0" stroke="#E58ABB" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="108" cy="148" r="3" fill="#D0178B" opacity="0.7"/>
+    <circle cx="132" cy="162" r="3" fill="#D0178B" opacity="0.55"/>
+    <circle cx="116" cy="180" r="2.5" fill="#D0178B" opacity="0.45"/>
+    <path d="M70 248c14 8 86 8 100 0" stroke="#E58ABB" stroke-width="2" stroke-linecap="round"/>
+    <path d="M78 108c8-4 16 0 20 8M142 108c-8-4-16 0-20 8" stroke="#F0A8C4" stroke-width="2" stroke-linecap="round"/>
+  </g>
 </svg>

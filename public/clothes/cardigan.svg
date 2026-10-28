@@ -1,5 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
-  <rect width="240" height="300" fill="#fff8ef"/>
-  <path d="M72 72h96l20 40-16 10v130H68V122l-16-10z" fill="#f6d7b0" stroke="#c47b3a" stroke-width="4"/>
-  <path d="M120 90v150" stroke="#c47b3a" stroke-width="3"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300" fill="none">
+  <defs>
+    <linearGradient id="card-bg" x1="0" y1="0" x2="240" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8EF"/>
+      <stop offset="1" stop-color="#F7E4CB"/>
+    </linearGradient>
+    <linearGradient id="card-body" x1="48" y1="55" x2="190" y2="255" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE4C2"/>
+      <stop offset="1" stop-color="#E8B47A"/>
+    </linearGradient>
+    <filter id="card-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#C47B3A" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <rect width="240" height="300" fill="url(#card-bg)"/>
+  <g filter="url(#card-soft)">
+    <path d="M94 58c9-12 43-12 52 0l7 12 36 20c7 4 10 13 6 20l-15 26c-3 5-10 7-15 4l-8-5v122c0 8-7 15-15 15H98c-8 0-15-7-15-15V135l-8 5c-5 3-12 1-15-4L45 110c-4-7-1-16 6-20l36-20 7-12z" fill="url(#card-body)" stroke="#C47B3A" stroke-width="2.5"/>
+    <path d="M120 78v168" stroke="#C47B3A" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M104 64c6-6 26-6 32 0" stroke="#C47B3A" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="112" cy="120" r="4" fill="#C47B3A"/>
+    <circle cx="112" cy="148" r="4" fill="#C47B3A"/>
+    <circle cx="112" cy="176" r="4" fill="#C47B3A"/>
+    <circle cx="112" cy="204" r="4" fill="#C47B3A"/>
+    <path d="M78 118h34M128 118h34M78 146h34M128 146h34M78 174h34M128 174h34" stroke="#D9A06A" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+    <path d="M70 250c8 8 22 10 30 0M140 250c8 8 22 10 30 0" stroke="#C47B3A" stroke-width="2" stroke-linecap="round"/>
+  </g>
 </svg>
