@@ -532,11 +532,11 @@ export const fa: Record<MessageKey, string> = {
 
   'header.sell': 'درخواست فروشندگی',
   'header.sellerLogin': 'ورود فروشندگان',
-  'header.sellerPanel': 'پنل فروشندگان',
+  'header.sellerPanel': 'پنل فروش',
   'header.login': 'ورود مشتری',
   'header.hi': 'سلام، {name}',
   'header.account': 'حساب من',
-  'header.orders': 'سفارش‌ها',
+  'header.orders': 'سفارشات',
   'header.logout': 'خروج',
   'header.cart': 'سبد',
 

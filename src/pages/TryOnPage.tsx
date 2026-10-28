@@ -239,7 +239,12 @@ export default function TryOnPage() {
               <p>{t('tryOn.stageHint')}</p>
             </div>
 
-            <div className="tryon__baby-wrap">
+            <motion.div
+              className="tryon__baby-wrap"
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 180, damping: 18, delay: 0.08 }}
+            >
               <AnimatedBaby
                 worn={wornItems}
                 dropSlot={dropSlot}
@@ -249,7 +254,7 @@ export default function TryOnPage() {
                 onClearSlot={clearSlot}
                 t={t}
               />
-            </div>
+            </motion.div>
 
             <AnimatePresence mode="wait">
               {palette.length ? (
@@ -327,8 +332,15 @@ export default function TryOnPage() {
                           className={`tryon__temp-card${isWorn ? ' is-worn' : ''}`}
                           drag
                           dragSnapToOrigin
-                          dragElastic={0.25}
-                          whileDrag={{ scale: 1.06, zIndex: 20, boxShadow: '0 16px 40px rgba(208,23,139,0.25)' }}
+                          dragElastic={0.2}
+                          dragMomentum={false}
+                          whileHover={{ y: -2 }}
+                          whileDrag={{
+                            scale: 1.08,
+                            rotate: 2,
+                            zIndex: 40,
+                            boxShadow: '0 20px 48px rgba(208,23,139,0.28)',
+                          }}
                           onDragStart={() => setDragId(item.id)}
                           onDragEnd={(_event, info) => {
                             const elements = document.elementsFromPoint(

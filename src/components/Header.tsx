@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { canOpenSellerPanel, clearSession, sessionDisplayName } from '../auth/session'
+import {
+  canOpenSellerPanel,
+  clearSession,
+  readSessionRole,
+  sessionDisplayName,
+} from '../auth/session'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { CaretIcon } from './icons/CaretIcon'
@@ -8,16 +13,21 @@ import { CartIcon } from './icons/CartIcon'
 import { Logo } from './Logo'
 import '../styles/components/Header.css'
 
-const guestUtilityLinks: { key: MessageKey; to: string; state?: { from: string } }[] = [
+type UtilityLink = { key: MessageKey; to: string; state?: { from: string } }
+
+const guestUtilityLinks: UtilityLink[] = [
   { key: 'header.sell', to: '/sell' },
   { key: 'header.sellerLogin', to: '/sell/login' },
-  { key: 'header.sellerPanel', to: '/seller-panel' },
   { key: 'header.orders', to: '/login', state: { from: '/orders' } },
   { key: 'header.login', to: '/login' },
 ]
 
-const loggedInUtilityLinks: { key: MessageKey; to: string; state?: { from: string } }[] = [
+const customerUtilityLinks: UtilityLink[] = [
   { key: 'header.sell', to: '/sell' },
+  { key: 'header.orders', to: '/orders' },
+]
+
+const sellerUtilityLinks: UtilityLink[] = [
   { key: 'header.sellerPanel', to: '/seller-panel' },
 ]
 
@@ -39,14 +49,16 @@ export function Header() {
   const [userName, setUserName] = useState<string | null>(() => sessionDisplayName())
   const [sellerPanel, setSellerPanel] = useState(() => canOpenSellerPanel())
   const menuRef = useRef<HTMLLIElement>(null)
-  const utilityLinks = (userName ? loggedInUtilityLinks : guestUtilityLinks).filter(
-    (link) => link.key !== 'header.sellerPanel' || sellerPanel,
-  )
+  const utilityLinks = !userName
+    ? guestUtilityLinks
+    : sellerPanel
+      ? sellerUtilityLinks
+      : customerUtilityLinks
 
   useEffect(() => {
     function syncSession() {
       setUserName(sessionDisplayName())
-      setSellerPanel(canOpenSellerPanel())
+      setSellerPanel(canOpenSellerPanel(readSessionRole()))
     }
     syncSession()
     window.addEventListener('storage', syncSession)
