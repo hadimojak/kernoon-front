@@ -1,13 +1,10 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { sessionDisplayName } from '../auth/session'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
-import { CalendarIcon } from '../components/icons/CalendarIcon'
 import { FacebookIcon } from '../components/icons/FacebookIcon'
 import { InstagramIcon } from '../components/icons/InstagramIcon'
 import { LinkedInIcon } from '../components/icons/LinkedInIcon'
-import { PinIcon } from '../components/icons/PinIcon'
 import { PinterestIcon } from '../components/icons/PinterestIcon'
 import { StarIcon } from '../components/icons/StarIcon'
 import { StoreIcon } from '../components/icons/StoreIcon'
@@ -48,31 +45,12 @@ const instagramPosts = [
   '/clothes/sleep.svg',
 ]
 
-function formatDeliveryDate(value: string) {
-  const [year, month, day] = value.split('-').map(Number)
-  if (!year || !month || !day) return ''
-  const mm = String(month).padStart(2, '0')
-  const dd = String(day).padStart(2, '0')
-  return `${mm}/${dd}/${year}`
-}
-
-type HomePageProps = {
-  loggedIn?: boolean
-}
-
-export default function HomePage({ loggedIn = false }: HomePageProps) {
+export default function HomePage() {
   const { t, lang } = useI18n()
-  const signedIn = loggedIn || Boolean(sessionDisplayName())
-  const [place, setPlace] = useState(signedIn ? 'Tehran' : '')
-  const [date, setDate] = useState(signedIn ? '2026-07-02' : '')
 
   useEffect(() => {
     document.title = t('home.title')
   }, [t])
-
-  function handleSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-  }
 
   return (
     <div className="home">
@@ -80,35 +58,6 @@ export default function HomePage({ loggedIn = false }: HomePageProps) {
 
       <main>
         <div className="home-frame">
-          <form className="home-search" onSubmit={handleSearch}>
-            <p className="home-search__title">{t('home.searchTitle')}</p>
-            <div className="home-search__fields">
-              <label className="home-search__field">
-                <PinIcon className="home-search__icon" />
-                <span className="home-search__prefix">{t('home.shipTo')}</span>
-                <input
-                  value={place}
-                  onChange={(event) => setPlace(event.target.value)}
-                  placeholder={t('home.shipPlaceholder')}
-                  aria-label={t('home.shipTo')}
-                />
-              </label>
-              <label className="home-search__field">
-                <CalendarIcon className="home-search__icon" />
-                <span className={date ? 'home-search__value' : 'home-search__prefix'}>
-                  {date ? formatDeliveryDate(date) : t('home.neededBy')}
-                </span>
-                <input
-                  className="home-search__date"
-                  type="date"
-                  value={date}
-                  aria-label={t('home.neededBy')}
-                  onChange={(event) => setDate(event.target.value)}
-                />
-              </label>
-            </div>
-          </form>
-
           <section className="home-hero" aria-labelledby="hero-title">
             <div className="home-hero__copy">
               <h1 id="hero-title">{t('home.heroTitle')}</h1>

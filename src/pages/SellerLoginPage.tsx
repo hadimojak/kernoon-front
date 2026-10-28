@@ -7,7 +7,7 @@ import {
   requestSellerEmailCode,
   requestSellerPhoneCode,
 } from '../api/account'
-import { canOpenSellerPanel, saveSession } from '../auth/session'
+import { canOpenSellerPanel } from '../auth/session'
 import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
@@ -69,7 +69,6 @@ export default function SellerLoginPage() {
         setError(t('auth.loginError'))
         return
       }
-      saveSession(session)
       navigate('/seller-panel')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('auth.loginError'))

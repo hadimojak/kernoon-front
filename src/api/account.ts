@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1'
+import { apiRequest, persistSession, type SessionResponse } from './client'
 
 export type SignupInput = {
   firstName: string
@@ -11,77 +11,72 @@ export type SignupInput = {
 
 export type AccountRole = 'customer' | 'seller' | 'masterSeller'
 
-type SessionResponse = {
-  accessToken: string
-  refreshToken: string
-  user: {
-    id: string
-    firstName: string
-    lastName: string
-    username: string
-    email: string
-    phone: string
-    role: AccountRole
-  }
+export type { SessionResponse }
+
+async function authRequest(path: string, body: unknown) {
+  const session = await apiRequest<SessionResponse>(path, {
+    body,
+    auth: false,
+  })
+  return persistSession(session)
 }
 
 export async function signup(input: SignupInput) {
-  return request<SessionResponse>('/auth/signup', input)
+  return authRequest('/auth/signup', input)
 }
 
 export function requestPhoneCode(phone: string) {
-  return request<{ sent: boolean }>('/auth/phone/code', { phone })
+  return apiRequest<{ sent: boolean }>('/auth/phone/code', {
+    body: { phone },
+    auth: false,
+  })
 }
 
 export function loginWithPhone(phone: string, code: string) {
-  return request<SessionResponse>('/auth/phone/login', { phone, code })
+  return authRequest('/auth/phone/login', { phone, code })
 }
 
 export function requestEmailCode(email: string) {
-  return request<{ sent: boolean }>('/auth/email/code', { email })
+  return apiRequest<{ sent: boolean }>('/auth/email/code', {
+    body: { email },
+    auth: false,
+  })
 }
 
 export function loginWithEmail(email: string, code: string) {
-  return request<SessionResponse>('/auth/email/login', { email, code })
+  return authRequest('/auth/email/login', { email, code })
 }
 
 export function loginWithPassword(username: string, password: string) {
-  return request<SessionResponse>('/auth/login', { username, password })
+  return authRequest('/auth/login', { username, password })
 }
 
 export function requestSellerPhoneCode(phone: string) {
-  return request<{ sent: boolean }>('/auth/seller/phone/code', { phone })
+  return apiRequest<{ sent: boolean }>('/auth/seller/phone/code', {
+    body: { phone },
+    auth: false,
+  })
 }
 
 export function loginSellerWithPhone(phone: string, code: string) {
-  return request<SessionResponse>('/auth/seller/phone/login', { phone, code })
+  return authRequest('/auth/seller/phone/login', { phone, code })
 }
 
 export function requestSellerEmailCode(email: string) {
-  return request<{ sent: boolean }>('/auth/seller/email/code', { email })
+  return apiRequest<{ sent: boolean }>('/auth/seller/email/code', {
+    body: { email },
+    auth: false,
+  })
 }
 
 export function loginSellerWithEmail(email: string, code: string) {
-  return request<SessionResponse>('/auth/seller/email/login', { email, code })
+  return authRequest('/auth/seller/email/login', { email, code })
 }
 
 export function loginAsSeller(username: string, password: string) {
-  return request<SessionResponse>('/auth/seller/login', { username, password })
+  return authRequest('/auth/seller/login', { username, password })
 }
 
-async function request<T>(path: string, body: unknown) {
-  const response = await fetch(`${apiUrl}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  const data = (await response.json().catch(() => null)) as
-    | T
-    | { message?: string | string[] }
-    | null
-  if (!response.ok) {
-    const message = data && typeof data === 'object' && 'message' in data ? data.message : undefined
-    throw new Error(Array.isArray(message) ? message.join(' ') : message || 'Request failed')
-  }
-  return data as T
+export function refreshSession(refreshToken: string) {
+  return authRequest('/auth/refresh', { refreshToken })
 }

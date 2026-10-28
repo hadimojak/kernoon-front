@@ -7,7 +7,6 @@ import {
   requestEmailCode,
   requestPhoneCode,
 } from '../api/account'
-import { saveSession } from '../auth/session'
 import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
@@ -46,8 +45,7 @@ export default function LoginPage() {
     setPending(true)
     try {
       if (method === 'password') {
-        const session = await loginWithPassword(username, password)
-        saveSession(session)
+        await loginWithPassword(username, password)
         navigate('/home')
         return
       }
@@ -59,11 +57,8 @@ export default function LoginPage() {
         return
       }
 
-      const session =
-        method === 'phone'
-          ? await loginWithPhone(phone, code)
-          : await loginWithEmail(email, code)
-      saveSession(session)
+      if (method === 'phone') await loginWithPhone(phone, code)
+      else await loginWithEmail(email, code)
       navigate('/home')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('auth.loginError'))

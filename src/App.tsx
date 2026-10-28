@@ -26,8 +26,8 @@ function SellerPanelRoute() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage key="guest" />} />
-      <Route path="/home" element={<HomePage key="logged-in" loggedIn />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/product" element={<ProductPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/orders" element={<OrdersPage />} />

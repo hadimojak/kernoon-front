@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { signup } from '../api/account'
-import { saveSession } from '../auth/session'
 import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
@@ -24,7 +23,7 @@ export default function SignupPage() {
     setError('')
     setPending(true)
     try {
-      const session = await signup({
+      await signup({
         firstName,
         lastName,
         username,
@@ -32,7 +31,6 @@ export default function SignupPage() {
         password,
         ...(email.trim() ? { email: email.trim() } : {}),
       })
-      saveSession(session)
       navigate('/home')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('auth.signupError'))

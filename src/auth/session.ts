@@ -15,6 +15,8 @@ export type SessionUser = {
 type StoredSession = {
   accessToken?: string
   refreshToken?: string
+  expiresIn?: number
+  accessExpiresAt?: number
   user?: Partial<SessionUser> & { role?: AccountRole }
 }
 
