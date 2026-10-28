@@ -14,7 +14,7 @@ export default function PaymentMethodsPage() {
 
   return (
     <div className="profile-page payment-methods-page">
-      <Header userName="hadi" />
+      <Header />
 
       <main className="profile-page__main">
         <div className="profile-page__frame">

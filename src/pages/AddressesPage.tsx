@@ -15,7 +15,7 @@ export default function AddressesPage() {
 
   return (
     <div className="profile-page addresses-page">
-      <Header userName="hadi" />
+      <Header />
 
       <main className="profile-page__main">
         <div className="profile-page__frame">

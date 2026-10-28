@@ -37,7 +37,7 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-page">
-      <Header userName="hadi" />
+      <Header />
 
       <main className="profile-page__main">
         <div className="profile-page__frame">

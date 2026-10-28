@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { canOpenSellerPanel } from '../auth/session'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { canOpenSellerPanel, clearSession, sessionDisplayName } from '../auth/session'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { CaretIcon } from './icons/CaretIcon'
@@ -17,7 +17,6 @@ const guestUtilityLinks: { key: MessageKey; to: string }[] = [
 
 const loggedInUtilityLinks: { key: MessageKey; to: string }[] = [
   { key: 'header.sell', to: '/sell' },
-  { key: 'header.sellerLogin', to: '/sell/login' },
   { key: 'header.sellerPanel', to: '/seller-panel' },
 ]
 
@@ -30,18 +29,30 @@ const navItems: { key: MessageKey; to: string }[] = [
   { key: 'nav.sizes', to: '/sizes' },
 ]
 
-type HeaderProps = {
-  userName?: string
-  onLogout?: () => void
-}
-
-export function Header({ userName, onLogout }: HeaderProps) {
+export function Header() {
   const { t, toggle } = useI18n()
+  const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [userName, setUserName] = useState<string | null>(() => sessionDisplayName())
+  const [sellerPanel, setSellerPanel] = useState(() => canOpenSellerPanel())
   const menuRef = useRef<HTMLLIElement>(null)
   const utilityLinks = (userName ? loggedInUtilityLinks : guestUtilityLinks).filter(
-    (link) => link.key !== 'header.sellerPanel' || canOpenSellerPanel(),
+    (link) => link.key !== 'header.sellerPanel' || sellerPanel,
   )
+
+  useEffect(() => {
+    function syncSession() {
+      setUserName(sessionDisplayName())
+      setSellerPanel(canOpenSellerPanel())
+    }
+    syncSession()
+    window.addEventListener('storage', syncSession)
+    window.addEventListener('kernoon-session', syncSession)
+    return () => {
+      window.removeEventListener('storage', syncSession)
+      window.removeEventListener('kernoon-session', syncSession)
+    }
+  }, [])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -63,6 +74,14 @@ export function Header({ userName, onLogout }: HeaderProps) {
       document.removeEventListener('keydown', handleEscape)
     }
   }, [menuOpen])
+
+  function logout() {
+    clearSession()
+    setUserName(null)
+    setSellerPanel(false)
+    setMenuOpen(false)
+    navigate('/')
+  }
 
   return (
     <header className="header">
@@ -98,6 +117,17 @@ export function Header({ userName, onLogout }: HeaderProps) {
                 </button>
                 {menuOpen ? (
                   <ul className="header__account-menu" role="menu">
+                    {sellerPanel ? (
+                      <li role="none">
+                        <Link
+                          role="menuitem"
+                          to="/seller-panel"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          {t('header.sellerPanel')}
+                        </Link>
+                      </li>
+                    ) : null}
                     <li role="none">
                       <Link role="menuitem" to="/profile" onClick={() => setMenuOpen(false)}>
                         {t('header.account')}
@@ -109,16 +139,14 @@ export function Header({ userName, onLogout }: HeaderProps) {
                       </Link>
                     </li>
                     <li role="none">
-                      <Link
+                      <button
+                        className="header__logout"
                         role="menuitem"
-                        to="/"
-                        onClick={() => {
-                          setMenuOpen(false)
-                          onLogout?.()
-                        }}
+                        type="button"
+                        onClick={logout}
                       >
                         {t('header.logout')}
-                      </Link>
+                      </button>
                     </li>
                   </ul>
                 ) : null}

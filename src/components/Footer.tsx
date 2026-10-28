@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { canOpenSellerPanel } from '../auth/session'
+import { canOpenSellerPanel, readSessionUser } from '../auth/session'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import { FacebookIcon } from './icons/FacebookIcon'
@@ -67,6 +67,8 @@ const columns: { title: MessageKey; links: { key: MessageKey; to: string }[] }[]
 
 export function Footer() {
   const { t } = useI18n()
+  const signedIn = Boolean(readSessionUser())
+  const sellerPanel = canOpenSellerPanel()
 
   return (
     <footer className="footer">
@@ -89,7 +91,13 @@ export function Footer() {
             <h2 className="footer__heading">{t(column.title)}</h2>
             <ul>
               {column.links
-                .filter((link) => link.key !== 'header.sellerPanel' || canOpenSellerPanel())
+                .filter((link) => {
+                  if (link.key === 'header.sellerPanel') return sellerPanel
+                  if (link.key === 'header.login' || link.key === 'header.sellerLogin') {
+                    return !signedIn
+                  }
+                  return true
+                })
                 .map((link) => (
                   <li key={link.key + link.to}>
                     <Link to={link.to}>{t(link.key)}</Link>

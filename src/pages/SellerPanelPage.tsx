@@ -65,7 +65,7 @@ export default function SellerPanelPage() {
             </button>
           ))}
         </nav>
-        <Link className="seller-panel__shop" to="/">
+        <Link className="seller-panel__shop" to="/home">
           {t('panel.shop')}
         </Link>
       </aside>

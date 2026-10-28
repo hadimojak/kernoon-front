@@ -23,7 +23,7 @@ export default function OrdersPage() {
 
   return (
     <div className="profile-page orders-page">
-      <Header userName="hadi" />
+      <Header />
 
       <main className="profile-page__main">
         <div className="profile-page__frame">

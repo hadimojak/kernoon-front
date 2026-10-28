@@ -61,7 +61,7 @@ export default function ProductPage() {
 
   return (
     <div className="product-page">
-      <Header userName="hadi" />
+      <Header />
 
       <main className="product-page__main">
         <div className="product-page__frame">

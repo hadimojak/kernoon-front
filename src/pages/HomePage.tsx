@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { sessionDisplayName } from '../auth/session'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { CalendarIcon } from '../components/icons/CalendarIcon'
@@ -61,8 +62,9 @@ type HomePageProps = {
 
 export default function HomePage({ loggedIn = false }: HomePageProps) {
   const { t, lang } = useI18n()
-  const [place, setPlace] = useState(loggedIn ? 'Tehran' : '')
-  const [date, setDate] = useState(loggedIn ? '2026-07-02' : '')
+  const signedIn = loggedIn || Boolean(sessionDisplayName())
+  const [place, setPlace] = useState(signedIn ? 'Tehran' : '')
+  const [date, setDate] = useState(signedIn ? '2026-07-02' : '')
 
   useEffect(() => {
     document.title = t('home.title')
@@ -74,7 +76,7 @@ export default function HomePage({ loggedIn = false }: HomePageProps) {
 
   return (
     <div className="home">
-      <Header userName={loggedIn ? 'hadi' : undefined} />
+      <Header />
 
       <main>
         <div className="home-frame">

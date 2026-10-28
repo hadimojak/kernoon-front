@@ -14,7 +14,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="checkout-page">
-      <Header userName="hadi" />
+      <Header />
 
       <main className="checkout-page__main">
         <section className="checkout-empty" aria-labelledby="checkout-empty-title">

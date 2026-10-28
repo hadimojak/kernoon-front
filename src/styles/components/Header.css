@@ -112,14 +112,22 @@
   box-shadow: 0 10px 28px rgba(40, 42, 53, 0.12);
 }
 
-.header__account-menu a {
+.header__account-menu a,
+.header__logout {
   display: block;
+  width: 100%;
   padding: 10px 14px;
+  border: 0;
+  background: transparent;
   color: var(--text);
+  font: inherit;
   font-size: 13.5px;
+  text-align: start;
+  cursor: pointer;
 }
 
-.header__account-menu a:hover {
+.header__account-menu a:hover,
+.header__logout:hover {
   background: #faf7f9;
   color: var(--brand);
 }

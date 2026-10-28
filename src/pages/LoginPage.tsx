@@ -7,6 +7,7 @@ import {
   requestEmailCode,
   requestPhoneCode,
 } from '../api/account'
+import { saveSession } from '../auth/session'
 import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
 import { useI18n } from '../i18n/useI18n'
@@ -46,7 +47,7 @@ export default function LoginPage() {
     try {
       if (method === 'password') {
         const session = await loginWithPassword(username, password)
-        localStorage.setItem('kernoon-session', JSON.stringify(session))
+        saveSession(session)
         navigate('/home')
         return
       }
@@ -62,7 +63,7 @@ export default function LoginPage() {
         method === 'phone'
           ? await loginWithPhone(phone, code)
           : await loginWithEmail(email, code)
-      localStorage.setItem('kernoon-session', JSON.stringify(session))
+      saveSession(session)
       navigate('/home')
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('auth.loginError'))
