@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { addCartItem } from '../api/shop'
 import { catalog, formatMoney } from '../data/catalog'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
@@ -39,10 +40,13 @@ type AccordionKey = 'description' | 'care' | 'related' | 'reviews' | 'substituti
 
 export default function ProductPage() {
   const { t, lang } = useI18n()
+  const navigate = useNavigate()
   const [params] = useSearchParams()
   const product = catalog.find((item) => item.id === params.get('item')) ?? catalog[0]
   const [activeImage, setActiveImage] = useState(0)
   const [tier, setTier] = useState<(typeof tiers)[number]['id']>('deluxe')
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
   const [open, setOpen] = useState<Record<AccordionKey, boolean>>({
     description: true,
     care: true,
@@ -57,6 +61,26 @@ export default function ProductPage() {
 
   function toggle(key: AccordionKey) {
     setOpen((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  async function handleAddToCart() {
+    setError('')
+    setPending(true)
+    try {
+      const sizeIndex = tiers.findIndex((item) => item.id === tier)
+      const size = product.sizes[sizeIndex] ?? product.sizes[0]
+      await addCartItem({
+        productId: product.id,
+        size,
+        tier,
+        quantity: 1,
+      })
+      navigate('/cart')
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('account.saveError'))
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -146,9 +170,15 @@ export default function ProductPage() {
                 <span>{t('product.delivery')}</span>
               </div>
 
-              <button className="product-order" type="button">
-                {t('product.order')}
+              <button
+                className="product-order"
+                type="button"
+                onClick={handleAddToCart}
+                disabled={pending}
+              >
+                {pending ? t('account.saving') : t('product.order')}
               </button>
+              {error ? <p className="account-form__error">{error}</p> : null}
               <p className="product-buybox__note">{t('product.note')}</p>
             </div>
           </section>

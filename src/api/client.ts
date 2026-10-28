@@ -1,6 +1,19 @@
 import { clearSession, readSession, saveSession } from '../auth/session'
 
 const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1'
+const CART_KEY = 'kernoon-cart-id'
+
+export function guestCartId() {
+  try {
+    const existing = localStorage.getItem(CART_KEY)
+    if (existing && /^[a-zA-Z0-9-]{8,64}$/.test(existing)) return existing
+    const next = crypto.randomUUID().replace(/-/g, '').slice(0, 24)
+    localStorage.setItem(CART_KEY, next)
+    return next
+  } catch {
+    return 'guest-local-cart-id'
+  }
+}
 
 export type SessionResponse = {
   accessToken: string
@@ -51,6 +64,8 @@ export async function apiRequest<T>(
     if (token) headers.Authorization = `Bearer ${token}`
   }
 
+  headers['x-cart-id'] = guestCartId()
+
   const response = await fetch(`${apiUrl}${path}`, {
     method,
     headers,
@@ -63,6 +78,7 @@ export async function apiRequest<T>(
       return apiRequest<T>(path, { ...options, retry: false })
     }
     clearSession()
+    return apiRequest<T>(path, { ...options, auth: false, retry: false })
   }
 
   const data = (await response.json().catch(() => null)) as

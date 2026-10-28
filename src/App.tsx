@@ -1,17 +1,21 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { RequireAccount } from './auth/RequireAccount'
 import { canOpenSellerPanel } from './auth/session'
 import AboutUsPage from './pages/AboutUsPage'
+import AddressFormPage from './pages/AddressFormPage'
 import AddressesPage from './pages/AddressesPage'
 import SellPage from './pages/SellPage'
 import CheckoutPage from './pages/CheckoutPage'
 import ContentPage from './pages/ContentPage'
 import ContactUsPage from './pages/ContactUsPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import SellerLoginPage from './pages/SellerLoginPage'
 import SellerPanelPage from './pages/SellerPanelPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import OrdersPage from './pages/OrdersPage'
+import PaymentFormPage from './pages/PaymentFormPage'
 import PaymentMethodsPage from './pages/PaymentMethodsPage'
 import ProductPage from './pages/ProductPage'
 import ProfilePage from './pages/ProfilePage'
@@ -29,10 +33,54 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/product" element={<ProductPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/orders" element={<OrdersPage />} />
-      <Route path="/addresses" element={<AddressesPage />} />
-      <Route path="/payment-methods" element={<PaymentMethodsPage />} />
+      <Route
+        path="/profile"
+        element={
+          <RequireAccount>
+            <ProfilePage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path="/orders"
+        element={
+          <RequireAccount>
+            <OrdersPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path="/addresses"
+        element={
+          <RequireAccount>
+            <AddressesPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path="/addresses/new"
+        element={
+          <RequireAccount>
+            <AddressFormPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path="/payment-methods"
+        element={
+          <RequireAccount>
+            <PaymentMethodsPage />
+          </RequireAccount>
+        }
+      />
+      <Route
+        path="/payment-methods/new"
+        element={
+          <RequireAccount>
+            <PaymentFormPage />
+          </RequireAccount>
+        }
+      />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/cart" element={<CheckoutPage />} />
       <Route path="/contact-us" element={<ContactUsPage />} />
@@ -56,12 +104,26 @@ export default function App() {
       <Route path="/city" element={<Navigate to="/sizes" replace />} />
       <Route path="/blog" element={<ContentPage />} />
       <Route path="/news" element={<ContentPage />} />
+      <Route path="/careers" element={<ContentPage />} />
       <Route path="/substitution-policy" element={<ContentPage />} />
       <Route path="/delivery-fees" element={<ContentPage />} />
-      <Route path="/careers" element={<ContentPage />} />
-      <Route path="/clothes-for-me" element={<ContentPage />} />
+      <Route
+        path="/clothes-for-me"
+        element={
+          <RequireAccount>
+            <ContentPage />
+          </RequireAccount>
+        }
+      />
       <Route path="/send-me-flowers" element={<Navigate to="/clothes-for-me" replace />} />
-      <Route path="/events" element={<ContentPage />} />
+      <Route
+        path="/events"
+        element={
+          <RequireAccount>
+            <ContentPage />
+          </RequireAccount>
+        }
+      />
       <Route path="/shops" element={<ContentPage />} />
       <Route path="/shops/near-me" element={<ContentPage />} />
       <Route path="/reviews" element={<ContentPage />} />
@@ -73,6 +135,7 @@ export default function App() {
       <Route path="/cookies" element={<ContentPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

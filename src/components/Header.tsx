@@ -8,14 +8,15 @@ import { CartIcon } from './icons/CartIcon'
 import { Logo } from './Logo'
 import '../styles/components/Header.css'
 
-const guestUtilityLinks: { key: MessageKey; to: string }[] = [
+const guestUtilityLinks: { key: MessageKey; to: string; state?: { from: string } }[] = [
   { key: 'header.sell', to: '/sell' },
   { key: 'header.sellerLogin', to: '/sell/login' },
   { key: 'header.sellerPanel', to: '/seller-panel' },
+  { key: 'header.orders', to: '/login', state: { from: '/orders' } },
   { key: 'header.login', to: '/login' },
 ]
 
-const loggedInUtilityLinks: { key: MessageKey; to: string }[] = [
+const loggedInUtilityLinks: { key: MessageKey; to: string; state?: { from: string } }[] = [
   { key: 'header.sell', to: '/sell' },
   { key: 'header.sellerPanel', to: '/seller-panel' },
 ]
@@ -96,6 +97,7 @@ export function Header() {
               <li key={link.key}>
                 <NavLink
                   to={link.to}
+                  state={link.state}
                   end
                   className={({ isActive }) => (isActive ? 'is-current' : undefined)}
                 >

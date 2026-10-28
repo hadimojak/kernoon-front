@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { signup } from '../api/account'
 import { AuthLayout } from '../components/AuthLayout'
 import { PasswordInput } from '../components/PasswordInput'
@@ -9,6 +9,14 @@ import '../styles/pages/SignupPage.css'
 export default function SignupPage() {
   const { t } = useI18n()
   const navigate = useNavigate()
+  const location = useLocation()
+  const afterSignup =
+    typeof location.state === 'object' &&
+    location.state &&
+    'from' in location.state &&
+    typeof (location.state as { from?: unknown }).from === 'string'
+      ? (location.state as { from: string }).from
+      : '/home'
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [username, setUsername] = useState('')
@@ -31,7 +39,7 @@ export default function SignupPage() {
         password,
         ...(email.trim() ? { email: email.trim() } : {}),
       })
-      navigate('/home')
+      navigate(afterSignup)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('auth.signupError'))
     } finally {
@@ -154,7 +162,10 @@ export default function SignupPage() {
         </button>
 
         <p className="signup-form__existing">
-          {t('auth.already')} <Link to="/login">{t('auth.login')}</Link>
+          {t('auth.already')}{' '}
+          <Link to="/login" state={{ from: afterSignup }}>
+            {t('auth.login')}
+          </Link>
         </p>
       </form>
     </AuthLayout>

@@ -1,6 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { catalog, formatMoney, type CatalogProduct } from '../data/catalog'
+import {
+  addPanelProduct,
+  panelCustomers,
+  panelDashboard,
+  panelOrders,
+  panelProducts,
+  type PanelCustomer,
+  type PanelDashboard,
+  type PanelProduct,
+} from '../api/panel'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/SellerPanelPage.css'
@@ -14,39 +23,77 @@ const menu: { id: Section; label: MessageKey }[] = [
   { id: 'customers', label: 'panel.customers' },
 ]
 
-type PanelProduct = CatalogProduct & { name?: string }
+const categories = ['newborn', 'toddler', 'kids', 'sleepwear', 'outerwear'] as const
 
 export default function SellerPanelPage() {
   const { t, lang } = useI18n()
   const [section, setSection] = useState<Section>('dashboard')
-  const [products, setProducts] = useState<PanelProduct[]>(catalog)
+  const [stats, setStats] = useState<PanelDashboard | null>(null)
+  const [products, setProducts] = useState<PanelProduct[]>([])
+  const [customers, setCustomers] = useState<PanelCustomer[]>([])
+  const [orderCount, setOrderCount] = useState(0)
   const [name, setName] = useState('')
+  const [nameFa, setNameFa] = useState('')
   const [price, setPrice] = useState('')
+  const [category, setCategory] = useState<(typeof categories)[number]>('kids')
   const [notice, setNotice] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     document.title = `${t('panel.title')} | ${t('brand.name')}`
   }, [t])
 
-  function addProduct(event: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    let alive = true
+    Promise.all([
+      panelDashboard(),
+      panelProducts(),
+      panelCustomers(),
+      panelOrders(),
+    ])
+      .then(([dashboard, listing, shopCustomers, orders]) => {
+        if (!alive) return
+        setStats(dashboard)
+        setProducts(listing)
+        setCustomers(shopCustomers)
+        setOrderCount(orders.length)
+      })
+      .catch((caught) => {
+        if (alive) {
+          setError(caught instanceof Error ? caught.message : t('account.loadError'))
+        }
+      })
+    return () => {
+      alive = false
+    }
+  }, [t])
+
+  async function addProduct(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const amount = Number(price)
-    if (!name.trim() || !Number.isFinite(amount) || amount <= 0) return
-    setProducts((current) => [
-      {
-        id: 'onesie',
+    if (!name.trim() || !Number.isFinite(amount) || amount < 1000) return
+    setError('')
+    try {
+      const created = await addPanelProduct({
         name: name.trim(),
-        usd: amount,
+        nameFa: nameFa.trim() || name.trim(),
         toman: Math.round(amount),
-        image: '/clothes/onesie.svg',
-        category: 'kids',
+        category,
         sizes: ['2-3'],
-      },
-      ...current,
-    ])
-    setName('')
-    setPrice('')
-    setNotice(t('panel.saved'))
+        stock: 10,
+        image: '/clothes/onesie.svg',
+      })
+      setProducts((current) => [created, ...current])
+      setStats((current) =>
+        current ? { ...current, products: current.products + 1 } : current,
+      )
+      setName('')
+      setNameFa('')
+      setPrice('')
+      setNotice(t('panel.saved'))
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('account.saveError'))
+    }
   }
 
   return (
@@ -75,23 +122,29 @@ export default function SellerPanelPage() {
           <h1>{t(menu.find((item) => item.id === section)?.label ?? 'panel.title')}</h1>
         </header>
 
+        {error ? <p className="account-form__error">{error}</p> : null}
+
         {section === 'dashboard' ? (
           <section className="seller-panel__stats" aria-label={t('panel.dashboard')}>
             <article>
               <span>{t('panel.revenue')}</span>
-              <strong>{lang === 'fa' ? '۰ تومان' : '$0.00'}</strong>
+              <strong>
+                {lang === 'fa'
+                  ? `${(stats?.revenueToman ?? 0).toLocaleString('fa-IR')} تومان`
+                  : `${(stats?.revenueToman ?? 0).toLocaleString('en-US')} IRR`}
+              </strong>
             </article>
             <article>
               <span>{t('panel.ordersStat')}</span>
-              <strong>0</strong>
+              <strong>{stats?.orders ?? orderCount}</strong>
             </article>
             <article>
               <span>{t('panel.productsStat')}</span>
-              <strong>{products.length}</strong>
+              <strong>{stats?.products ?? products.length}</strong>
             </article>
             <article>
               <span>{t('panel.customersStat')}</span>
-              <strong>0</strong>
+              <strong>{stats?.customers ?? customers.length}</strong>
             </article>
           </section>
         ) : null}
@@ -104,13 +157,30 @@ export default function SellerPanelPage() {
                 <input value={name} onChange={(event) => setName(event.target.value)} required />
               </label>
               <label>
+                {t('panel.nameFa')}
+                <input value={nameFa} onChange={(event) => setNameFa(event.target.value)} />
+              </label>
+              <label>
                 {t('panel.price')}
                 <input
                   value={price}
                   onChange={(event) => setPrice(event.target.value)}
-                  inputMode="decimal"
+                  inputMode="numeric"
                   required
                 />
+              </label>
+              <label>
+                {t('panel.category')}
+                <select
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value as typeof category)}
+                >
+                  {categories.map((id) => (
+                    <option key={id} value={id}>
+                      {t(`nav.${id}` as MessageKey)}
+                    </option>
+                  ))}
+                </select>
               </label>
               <button type="submit">{t('panel.add')}</button>
             </form>
@@ -125,17 +195,25 @@ export default function SellerPanelPage() {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product, index) => (
-                  <tr key={`${product.name ?? product.id}-${index}`}>
+                {products.map((product) => (
+                  <tr key={product.id}>
                     <td data-label={t('panel.product')}>
                       <span className="seller-panel__product">
                         <img src={product.image} alt="" />
-                        {product.name ?? t(`product.${product.id}`)}
+                        {lang === 'fa' ? product.nameFa || product.name : product.name}
                       </span>
                     </td>
-                    <td data-label={t('panel.price')}>{formatMoney(product, lang)}</td>
-                    <td data-label={t('panel.category')}>{t(`nav.${product.category}` as MessageKey)}</td>
-                    <td data-label={t('panel.status')}>{t('panel.inStock')}</td>
+                    <td data-label={t('panel.price')}>
+                      {lang === 'fa'
+                        ? `${product.toman.toLocaleString('fa-IR')} تومان`
+                        : `${product.toman.toLocaleString('en-US')} IRR`}
+                    </td>
+                    <td data-label={t('panel.category')}>
+                      {t(`nav.${product.category}` as MessageKey)}
+                    </td>
+                    <td data-label={t('panel.status')}>
+                      {product.stock > 0 ? t('panel.inStock') : t('panel.outOfStock')}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -145,13 +223,29 @@ export default function SellerPanelPage() {
 
         {section === 'orders' ? (
           <section className="seller-panel__card">
-            <p>{t('panel.emptyOrders')}</p>
+            <p>{orderCount === 0 ? t('panel.emptyOrders') : `${orderCount}`}</p>
           </section>
         ) : null}
 
         {section === 'customers' ? (
           <section className="seller-panel__card">
-            <p>{t('panel.emptyCustomers')}</p>
+            {customers.length === 0 ? (
+              <p>{t('panel.emptyCustomers')}</p>
+            ) : (
+              <ul className="account-list">
+                {customers.map((customer) => (
+                  <li key={customer.id} className="account-list__item">
+                    <div>
+                      <strong>{customer.name}</strong>
+                      <p>{customer.phone}</p>
+                      <p>
+                        {customer.province}، {customer.city}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         ) : null}
       </main>

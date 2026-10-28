@@ -57,8 +57,16 @@ export function sessionDisplayName(user: SessionUser | null = readSessionUser())
   return name || null
 }
 
+export function isLoggedIn() {
+  return Boolean(readSessionUser())
+}
+
 export function canOpenSellerPanel(role: AccountRole | null = readSessionRole()) {
   return role === 'seller' || role === 'masterSeller'
+}
+
+export function canOpenAccount(role: AccountRole | null = readSessionRole()) {
+  return role === 'customer' || role === 'seller' || role === 'masterSeller'
 }
 
 export function saveSession(session: unknown) {

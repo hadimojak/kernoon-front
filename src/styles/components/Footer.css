@@ -5,7 +5,7 @@
 
 .footer__inner {
   display: grid;
-  grid-template-columns: 1.1fr repeat(4, 1fr);
+  grid-template-columns: 1.1fr 1fr 1.6fr 1fr;
   gap: 18px 24px;
   max-width: 1280px;
   margin: 0 auto;
@@ -43,6 +43,17 @@
 
 .footer__column li + li {
   margin-top: 5px;
+}
+
+.footer__column--split ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 5px;
+}
+
+.footer__column--split li + li {
+  margin-top: 0;
 }
 
 .footer__column a {

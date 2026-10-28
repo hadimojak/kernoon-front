@@ -63,6 +63,46 @@
   background: #111827;
 }
 
+.checkout-filled {
+  width: 100%;
+  max-width: 720px;
+  display: grid;
+  gap: 20px;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.checkout-filled h1 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.checkout-options {
+  display: grid;
+  gap: 12px;
+}
+
+.checkout-options label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.checkout-options select {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+button.checkout-empty__cta {
+  border: 0;
+  cursor: pointer;
+  justify-self: start;
+}
+
 @media (max-width: 640px) {
   .checkout-page__main {
     padding: 24px 16px 56px;

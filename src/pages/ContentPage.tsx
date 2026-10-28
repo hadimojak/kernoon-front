@@ -19,36 +19,14 @@ const contentKeys: Record<string, { title: MessageKey; lead: MessageKey }> = {
   '/cookies': { title: 'content.cookies.title', lead: 'content.cookies.lead' },
 }
 
-const COOKIE_KEY = 'bloomnation-cookie-prefs'
+const COOKIE_KEY = 'kernoon-cookie-prefs'
 
 type CookiePrefs = {
   analytics: boolean
   marketing: boolean
 }
 
-const posts = [
-  {
-    id: 'seasonal',
-    title: 'What to send when the season changes',
-    date: 'March 12, 2026',
-    excerpt: 'Kernoon Clothes picks soft cotton and knits for the season, not a catalog frozen in January.',
-    body: 'A cotton set for warm months should not be the same as a knit layer for cold months. Kernoon Clothes swaps in lighter fabrics when the season changes, so the piece is comfortable the week it arrives.',
-  },
-  {
-    id: 'note',
-    title: 'How to write a card that sounds like you',
-    date: 'February 2, 2026',
-    excerpt: 'Short, specific, and a little imperfect beats a poem you found online.',
-    body: 'Name the moment. “Happy Tuesday, you handled that week” lands better than a generic congratulations line. Keep it to two or three sentences so it fits the note, and put size requests in the delivery notes at checkout.',
-  },
-  {
-    id: 'same-day',
-    title: 'Same-day delivery, without the wire service',
-    date: 'January 18, 2026',
-    excerpt: 'Kernoon Clothes packs the piece you chose and sends it to you.',
-    body: 'Kernoon Clothes packs the size you picked and ships it to the address you enter. You see the photos and reviews before you pay.',
-  },
-]
+const postIds = ['1', '2', '3'] as const
 
 const newsItems = [
   {
@@ -179,8 +157,8 @@ const pages: Record<string, { title: string; lead: string }> = {
     lead: 'What we collect when you shop, create an account, or contact support.',
   },
   '/cookies': {
-    title: 'Cookie Settings',
-    lead: 'Choose which optional cookies BloomNation may store in this browser.',
+    title: 'Cookie settings',
+    lead: 'Choose which optional cookies this browser may store.',
   },
 }
 
@@ -261,14 +239,14 @@ function ContentScreen() {
         </header>
 
         {pathname === '/blog' ? (
-          <section className="info-list" aria-label="Posts">
-            {posts.map((post) => (
-              <article key={post.id}>
-                <p className="info-meta">{post.date}</p>
-                <h2>{post.title}</h2>
-                <p>{openPost === post.id ? post.body : post.excerpt}</p>
-                <button type="button" onClick={() => setOpenPost(openPost === post.id ? null : post.id)}>
-                  {openPost === post.id ? 'Close' : 'Read'}
+          <section className="info-list" aria-label={t('content.blog.posts')}>
+            {postIds.map((id) => (
+              <article key={id}>
+                <p className="info-meta">{t(`content.blog.${id}.date`)}</p>
+                <h2>{t(`content.blog.${id}.title`)}</h2>
+                <p>{openPost === id ? t(`content.blog.${id}.body`) : t(`content.blog.${id}.excerpt`)}</p>
+                <button type="button" onClick={() => setOpenPost(openPost === id ? null : id)}>
+                  {openPost === id ? t('content.blog.close') : t('content.blog.read')}
                 </button>
               </article>
             ))}
@@ -309,32 +287,32 @@ function ContentScreen() {
         {pathname === '/delivery-fees' ? (
           <section className="info-prose">
             <table>
-              <caption>Typical delivery fees</caption>
+              <caption>{t('content.shipping.tableCaption')}</caption>
               <thead>
                 <tr>
-                  <th scope="col">Distance from the shop</th>
-                  <th scope="col">Fee</th>
+                  <th scope="col">{t('content.shipping.distance')}</th>
+                  <th scope="col">{t('content.shipping.fee')}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Within the shop’s city</td>
-                  <td>$12.95</td>
+                  <td>{t('content.shipping.city')}</td>
+                  <td>{t('content.shipping.cityFee')}</td>
                 </tr>
                 <tr>
-                  <td>Nearby neighborhoods</td>
-                  <td>$16.95</td>
+                  <td>{t('content.shipping.nearby')}</td>
+                  <td>{t('content.shipping.nearbyFee')}</td>
                 </tr>
                 <tr>
-                  <td>Extended delivery area</td>
-                  <td>$22.95</td>
+                  <td>{t('content.shipping.extended')}</td>
+                  <td>{t('content.shipping.extendedFee')}</td>
                 </tr>
               </tbody>
             </table>
-            <p>
-              The exact fee appears at checkout once you enter a delivery address. Same-day requests can add a rush fee when the shop is close to its cutoff.
-            </p>
-            <p>Sales tax is calculated from the delivery address and shown before you pay. There is no separate service charge on top of the clothes, shipping, and tax.</p>
+            <p>{t('content.shipping.checkoutNote')}</p>
+            <p>{t('content.shipping.taxNote')}</p>
+            <h2>{t('content.shipping.returnsTitle')}</h2>
+            <p>{t('content.shipping.returnsBody')}</p>
           </section>
         ) : null}
 
@@ -522,16 +500,19 @@ function ContentScreen() {
         ) : null}
 
         {pathname === '/cookies' ? (
-          <section className="info-prose">
+          <section className="info-cookies">
             {prefsSaved ? (
               <p className="info-notice" role="status">
-                Preferences saved in this browser.
+                {t('content.cookies.saved')}
               </p>
             ) : null}
-            <form className="info-form" onSubmit={savePrefs}>
+            <form className="info-form info-form--cookies" onSubmit={savePrefs}>
               <label className="info-check">
                 <input type="checkbox" checked disabled />
-                Essential cookies, required to sign in and check out
+                <span>
+                  <strong>{t('content.cookies.essential')}</strong>
+                  <span>{t('content.cookies.essentialNote')}</span>
+                </span>
               </label>
               <label className="info-check">
                 <input
@@ -539,7 +520,10 @@ function ContentScreen() {
                   checked={prefs.analytics}
                   onChange={(event) => setPrefs({ ...prefs, analytics: event.target.checked })}
                 />
-                Analytics cookies
+                <span>
+                  <strong>{t('content.cookies.analytics')}</strong>
+                  <span>{t('content.cookies.analyticsNote')}</span>
+                </span>
               </label>
               <label className="info-check">
                 <input
@@ -547,9 +531,12 @@ function ContentScreen() {
                   checked={prefs.marketing}
                   onChange={(event) => setPrefs({ ...prefs, marketing: event.target.checked })}
                 />
-                Marketing cookies
+                <span>
+                  <strong>{t('content.cookies.marketing')}</strong>
+                  <span>{t('content.cookies.marketingNote')}</span>
+                </span>
               </label>
-              <button type="submit">Save preferences</button>
+              <button type="submit">{t('content.cookies.save')}</button>
             </form>
           </section>
         ) : null}

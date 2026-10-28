@@ -1,29 +1,27 @@
 import { useEffect } from 'react'
-import { useI18n } from '../i18n/useI18n'
 import { Link } from 'react-router-dom'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
 import { BrandMark } from '../components/icons/BrandMark'
+import { useI18n } from '../i18n/useI18n'
+import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/AboutUsPage.css'
 
-const features = [
+const features: { image: string; titleKey: MessageKey; bodyKey: MessageKey }[] = [
   {
     image: '/clothes/onesie.svg',
-    alt: '',
-    titleKey: 'nav.newborn' as const,
-    bodyKey: 'shop.newborn.lead' as const,
+    titleKey: 'nav.newborn',
+    bodyKey: 'shop.newborn.lead',
   },
   {
     image: '/clothes/tee.svg',
-    alt: '',
-    titleKey: 'nav.toddler' as const,
-    bodyKey: 'shop.toddler.lead' as const,
+    titleKey: 'nav.toddler',
+    bodyKey: 'shop.toddler.lead',
   },
   {
     image: '/clothes/hoodie.svg',
-    alt: '',
-    titleKey: 'nav.kids' as const,
-    bodyKey: 'shop.kids.lead' as const,
+    titleKey: 'nav.kids',
+    bodyKey: 'shop.kids.lead',
   },
 ]
 
@@ -50,24 +48,17 @@ export default function AboutUsPage() {
             </h1>
             <p>{t('about.body')}</p>
           </div>
-          <img
-            className="about-hero__photo"
-            src="/about/hero.jpg"
-            alt="Person working at a sunlit bench"
-          />
+          <img className="about-hero__photo" src="/about/hero.jpg" alt="" />
         </section>
 
         <section className="about-why" aria-labelledby="why-choose">
           <h2 id="why-choose">{t('about.why')}</h2>
           <p>{t('about.whyBody')}</p>
-          <p className="about-why__credit">
-            Images from Seed Floral (West Hollywood, CA) &amp; Brooklyn Blooms (Brooklyn, NY)
-          </p>
 
           <ul className="about-features">
             {features.map((feature) => (
               <li key={feature.titleKey}>
-                <img src={feature.image} alt={feature.alt} />
+                <img src={feature.image} alt="" />
                 <h3>{t(feature.titleKey)}</h3>
                 <p>{t(feature.bodyKey)}</p>
               </li>
@@ -77,37 +68,6 @@ export default function AboutUsPage() {
           <Link className="about-shop" to="/home">
             {t('about.shop')}
           </Link>
-        </section>
-
-        <section className="about-team" aria-labelledby="founding-team">
-          <h2 id="founding-team">Founding Team</h2>
-          <img
-            src="/about/founders.jpg"
-            alt="Co-founders Farbod Shoraka and Gregg Weisstein"
-          />
-
-          <article>
-            <h3>Farbod Shoraka – Co-Founder, Chief Executive Officer</h3>
-            <p>
-              Farbod drives BloomNation&apos;s vision, strategy and growth. An economics graduate
-              from University of California, Berkeley, Farbod has always had a passion for
-              understanding business models creating solutions for the greater good. Prior to
-              BloomNation, Farbod was an analyst in Mergers &amp; Acquisitions and corporate
-              strategy.
-            </p>
-          </article>
-
-          <article>
-            <h3>Gregg Weisstein – Co-Founder, Chief Operating Officer</h3>
-            <p>
-              With thousands of Kernoon Clothes pieces in the shop, Gregg is
-              responsible for keeping BloomNation a well-oiled machine. A Business Economics and
-              Accounting graduate from University of California, Santa Barbara, Gregg has consulted
-              for market leaders and wholesalers for the majority of his professional career.
-            </p>
-          </article>
-
-          <p className="about-team__note">BloomNation is part of the Promenade Group.</p>
         </section>
       </main>
 

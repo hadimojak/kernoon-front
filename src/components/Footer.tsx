@@ -20,20 +20,24 @@ const socialLinks = [
   { label: 'YouTube', href: 'https://youtube.com', Icon: YouTubeIcon },
 ]
 
-const columns: { title: MessageKey; links: { key: MessageKey; to: string }[] }[] = [
+const columns: {
+  title: MessageKey
+  links: { key: MessageKey; to: string }[]
+  split?: boolean
+}[] = [
   {
     title: 'footer.company',
     links: [
       { key: 'footer.about', to: '/about-us' },
       { key: 'footer.blog', to: '/blog' },
       { key: 'footer.news', to: '/news' },
-      { key: 'footer.shipping', to: '/delivery-fees' },
-      { key: 'footer.contact', to: '/contact-us' },
       { key: 'footer.careers', to: '/careers' },
+      { key: 'footer.contact', to: '/contact-us' },
     ],
   },
   {
     title: 'footer.shop',
+    split: true,
     links: [
       { key: 'nav.newborn', to: '/newborn' },
       { key: 'nav.toddler', to: '/toddler' },
@@ -44,19 +48,10 @@ const columns: { title: MessageKey; links: { key: MessageKey; to: string }[] }[]
     ],
   },
   {
-    title: 'footer.help',
-    links: [
-      { key: 'footer.sizeGuide', to: '/sizes' },
-      { key: 'footer.shipping', to: '/delivery-fees' },
-      { key: 'footer.helpCenter', to: '/help' },
-      { key: 'footer.reviews', to: '/reviews' },
-      { key: 'footer.contact', to: '/contact-us' },
-    ],
-  },
-  {
     title: 'footer.account',
     links: [
       { key: 'header.login', to: '/login' },
+      { key: 'header.account', to: '/profile' },
       { key: 'header.orders', to: '/orders' },
       { key: 'header.sell', to: '/sell' },
       { key: 'header.sellerLogin', to: '/sell/login' },
@@ -86,26 +81,43 @@ export function Footer() {
           </ul>
         </div>
 
-        {columns.map((column) => (
-          <nav className="footer__column" key={column.title} aria-label={t(column.title)}>
-            <h2 className="footer__heading">{t(column.title)}</h2>
-            <ul>
-              {column.links
-                .filter((link) => {
-                  if (link.key === 'header.sellerPanel') return sellerPanel
-                  if (link.key === 'header.login' || link.key === 'header.sellerLogin') {
-                    return !signedIn
-                  }
-                  return true
-                })
-                .map((link) => (
-                  <li key={link.key + link.to}>
-                    <Link to={link.to}>{t(link.key)}</Link>
-                  </li>
-                ))}
-            </ul>
-          </nav>
-        ))}
+        {columns.map((column) => {
+          const links = column.links.filter((link) => {
+            if (link.key === 'header.sellerPanel') return sellerPanel
+            if (link.key === 'header.login' || link.key === 'header.sellerLogin') {
+              return !signedIn
+            }
+            if (link.key === 'header.account') return signedIn
+            return true
+          })
+
+          return (
+            <nav
+              className={column.split ? 'footer__column footer__column--split' : 'footer__column'}
+              key={column.title}
+              aria-label={t(column.title)}
+            >
+              <h2 className="footer__heading">{t(column.title)}</h2>
+              <ul>
+                {links.map((link) => {
+                  const needsLogin =
+                    !signedIn &&
+                    (link.key === 'header.orders' || link.key === 'header.account')
+                  return (
+                    <li key={link.key + link.to}>
+                      <Link
+                        to={needsLogin ? '/login' : link.to}
+                        state={needsLogin ? { from: link.to } : undefined}
+                      >
+                        {t(link.key)}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </nav>
+          )
+        })}
       </div>
 
       <div className="footer__legal">

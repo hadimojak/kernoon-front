@@ -1,7 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { applyAsSeller } from '../api/shop'
 import { Footer } from '../components/Footer'
 import { Header } from '../components/Header'
+import { iranProvinces, normalizeIranPhone, provinceLabels } from '../data/iran'
 import { useI18n } from '../i18n/useI18n'
 import type { MessageKey } from '../i18n/translations'
 import '../styles/pages/SellPage.css'
@@ -13,21 +15,41 @@ const perks: { title: MessageKey; body: MessageKey }[] = [
 ]
 
 export default function SellPage() {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const [shop, setShop] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [province, setProvince] = useState<(typeof iranProvinces)[number]>('tehran')
   const [city, setCity] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [pending, setPending] = useState(false)
 
   useEffect(() => {
     document.title = `${t('seller.title')} | ${t('brand.name')}`
   }, [t])
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setSubmitted(true)
+    setError('')
+    setPending(true)
+    try {
+      const normalized = normalizeIranPhone(phone)
+      await applyAsSeller({
+        shop: shop.trim(),
+        name: name.trim(),
+        email: email.trim(),
+        phone: normalized || undefined,
+        province,
+        city: city.trim(),
+      })
+      setSubmitted(true)
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : t('seller.applyError'))
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -60,7 +82,10 @@ export default function SellPage() {
             <div className="seller-join__thanks">
               <h2 id="apply-title">{t('seller.thanksTitle')}</h2>
               <p>
-                {`Thanks, ${name.split(' ')[0] || 'there'}. We'll review ${shop || 'your shop'} and email you at ${email}.`}
+                {t('seller.thanksBody')
+                  .replace('{name}', name.split(' ')[0] || (lang === 'fa' ? 'فروشنده' : 'there'))
+                  .replace('{shop}', shop || (lang === 'fa' ? 'فروشگاه شما' : 'your shop'))
+                  .replace('{email}', email)}
               </p>
               <Link to="/sell/login">{t('seller.goLogin')}</Link>
             </div>
@@ -69,15 +94,15 @@ export default function SellPage() {
               <h2 id="apply-title">{t('seller.formTitle')}</h2>
               <form onSubmit={handleSubmit} noValidate>
                 <label>
-                  Shop name
+                  {t('seller.shopName')}
                   <input value={shop} onChange={(event) => setShop(event.target.value)} required />
                 </label>
                 <label>
-                  Your name
+                  {t('seller.yourName')}
                   <input value={name} onChange={(event) => setName(event.target.value)} required />
                 </label>
                 <label>
-                  Email
+                  {t('seller.email')}
                   <input
                     type="email"
                     autoComplete="email"
@@ -87,20 +112,37 @@ export default function SellPage() {
                   />
                 </label>
                 <label>
-                  Phone
+                  {t('seller.phone')}
                   <input
                     type="tel"
                     autoComplete="tel"
                     value={phone}
                     onChange={(event) => setPhone(event.target.value)}
+                    placeholder="09xxxxxxxxx"
                     required
                   />
                 </label>
                 <label>
-                  City
+                  {t('seller.province')}
+                  <select
+                    value={province}
+                    onChange={(event) => setProvince(event.target.value as typeof province)}
+                  >
+                    {iranProvinces.map((id) => (
+                      <option key={id} value={id}>
+                        {provinceLabels[id][lang]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  {t('seller.city')}
                   <input value={city} onChange={(event) => setCity(event.target.value)} required />
                 </label>
-                <button type="submit">Submit application</button>
+                {error ? <p className="account-form__error">{error}</p> : null}
+                <button type="submit" disabled={pending}>
+                  {pending ? t('account.saving') : t('seller.submit')}
+                </button>
               </form>
             </>
           )}

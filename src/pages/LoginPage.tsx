@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   loginWithEmail,
   loginWithPassword,
@@ -22,6 +22,14 @@ const methods: { id: LoginMethod; label: 'auth.methodPhone' | 'auth.methodEmail'
 export default function LoginPage() {
   const { t } = useI18n()
   const navigate = useNavigate()
+  const location = useLocation()
+  const afterLogin =
+    typeof location.state === 'object' &&
+    location.state &&
+    'from' in location.state &&
+    typeof (location.state as { from?: unknown }).from === 'string'
+      ? (location.state as { from: string }).from
+      : '/home'
   const [method, setMethod] = useState<LoginMethod>('phone')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -46,7 +54,7 @@ export default function LoginPage() {
     try {
       if (method === 'password') {
         await loginWithPassword(username, password)
-        navigate('/home')
+        navigate(afterLogin)
         return
       }
 
@@ -59,7 +67,7 @@ export default function LoginPage() {
 
       if (method === 'phone') await loginWithPhone(phone, code)
       else await loginWithEmail(email, code)
-      navigate('/home')
+      navigate(afterLogin)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('auth.loginError'))
     } finally {
@@ -196,7 +204,9 @@ export default function LoginPage() {
 
         <div className="auth-links">
           <Link to="/forgot-password">{t('auth.forgot')}</Link>
-          <Link to="/signup">{t('auth.signupLink')}</Link>
+          <Link to="/signup" state={{ from: afterLogin }}>
+            {t('auth.signupLink')}
+          </Link>
         </div>
       </form>
     </AuthLayout>
